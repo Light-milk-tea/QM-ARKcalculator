@@ -1,0 +1,22 @@
+{
+  "name": "qmcalculator",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev -w web",
+    "build": "npm run build --workspaces --if-present",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "regression": "npm run test -w @qm/calc-core",
+    "sync:data": "node scripts/sync-game-data.mjs",
+    "audit:custom": "node scripts/audit-custom-coverage.mjs",
+    "docs:custom": "node scripts/generate-custom-docs.mjs",
+    "quality:gate": "node scripts/quality-gate.mjs",
+    "release:snapshot": "node scripts/release-snapshot.mjs"
+  }
+}

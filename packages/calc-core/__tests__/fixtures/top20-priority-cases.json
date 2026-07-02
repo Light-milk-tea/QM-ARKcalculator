@@ -1,0 +1,202 @@
+[
+  {
+    "id": "top20-001",
+    "operator": "能天使",
+    "skill": "S3 过载模式",
+    "status": "pending",
+    "scenario": "single_target_baseline",
+    "enemy": { "defense": 800, "magicResistance": 30 },
+    "conditionEnabled": true,
+    "expected": { "hitDamage": null, "totalDamage": null, "dps": null, "tolerance": 0.02 }
+  },
+  {
+    "id": "top20-002",
+    "operator": "艾雅法拉",
+    "skill": "S2 点燃",
+    "status": "pending",
+    "scenario": "single_target_baseline",
+    "enemy": { "defense": 500, "magicResistance": 40 },
+    "conditionEnabled": true,
+    "expected": { "hitDamage": null, "totalDamage": null, "dps": null, "tolerance": 0.02 }
+  },
+  {
+    "id": "top20-003",
+    "operator": "阿米娅（术）",
+    "skill": "S3 奇美拉",
+    "status": "pending",
+    "scenario": "switch_magical_with_extra_stream",
+    "enemy": { "defense": 600, "magicResistance": 30 },
+    "conditionEnabled": true,
+    "expected": { "hitDamage": null, "totalDamage": null, "dps": null, "tolerance": 0.02 }
+  },
+  {
+    "id": "top20-004",
+    "operator": "银灰",
+    "skill": "S3 真银斩",
+    "status": "pending",
+    "scenario": "burst_window",
+    "enemy": { "defense": 1000, "magicResistance": 20 },
+    "conditionEnabled": true,
+    "expected": { "hitDamage": null, "totalDamage": null, "dps": null, "tolerance": 0.02 }
+  },
+  {
+    "id": "top20-005",
+    "operator": "史尔特尔",
+    "skill": "S3 黄昏",
+    "status": "pending",
+    "scenario": "arts_burst",
+    "enemy": { "defense": 400, "magicResistance": 50 },
+    "conditionEnabled": true,
+    "expected": { "hitDamage": null, "totalDamage": null, "dps": null, "tolerance": 0.02 }
+  },
+  {
+    "id": "top20-006",
+    "operator": "陈（近卫）",
+    "skill": "S2 赤霄·拔刀",
+    "status": "pending",
+    "scenario": "multi_hit_main_stream",
+    "enemy": { "defense": 900, "magicResistance": 30 },
+    "conditionEnabled": true,
+    "expected": { "hitDamage": null, "totalDamage": null, "dps": null, "tolerance": 0.03 }
+  },
+  {
+    "id": "top20-007",
+    "operator": "号角",
+    "skill": "S3 终曲",
+    "status": "pending",
+    "scenario": "conditional_switch",
+    "enemy": { "defense": 1000, "magicResistance": 30 },
+    "conditionEnabled": false,
+    "expected": { "hitDamage": null, "totalDamage": null, "dps": null, "tolerance": 0.03 }
+  },
+  {
+    "id": "top20-008",
+    "operator": "澄闪",
+    "skill": "S3 澄净闪耀",
+    "status": "pending",
+    "scenario": "charge_like_behavior",
+    "enemy": { "defense": 700, "magicResistance": 35 },
+    "conditionEnabled": true,
+    "expected": { "hitDamage": null, "totalDamage": null, "dps": null, "tolerance": 0.03 }
+  },
+  {
+    "id": "top20-009",
+    "operator": "缄默德克萨斯",
+    "skill": "S3 剑雨滂沱",
+    "status": "pending",
+    "scenario": "main_other_stream_split",
+    "enemy": { "defense": 700, "magicResistance": 20 },
+    "conditionEnabled": true,
+    "expected": { "hitDamage": null, "totalDamage": null, "dps": null, "tolerance": 0.03 }
+  },
+  {
+    "id": "top20-010",
+    "operator": "假日威龙陈",
+    "skill": "S3 假日风暴",
+    "status": "pending",
+    "scenario": "ammo_based_schedule",
+    "enemy": { "defense": 1200, "magicResistance": 20 },
+    "conditionEnabled": true,
+    "expected": { "hitDamage": null, "totalDamage": null, "dps": null, "tolerance": 0.03 }
+  },
+  {
+    "id": "top20-011",
+    "operator": "水月",
+    "skill": "S2 湍流",
+    "status": "pending",
+    "scenario": "extra_stream",
+    "enemy": { "defense": 850, "magicResistance": 25 },
+    "conditionEnabled": true,
+    "expected": { "hitDamage": null, "totalDamage": null, "dps": null, "tolerance": 0.03 }
+  },
+  {
+    "id": "top20-012",
+    "operator": "棘刺",
+    "skill": "S3 至高之术",
+    "status": "pending",
+    "scenario": "warmup_to_stable_stage",
+    "enemy": { "defense": 900, "magicResistance": 20 },
+    "conditionEnabled": true,
+    "expected": { "hitDamage": null, "totalDamage": null, "dps": null, "tolerance": 0.03 }
+  },
+  {
+    "id": "top20-013",
+    "operator": "伊芙利特",
+    "skill": "S2 炎爆",
+    "status": "pending",
+    "scenario": "arts_resistance_interaction",
+    "enemy": { "defense": 400, "magicResistance": 60 },
+    "conditionEnabled": true,
+    "expected": { "hitDamage": null, "totalDamage": null, "dps": null, "tolerance": 0.02 }
+  },
+  {
+    "id": "top20-014",
+    "operator": "刻俄柏",
+    "skill": "S2 很热的刀",
+    "status": "pending",
+    "scenario": "enemy_stat_dependent_damage",
+    "enemy": { "defense": 1500, "magicResistance": 10 },
+    "conditionEnabled": true,
+    "expected": { "hitDamage": null, "totalDamage": null, "dps": null, "tolerance": 0.03 }
+  },
+  {
+    "id": "top20-015",
+    "operator": "玛恩纳",
+    "skill": "S3 圣约裁决",
+    "status": "pending",
+    "scenario": "condition_toggle_compare",
+    "enemy": { "defense": 1000, "magicResistance": 30 },
+    "conditionEnabled": false,
+    "expected": { "hitDamage": null, "totalDamage": null, "dps": null, "tolerance": 0.03 }
+  },
+  {
+    "id": "top20-016",
+    "operator": "归鲨",
+    "skill": "S3 终曲震撼",
+    "status": "pending",
+    "scenario": "short_burst_high_scale",
+    "enemy": { "defense": 1100, "magicResistance": 20 },
+    "conditionEnabled": true,
+    "expected": { "hitDamage": null, "totalDamage": null, "dps": null, "tolerance": 0.03 }
+  },
+  {
+    "id": "top20-017",
+    "operator": "白铁",
+    "skill": "S2 迭代增幅",
+    "status": "pending",
+    "scenario": "aspd_scale_link",
+    "enemy": { "defense": 900, "magicResistance": 30 },
+    "conditionEnabled": true,
+    "expected": { "hitDamage": null, "totalDamage": null, "dps": null, "tolerance": 0.03 }
+  },
+  {
+    "id": "top20-018",
+    "operator": "仇白",
+    "skill": "S3 断罪",
+    "status": "pending",
+    "scenario": "multi_stream_burst",
+    "enemy": { "defense": 950, "magicResistance": 25 },
+    "conditionEnabled": true,
+    "expected": { "hitDamage": null, "totalDamage": null, "dps": null, "tolerance": 0.03 }
+  },
+  {
+    "id": "top20-019",
+    "operator": "逻各斯",
+    "skill": "S3 高阶术式",
+    "status": "pending",
+    "scenario": "arts_burst_variant",
+    "enemy": { "defense": 600, "magicResistance": 50 },
+    "conditionEnabled": true,
+    "expected": { "hitDamage": null, "totalDamage": null, "dps": null, "tolerance": 0.03 }
+  },
+  {
+    "id": "top20-020",
+    "operator": "焰影苇草",
+    "skill": "S3 灼地回响",
+    "status": "pending",
+    "scenario": "special_semantics_pending",
+    "enemy": { "defense": 700, "magicResistance": 35 },
+    "conditionEnabled": true,
+    "expected": { "hitDamage": null, "totalDamage": null, "dps": null, "tolerance": 0.03 }
+  }
+]

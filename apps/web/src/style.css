@@ -1,0 +1,69 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: light;
+  }
+
+  body {
+    @apply bg-arkrec-bg text-arkrec-text font-sans antialiased;
+    line-height: 1.6;
+  }
+}
+
+@layer components {
+  .wiki-header {
+    @apply text-2xl font-normal border-b border-arkrec-border pb-1 mb-4 text-arkrec-text;
+  }
+
+  .wiki-subheader {
+    @apply text-lg font-bold border-b border-arkrec-border pb-1 mb-3 mt-6 text-arkrec-text;
+  }
+
+  .wiki-input {
+    @apply w-full bg-white border border-gray-300 px-2 py-1 text-sm outline-none transition-colors focus:border-arkrec-primary focus:ring-1 focus:ring-arkrec-primary;
+  }
+
+  .wiki-select {
+    @apply w-full bg-white border border-gray-300 px-2 py-1 text-sm outline-none transition-colors focus:border-arkrec-primary focus:ring-1 focus:ring-arkrec-primary appearance-none;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right 0.25rem center;
+    background-repeat: no-repeat;
+    background-size: 1.2em 1.2em;
+    padding-right: 2rem;
+  }
+
+  .wiki-checkbox {
+    @apply w-4 h-4 border border-gray-300 bg-white appearance-none cursor-pointer relative top-[3px];
+  }
+  
+  .wiki-checkbox:checked {
+    @apply bg-arkrec-primary border-arkrec-primary;
+  }
+
+  .wiki-checkbox:checked::after {
+    content: "";
+    @apply absolute inset-0;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='currentColor'%3E%3Cpath fill-rule='evenodd' d='M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z' clip-rule='evenodd'/%3E%3C/svg%3E") center / contain no-repeat;
+    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='currentColor'%3E%3Cpath fill-rule='evenodd' d='M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z' clip-rule='evenodd'/%3E%3C/svg%3E") center / contain no-repeat;
+    background-color: white;
+  }
+
+  .wiki-table {
+    @apply w-full border-collapse border border-arkrec-border text-sm mb-4;
+  }
+
+  .wiki-table th, .wiki-table td {
+    @apply border border-arkrec-border px-3 py-1.5;
+  }
+
+  .wiki-table th {
+    @apply bg-arkrec-panel font-bold text-left w-1/3;
+  }
+
+  .wiki-list {
+    @apply list-disc list-inside pl-4 text-sm space-y-1 mb-4;
+  }
+}
