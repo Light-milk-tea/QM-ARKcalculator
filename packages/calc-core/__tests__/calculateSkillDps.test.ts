@@ -7,7 +7,10 @@ const index: OperatorIndex = {
     exusiai_like: {
       id: "exusiai_like",
       name: "能天使样例",
+      baseHealth: 1000,
       baseAttack: 700,
+      baseDefense: 100,
+      baseMagicResistance: 0,
       baseAttackInterval: 1,
       defaultAttackType: "physical",
       skills: [
@@ -25,7 +28,10 @@ const index: OperatorIndex = {
     eyja_like: {
       id: "eyja_like",
       name: "艾雅法拉样例",
+      baseHealth: 1000,
       baseAttack: 1000,
+      baseDefense: 80,
+      baseMagicResistance: 10,
       baseAttackInterval: 1.6,
       defaultAttackType: "magical",
       skills: [
@@ -42,7 +48,10 @@ const index: OperatorIndex = {
     amiya_like: {
       id: "amiya_like",
       name: "阿米娅样例",
+      baseHealth: 900,
       baseAttack: 820,
+      baseDefense: 90,
+      baseMagicResistance: 0,
       baseAttackInterval: 1.3,
       defaultAttackType: "physical",
       skills: [
@@ -76,6 +85,9 @@ describe("calculateSkillDps", () => {
       ),
     ).toBe(true);
     expect(result.schedule.attackCount).toBeGreaterThan(1);
+    expect(result.formula.mainHit.length).toBeGreaterThan(0);
+    expect(result.formula.schedule.length).toBeGreaterThan(0);
+    expect(result.formula.summary.length).toBeGreaterThan(0);
   });
 
   it("计算法术技能", () => {

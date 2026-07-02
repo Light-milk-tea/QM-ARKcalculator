@@ -7,6 +7,7 @@
 
 ## 门禁步骤
 
+0. Sync Data：`npm run sync:data`（前置，保证数据版本一致）
 1. Typecheck：`npm run typecheck`
 2. Unit/Regression：`npm run test`
 3. Build：`npm run build`
@@ -19,11 +20,12 @@
 - 任一步骤失败即终止，不允许带风险合入。
 - 修复后必须重新执行全量门禁，不只重跑单步。
 - 若为数据变更引入告警，应同步更新审计记录与规则文档。
+- `audit:custom` 不仅输出统计，也会在关键阈值不达标时返回非 0 退出码。
 
 ## 与 CI 对齐
 
 - CI 工作流定义：`.github/workflows/ci.yml`
-- CI 会先执行 `sync:data`，再执行 `quality:gate`。
+- CI 会显式先执行 `sync:data`，再执行 `quality:gate`。
 - 本地与 CI 使用同一命令，避免“本地通过/CI失败”的流程漂移。
 
 ## 版本范围

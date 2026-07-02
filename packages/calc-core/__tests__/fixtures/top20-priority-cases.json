@@ -1,53 +1,63 @@
 [
   {
     "id": "top20-001",
+    "operatorId": "char_103_angel",
+    "skillId": "skchr_angel_3",
     "operator": "能天使",
     "skill": "S3 过载模式",
-    "status": "pending",
+    "status": "ready",
     "scenario": "single_target_baseline",
     "enemy": { "defense": 800, "magicResistance": 30 },
     "conditionEnabled": true,
-    "expected": { "hitDamage": null, "totalDamage": null, "dps": null, "tolerance": 0.02 }
+    "expected": { "hitDamage": 38.3031, "totalDamage": 574.5465, "dps": 38.3031, "tolerance": 0.02 }
   },
   {
     "id": "top20-002",
+    "operatorId": "char_180_amgoat",
+    "skillId": "skchr_amgoat_2",
     "operator": "艾雅法拉",
     "skill": "S2 点燃",
-    "status": "pending",
+    "status": "ready",
     "scenario": "single_target_baseline",
     "enemy": { "defense": 500, "magicResistance": 40 },
     "conditionEnabled": true,
-    "expected": { "hitDamage": null, "totalDamage": null, "dps": null, "tolerance": 0.02 }
+    "expected": { "hitDamage": 964.2348, "totalDamage": 964.2348, "dps": 9642.348, "tolerance": 0.02 }
   },
   {
     "id": "top20-003",
+    "operatorId": "char_002_amiya",
+    "skillId": "skchr_amiya_3",
     "operator": "阿米娅（术）",
     "skill": "S3 奇美拉",
-    "status": "pending",
+    "status": "ready",
     "scenario": "switch_magical_with_extra_stream",
     "enemy": { "defense": 600, "magicResistance": 30 },
     "conditionEnabled": true,
-    "expected": { "hitDamage": null, "totalDamage": null, "dps": null, "tolerance": 0.02 }
+    "expected": { "hitDamage": 1644.72, "totalDamage": 30838.5, "dps": 1027.95, "tolerance": 0.02 }
   },
   {
     "id": "top20-004",
+    "operatorId": "char_172_svrash",
+    "skillId": "skchr_svrash_3",
     "operator": "银灰",
     "skill": "S3 真银斩",
-    "status": "pending",
+    "status": "ready",
     "scenario": "burst_window",
     "enemy": { "defense": 1000, "magicResistance": 20 },
     "conditionEnabled": true,
-    "expected": { "hitDamage": null, "totalDamage": null, "dps": null, "tolerance": 0.02 }
+    "expected": { "hitDamage": 1951.04, "totalDamage": 45024, "dps": 1500.8, "tolerance": 0.02 }
   },
   {
     "id": "top20-005",
+    "operatorId": "char_350_surtr",
+    "skillId": "skchr_surtr_3",
     "operator": "史尔特尔",
     "skill": "S3 黄昏",
-    "status": "pending",
+    "status": "ready",
     "scenario": "arts_burst",
     "enemy": { "defense": 400, "magicResistance": 50 },
     "conditionEnabled": true,
-    "expected": { "hitDamage": null, "totalDamage": null, "dps": null, "tolerance": 0.02 }
+    "expected": { "hitDamage": 1720, "totalDamage": 1720, "dps": 17200, "tolerance": 0.02 }
   },
   {
     "id": "top20-006",

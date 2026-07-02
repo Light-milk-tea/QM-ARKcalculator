@@ -28,3 +28,5 @@ jobs:
 
       - name: Run quality gate v1
         run: npm run quality:gate
+        env:
+          SKIP_QUALITY_SYNC: "true"

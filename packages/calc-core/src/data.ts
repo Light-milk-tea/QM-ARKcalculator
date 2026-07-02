@@ -1,4 +1,4 @@
-import type { OperatorData, OperatorIndex, RawGameData, SkillData } from "./types";
+import type { AttackType, OperatorData, OperatorIndex, RawGameData, SkillData } from "./types";
 
 function toNumber(value: unknown, fallback = 0): number {
   return typeof value === "number" && Number.isFinite(value) ? value : fallback;
@@ -10,6 +10,7 @@ function toString(value: unknown, fallback = ""): string {
 
 type CharacterLike = {
   name?: string;
+  subProfessionId?: string;
   phases?: Array<{
     maxLevel?: number;
     attributesKeyFrames?: Array<{
@@ -68,20 +69,145 @@ type SkillLike = {
   }>;
 };
 
+const knownBlackboardKeys = new Set([
+  "atk",
+  "atk_scale",
+  "damage_scale",
+  "attack_speed",
+  "base_attack_time",
+  "cnt",
+  "times",
+  "interval",
+  "duration",
+  "def",
+  "magic_resistance",
+  "ep_damage_ratio",
+  "attack@atk",
+  "attack@atk_scale",
+  "attack@cnt",
+  "attack@times",
+  "attack@duration",
+  "attack@interval",
+  "attack@def",
+  "attack@stun",
+  "attack@prob",
+  "attack@move_speed",
+  "attack@force",
+  "attack@heal_scale",
+  "attack@ep_damage_ratio",
+]);
+
+const knownBlackboardPrefixes = ["talent@", "recipe.", "sandbox_res_collector."];
+
+function isKnownBlackboardKey(key: string): boolean {
+  if (knownBlackboardKeys.has(key)) return true;
+  return knownBlackboardPrefixes.some((prefix) => key.startsWith(prefix));
+}
+
+function resolveAttackType(profession: string | undefined, subProfessionId: string | undefined): AttackType {
+  if (profession === "CASTER" || profession === "MEDIC") {
+    return "magical";
+  }
+
+  const magicalSubprofessionHints = ["arts", "incantation", "mysticcaster", "corecaster", "phalanxcaster"];
+  if (
+    typeof subProfessionId === "string" &&
+    magicalSubprofessionHints.some((hint) => subProfessionId.toLowerCase().includes(hint))
+  ) {
+    return "magical";
+  }
+
+  return "physical";
+}
+
+function inferCustomTags(params: {
+  skillId: string;
+  skillName: string;
+  durationSeconds: number;
+  keys: string[];
+  attackScale: number;
+  attackSpeedBonus: number;
+  atkBuffRatio: number;
+  unmappedBlackboardKeys: string[];
+  hasAmbiguousSemantic: boolean;
+}): string[] {
+  const tags = new Set<string>();
+  const keySet = new Set(params.keys);
+  const lowerSkillName = params.skillName.toLowerCase();
+
+  if (keySet.has("def") || keySet.has("attack@def") || keySet.has("magic_resistance")) {
+    tags.add("def_shred");
+  }
+  if (
+    lowerSkillName.includes("法术") ||
+    lowerSkillName.includes("术式") ||
+    params.skillId.includes("_magic_")
+  ) {
+    tags.add("switch_magical");
+  }
+  if (keySet.has("ep_damage_ratio") || keySet.has("attack@ep_damage_ratio")) {
+    tags.add("extra_true");
+  }
+  if (
+    params.durationSeconds <= 10 &&
+    (params.attackSpeedBonus > 0 || params.attackScale >= 1.8 || params.atkBuffRatio >= 0.8)
+  ) {
+    tags.add("burst_short");
+  }
+  if (params.unmappedBlackboardKeys.length > 0) {
+    tags.add("legacy_unmapped");
+  }
+  if (params.hasAmbiguousSemantic) {
+    tags.add("semantic_ambiguous");
+  }
+
+  return [...tags];
+}
+
 function parseSkill(skillId: string, raw: SkillLike): SkillData {
   const level = raw.levels?.[raw.levels.length - 1];
   const blackboard = level?.blackboard ?? [];
-  const board = new Map(blackboard.map((entry) => [entry.key ?? "", toNumber(entry.value)]));
+  const board = new Map(
+    blackboard
+      .filter((entry) => typeof entry.key === "string")
+      .map((entry) => [entry.key as string, toNumber(entry.value)]),
+  );
+  const blackboardKeys = [...board.keys()];
+  const unmappedBlackboardKeys = blackboardKeys.filter((key) => !isKnownBlackboardKey(key));
+  const hasAmbiguousSemantic =
+    blackboardKeys.includes("mode") ||
+    blackboardKeys.includes("branch_id") ||
+    (blackboardKeys.includes("atk") && blackboardKeys.includes("attack@atk"));
+  const durationSeconds = toNumber(level?.duration, 1);
+  const attackScale = board.get("atk_scale") ?? board.get("attack@atk_scale") ?? 1;
+  const atkBuffRatio = board.get("atk") ?? board.get("attack@atk") ?? 0;
+  const attackSpeedBonus = board.get("attack_speed") ?? 0;
+  const attackCount = board.get("cnt") ?? board.get("times");
+  const skillName = toString(level?.name, skillId);
+  const customTags = inferCustomTags({
+    skillId,
+    skillName,
+    durationSeconds,
+    keys: blackboardKeys,
+    attackScale,
+    attackSpeedBonus,
+    atkBuffRatio,
+    unmappedBlackboardKeys,
+    hasAmbiguousSemantic,
+  });
 
   return {
     id: skillId,
-    name: toString(level?.name, skillId),
-    durationSeconds: toNumber(level?.duration, 1),
-    attackScale: board.get("atk_scale") ?? 1,
+    name: skillName,
+    durationSeconds,
+    attackScale,
     damageScale: board.get("damage_scale") ?? 1,
-    atkBuffRatio: board.get("atk") ?? 0,
-    attackSpeedBonus: board.get("attack_speed") ?? 0,
-    customTags: [],
+    atkBuffRatio,
+    attackSpeedBonus,
+    attackCount: toNumber(attackCount, 0) > 0 ? toNumber(attackCount, 0) : undefined,
+    customTags,
+    unmappedBlackboardKeys,
+    hasAmbiguousSemantic,
   };
 }
 
@@ -211,7 +337,7 @@ export function buildOperatorIndexFromRaw(rawData: RawGameData): OperatorIndex {
       baseDefense: beforeTalentDefense * (1 + talentBonus.defRatio),
       baseMagicResistance: beforeTalentMagicResistance + talentBonus.magicResistanceFlat,
       baseAttackInterval: toNumber(keyFrame?.baseAttackTime, 1) + talentBonus.baseAttackTimeFlat,
-      defaultAttackType: "physical",
+      defaultAttackType: resolveAttackType(character.profession, character.subProfessionId),
       skills: parsedSkills,
     };
   }

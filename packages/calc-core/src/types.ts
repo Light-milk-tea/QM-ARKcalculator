@@ -1,3 +1,5 @@
+import type { WarningCode, WarningLevel } from "./warningCatalog";
+
 export type AttackType = "physical" | "magical" | "true";
 
 export interface SkillData {
@@ -10,6 +12,8 @@ export interface SkillData {
   attackSpeedBonus?: number;
   attackCount?: number;
   customTags?: string[];
+  unmappedBlackboardKeys?: string[];
+  hasAmbiguousSemantic?: boolean;
 }
 
 export interface OperatorData {
@@ -83,6 +87,20 @@ export interface RuleTrace {
   note: string;
 }
 
+export interface FormulaStep {
+  key: string;
+  label: string;
+  expression: string;
+  value: number | string;
+  inputs?: Record<string, number | string>;
+}
+
+export interface CalculationFormula {
+  mainHit: FormulaStep[];
+  schedule: FormulaStep[];
+  summary: FormulaStep[];
+}
+
 export interface CalculationResult {
   summary: {
     hitDamage: number;
@@ -92,12 +110,21 @@ export interface CalculationResult {
   schedule: {
     attackInterval: number;
     attackCount: number;
+    attackCountFromSkill: boolean;
     duration: number;
   };
   streams: DamageStreamResult[];
   breakdown: BreakdownItem[];
+  formula: CalculationFormula;
   ruleTrace: RuleTrace[];
-  warnings: string[];
+  warnings: CalculationWarning[];
+}
+
+export interface CalculationWarning {
+  code: WarningCode;
+  level: WarningLevel;
+  message: string;
+  source?: string;
 }
 
 export interface RuleDefinition {

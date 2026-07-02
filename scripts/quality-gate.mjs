@@ -7,6 +7,9 @@ const __dirname = dirname(__filename);
 const root = resolve(__dirname, "..");
 
 const steps = [
+  ...(process.env.SKIP_QUALITY_SYNC === "true"
+    ? []
+    : [{ name: "SyncData", cmd: "npm", args: ["run", "sync:data"] }]),
   { name: "Typecheck", cmd: "npm", args: ["run", "typecheck"] },
   { name: "UnitAndRegression", cmd: "npm", args: ["run", "test"] },
   { name: "Build", cmd: "npm", args: ["run", "build"] },

@@ -7,7 +7,10 @@ const sampleIndex: OperatorIndex = {
     phys: {
       id: "phys",
       name: "物理样例",
+      baseHealth: 1000,
       baseAttack: 600,
+      baseDefense: 100,
+      baseMagicResistance: 0,
       baseAttackInterval: 1,
       defaultAttackType: "physical",
       skills: [{ id: "s1", name: "物理技能", durationSeconds: 10, attackScale: 1.5 }],
@@ -15,7 +18,10 @@ const sampleIndex: OperatorIndex = {
     arts: {
       id: "arts",
       name: "法术样例",
+      baseHealth: 1200,
       baseAttack: 950,
+      baseDefense: 80,
+      baseMagicResistance: 10,
       baseAttackInterval: 1.6,
       defaultAttackType: "magical",
       skills: [{ id: "s2", name: "法术技能", durationSeconds: 15, attackScale: 1.8 }],
@@ -23,7 +29,10 @@ const sampleIndex: OperatorIndex = {
     switcher: {
       id: "switcher",
       name: "切换态样例",
+      baseHealth: 1500,
       baseAttack: 800,
+      baseDefense: 120,
+      baseMagicResistance: 0,
       baseAttackInterval: 1.2,
       defaultAttackType: "physical",
       skills: [
