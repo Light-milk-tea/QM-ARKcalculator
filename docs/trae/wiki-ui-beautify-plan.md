@@ -245,20 +245,20 @@
 
 ```
 useSelectionStore + useBattleConfigStore + useGameData + useCalculation
-                                  │
-                                  ▼
-                          HomePage.vue (组合层)
-                                  │
-        ┌─────────┬───────────────┼───────────────┬──────────────┐
-        ▼         ▼               ▼               ▼              ▼
-   AppHeader  ArticleToc   ParameterForm   ResultSummary   OperatorInfobox
-                                  │               │
-                                  ▼               ▼
-                          RuleTracePanel  FormulaViewer
-                                                │
-                                  ┌─────────────┼─────────────┐
-                                  ▼             ▼             ▼
-                            StreamsTable  BreakdownTable  ArticleFooter
+                                 │
+                                 ▼
+                         HomePage.vue (组合层)
+                                 │
+       ┌─────────┬───────────────┼───────────────┬──────────────┐
+       ▼         ▼               ▼               ▼              ▼
+  AppHeader  ArticleToc   ParameterForm   ResultSummary   OperatorInfobox
+                                 │               │
+                                 ▼               ▼
+                         RuleTracePanel  FormulaViewer
+                                               │
+                                 ┌─────────────┼─────────────┐
+                                 ▼             ▼             ▼
+                           StreamsTable  BreakdownTable  ArticleFooter
 ```
 
 * **单向数据流**: store → `HomePage` → 子组件 props
@@ -344,4 +344,3 @@ useSelectionStore + useBattleConfigStore + useGameData + useCalculation
 * 多语言切换
 
 * 召唤物/天赋独立面板
-

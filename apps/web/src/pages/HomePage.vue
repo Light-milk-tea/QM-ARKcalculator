@@ -88,7 +88,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-arkrec-bg">
+  <div class="wiki-page min-h-screen bg-arkrec-bg">
     <AppHeader :loading="loading" :loaded="loaded" :error="error" />
 
     <div class="wiki-shell">

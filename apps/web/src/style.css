@@ -14,10 +14,16 @@
   body {
     @apply bg-arkrec-bg text-arkrec-ink font-sans antialiased;
     line-height: 1.6;
+    background-image: radial-gradient(circle at 0 0, rgba(234, 236, 240, 0.45), transparent 34rem);
+  }
+
+  #app {
+    @apply min-h-screen;
   }
 
   a {
     @apply text-arkrec-link no-underline;
+    transition: color 0.18s ease;
   }
 
   a:hover {
@@ -28,16 +34,33 @@
 @layer components {
   /* ===== 词条外壳与排版容器 ===== */
   .wiki-shell {
-    @apply max-w-[1180px] mx-auto px-6 lg:px-10 py-6;
+    @apply max-w-[1220px] mx-auto px-4 sm:px-6 lg:px-10 py-6 lg:py-8;
   }
 
   .wiki-content {
     @apply min-w-0;
   }
 
+  .wiki-content > section,
+  .wiki-content > .wiki-collapse {
+    @apply bg-white border border-arkrec-rule shadow-wiki-card px-4 sm:px-5 py-4 sm:py-5;
+  }
+
+  .wiki-content > section[id],
+  .wiki-content > .wiki-collapse[id] {
+    scroll-margin-top: 5rem;
+  }
+
+  .wiki-content > section + section,
+  .wiki-content > section + .wiki-collapse,
+  .wiki-content > .wiki-collapse + section,
+  .wiki-content > .wiki-collapse + .wiki-collapse {
+    @apply mt-6;
+  }
+
   /* ===== 词条标题区 ===== */
   .wiki-titlebar {
-    @apply font-serif text-[2.2rem] leading-tight text-arkrec-ink border-b border-arkrec-rule pb-2 mb-2;
+    @apply font-serif text-[2rem] sm:text-[2.35rem] leading-tight text-arkrec-ink border-b border-arkrec-rule pb-2 mb-5;
     letter-spacing: -0.01em;
   }
 
@@ -55,7 +78,12 @@
 
   /* ===== 词条章节标题 ===== */
   .wiki-section {
-    @apply text-[1.5rem] font-serif text-arkrec-ink border-b border-arkrec-rule pb-1 mb-4 mt-8 flex items-baseline gap-2;
+    @apply text-[1.35rem] sm:text-[1.5rem] font-serif text-arkrec-ink border-b border-arkrec-rule pb-1 mb-4 mt-0 flex items-baseline gap-2;
+  }
+
+  .wiki-section > span::before {
+    content: "§";
+    @apply inline-block mr-2 text-arkrec-note;
   }
 
   .wiki-subsection {
@@ -67,7 +95,7 @@
   }
 
   .wiki-paragraph {
-    @apply text-[0.95rem] leading-7 my-3 text-arkrec-ink;
+    @apply text-[0.95rem] leading-8 my-3 text-arkrec-ink;
   }
 
   .wiki-anchor {
@@ -93,11 +121,11 @@
 
   /* ===== 左侧目录 TOC ===== */
   .wiki-toc {
-    @apply text-[0.85rem] leading-6 sticky top-4 self-start;
+    @apply text-[0.85rem] leading-6 sticky top-20 self-start bg-white border border-arkrec-rule shadow-wiki-card px-3 py-3;
   }
 
   .wiki-toc-title {
-    @apply text-[0.7rem] uppercase tracking-wider text-arkrec-note mb-2 border-b border-arkrec-rule pb-1;
+    @apply text-[0.7rem] uppercase tracking-wider text-[#f3f4f6] mb-2 border-b border-[#4b5563] pb-1 bg-[#374151] px-2 py-1;
   }
 
   .wiki-toc-list {
@@ -105,7 +133,7 @@
   }
 
   .wiki-toc-link {
-    @apply text-arkrec-link no-underline block py-0.5;
+    @apply text-arkrec-link no-underline block py-1 px-1.5;
   }
 
   .wiki-toc-link:hover {
@@ -113,12 +141,12 @@
   }
 
   .wiki-toc-link--active {
-    @apply text-arkrec-ink font-semibold;
+    @apply text-arkrec-ink font-semibold bg-arkrec-panel;
   }
 
   /* ===== 词条底部署名行 ===== */
   .wiki-footnotes {
-    @apply border-t border-arkrec-rule mt-12 pt-4 text-[0.78rem] text-arkrec-note flex flex-wrap items-center gap-x-3 gap-y-1;
+    @apply border-t border-arkrec-rule mt-10 pt-4 text-[0.78rem] text-arkrec-note flex flex-wrap items-center gap-x-3 gap-y-1;
   }
 
   .wiki-footnotes a {
@@ -132,7 +160,8 @@
 
   /* ===== Callout(信息/警告/成功) ===== */
   .wiki-callout {
-    @apply border border-arkrec-rule bg-arkrec-panel px-3 py-2 text-[0.88rem] text-arkrec-ink;
+    @apply border border-arkrec-rule bg-arkrec-panel px-3 py-2.5 text-[0.88rem] text-arkrec-ink;
+    border-left-width: 4px;
   }
 
   .wiki-callout-danger {
@@ -145,7 +174,7 @@
 
   /* ===== Infobox(干员信息框) ===== */
   .wiki-infobox {
-    @apply w-full bg-arkrec-panel border border-arkrec-rule p-2 text-[0.88rem] shadow-wiki-card;
+    @apply w-full bg-white border border-arkrec-rule p-2 text-[0.88rem] shadow-wiki-card;
   }
 
   .wiki-infobox--attached {
@@ -154,7 +183,7 @@
 
   /* ===== Disclosure(可折叠面板) ===== */
   .wiki-disclosure {
-    @apply w-full bg-arkrec-panel border border-arkrec-rule shadow-wiki-card;
+    @apply w-full bg-white border border-arkrec-rule shadow-wiki-card;
   }
 
   .wiki-disclosure--attached {
@@ -162,7 +191,8 @@
   }
 
   .wiki-disclosure-header {
-    @apply w-full flex items-center justify-between bg-arkrec-sub font-semibold text-arkrec-ink text-[0.95rem] py-2 px-3 border-b border-transparent;
+    @apply w-full flex items-center justify-between bg-[#2f3843] font-semibold text-[#f8fafc] text-[0.95rem] py-2.5 px-3 border-b border-[#4b5563];
+    background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0));
   }
 
   .wiki-disclosure--attached .wiki-disclosure-header {
@@ -175,11 +205,11 @@
   }
 
   .wiki-disclosure-indicator {
-    @apply font-mono text-arkrec-softInk text-[1rem] leading-none;
+    @apply font-mono text-[#e5e7eb] text-[1rem] leading-none;
   }
 
   .wiki-disclosure-body {
-    @apply p-2;
+    @apply p-3;
   }
 
   /* ===== Collapsible Section(可折叠章节) ===== */
@@ -200,7 +230,8 @@
   }
 
   .wiki-infobox-header {
-    @apply bg-arkrec-sub font-bold text-center py-2 px-2 mb-1 border border-arkrec-rule text-arkrec-ink;
+    @apply bg-[#2f3843] font-bold text-center py-2 px-2 mb-1 border border-[#4b5563] text-[#f8fafc];
+    background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0));
     font-family: "Noto Serif SC", "Songti SC", serif;
   }
 
@@ -223,7 +254,7 @@
 
   /* ===== 表单控件 ===== */
   .wiki-input {
-    @apply w-full bg-white border border-arkrec-rule px-2 py-1.5 text-[0.9rem] outline-none rounded-wiki transition-colors h-9;
+    @apply w-full bg-white border border-arkrec-rule px-2.5 py-1.5 text-[0.9rem] outline-none rounded-wiki transition-colors h-9;
   }
 
   .wiki-input:focus {
@@ -231,7 +262,7 @@
   }
 
   .wiki-select {
-    @apply w-full bg-white border border-arkrec-rule px-2 py-1.5 text-[0.9rem] outline-none rounded-wiki transition-colors h-9 appearance-none;
+    @apply w-full bg-white border border-arkrec-rule px-2.5 py-1.5 text-[0.9rem] outline-none rounded-wiki transition-colors h-9 appearance-none;
     background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23a2a9b1' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
     background-position: right 0.4rem center;
     background-repeat: no-repeat;
@@ -266,11 +297,11 @@
 
   .wiki-table th,
   .wiki-table td {
-    @apply border border-arkrec-rule px-3 py-2;
+    @apply border border-arkrec-rule px-3 py-2.5;
   }
 
   .wiki-table th {
-    @apply bg-arkrec-sub font-semibold text-center text-arkrec-ink;
+    @apply bg-[#313b46] font-semibold text-center text-[#f8fafc];
   }
 
   .wiki-table td {
@@ -283,6 +314,10 @@
 
   .wiki-table--zebra tbody tr:nth-child(even) td {
     @apply bg-arkrec-panel;
+  }
+
+  .wiki-table tbody tr:hover td {
+    @apply bg-[#fdfdfd];
   }
 
   .wiki-table--narrow th,
@@ -314,22 +349,34 @@
 
   /* ===== 顶部站点条 ===== */
   .wiki-sitebar {
-    @apply bg-[#f8f9fa] border-b border-arkrec-rule;
+    @apply bg-black border-b border-black sticky top-0 z-20;
+    backdrop-filter: blur(6px);
   }
 
   .wiki-sitebar-inner {
-    @apply max-w-[1180px] mx-auto px-6 lg:px-10 h-12 flex items-center justify-between;
+    @apply max-w-[1220px] mx-auto px-4 sm:px-6 lg:px-10 h-14 flex items-center justify-between;
   }
 
   .wiki-sitelogo {
-    @apply font-serif text-[1.15rem] font-bold text-arkrec-ink tracking-wide;
+    @apply font-serif text-[1.15rem] font-bold text-white tracking-wide;
   }
 
   .wiki-sitetag {
-    @apply text-[0.82rem] text-arkrec-softInk ml-3 hidden sm:inline;
+    @apply text-[0.82rem] text-[#d0d0d0] ml-3 hidden sm:inline;
   }
 
   .wiki-sitestatus {
-    @apply text-[0.82rem];
+    @apply text-[0.82rem] text-[#f1f1f1];
+  }
+
+  .wiki-page {
+    @apply pb-8;
+  }
+}
+
+@media (max-width: 1023px) {
+  .wiki-content > section,
+  .wiki-content > .wiki-collapse {
+    @apply px-3.5 py-4;
   }
 }

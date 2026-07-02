@@ -263,3 +263,50 @@ npm run release:snapshot
 
 > 请先阅读 `QMcalculator/docs/agent-handoff.md`，低上下文接手。默认工作对象是 `QMcalculator`，`ArknightCalculator` 仅作旧规则与结果对照参考；除非我明确要求，否则不要修改旧项目。
 
+## 13. 项目进度快照（2026-07-02）
+
+> 本节用于给后续 agent 提供“可执行证据级”的当前进度，不需要重新做一轮全仓扫描。
+
+### 13.1 当前阶段判断
+
+- 从可运行结果看，`MVP-DPS` 主链路已经可用，项目已不再是“纯规划阶段”
+- 从规则迁移覆盖看，当前更接近“阶段1已形成闭环、阶段2首批迁移推进中”的状态
+- 中长期路线图里的勾选项仍偏模板化，判断进度时应优先参考脚本输出、测试结果与版本文件
+
+### 13.2 已落地能力（可直接复用）
+
+- 计算内核主入口与关键模块已具备：`packages/calc-core/src/{index,pipeline,rules,phase1CustomRules,types,warningCatalog}.ts`
+- Web MVP 主流程文件已具备：`apps/web/src/pages/HomePage.vue` + `composables/stores/components` 结构
+- 质量门禁 v1 已串联：`scripts/quality-gate.mjs`（`sync:data -> typecheck -> test -> build -> audit:custom`）
+- CI 已接入统一门禁：`.github/workflows/ci.yml`
+- 版本与快照链路已存在：`versions/data-version.json`、`versions/rule-version.json`、`versions/releases/`
+
+### 13.3 关键进度指标（最新可验证）
+
+以下指标来自一次完整质量门禁执行与审计脚本输出：
+
+- 质量门禁：`node scripts/quality-gate.mjs` 全部通过
+- 测试通过：`@qm/calc-core` 共 `3` 个测试文件、`5` 个测试用例通过
+- `Top20` 迁移：`ready=5`，`pending=15`（处于首批迁移早中期）
+- Blackboard 覆盖率：`0.7617`（阈值 `>= 0.75`，已达标）
+- 疑似需 custom 比例：`0.1776`（阈值 `<= 0.25`，已达标）
+- 规则版本：`v0.1.0`，已包含 `4` 条 phase1 规则
+- 数据版本：`20260702-1`，并已有首个 release snapshot
+
+### 13.4 当前主要缺口（下一阶段重点）
+
+- `Top20` 仍有 `15` 项 pending，阶段2核心任务仍是补齐高价值规则迁移与回归
+- `docs/custom/custom-rule-status.md` 目前仍是“首批分类占位”，需要随着迁移进展持续生成和细化
+- Web 侧自动化测试仍为空（当前 `web` 测试是 passWithNoTests），后续建议补最小交互回归
+- 路线图文档里程碑未同步到实际完成度，建议每次阶段动作后更新勾选状态和偏差说明
+
+### 13.5 接手后建议的首轮动作（低上下文）
+
+1. 先跑：`node scripts/quality-gate.mjs`，确认本地基线
+2. 再看：`packages/calc-core/__tests__/fixtures/top20-priority-cases.json`，按 pending 清单挑 1-2 条推进
+3. 规则迁移完成后同步更新：
+   - 回归样例（`top20` fixtures + 对应测试）
+   - custom 状态文档（`npm run docs:custom`）
+   - 必要 warning/ruleTrace 行为说明
+4. 每完成一轮迁移，跑一次 `quality:gate` 并确认 `versions` 快照是否需要补档
+
