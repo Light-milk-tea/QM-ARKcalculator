@@ -1,5 +1,5 @@
 {
-  "ruleVersionId": "v0.3.0",
+  "ruleVersionId": "v0.4.0",
   "phase": "mvp-dps",
   "includes": [
     "phase1.damage_type.switch_magical",
@@ -13,7 +13,15 @@
     "phase1.thorns3.stable_stage",
     "phase1.chen2.instant_multi_hit",
     "phase1.horn3.conditional_overload",
-    "phase1.texas2.appear_extra_stream"
+    "phase1.texas2.appear_extra_stream",
+    "phase1.ifrit2.burn_def_shred_proxy",
+    "phase1.cerber2.hotblade_aspd_proxy",
+    "phase1.mlynar3.verdict_true_stream",
+    "phase1.ghost23.burst_threshold_proxy",
+    "phase1.ironmn2.iter_amp_proxy",
+    "phase1.qiubai3.switch_magical_burst",
+    "phase1.logos3.arts_burst_variant",
+    "phase1.reed23.burn_echo_proxy"
   ],
-  "notes": "Phase1 migration expanded to Top20 ready>=12 and lava schedule parity."
+  "notes": "Phase1 migration expanded to Top20 ready=20 with second-batch proxy rules."
 }

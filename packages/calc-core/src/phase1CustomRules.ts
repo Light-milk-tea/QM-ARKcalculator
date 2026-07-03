@@ -93,6 +93,107 @@ export const phase1CustomRules: RuleDefinition[] = [
     note: "第一批迁移：缄默德克萨斯S3额外伤害流修正。",
   },
   {
+    id: "phase1.ifrit2.burn_def_shred_proxy",
+    scope: "skill",
+    match: (ctx) => ctx.skill.id === "skchr_ifrit_2",
+    transform: (effects, ctx) => ({
+      ...effects,
+      atkBuffRatio: Math.max(effects.atkBuffRatio, 0.4),
+      attackScale: Math.max(effects.attackScale, 1.45),
+      defShredFlat: ctx.battle.conditionEnabled ? Math.max(effects.defShredFlat, 220) : effects.defShredFlat,
+    }),
+    note: "第一批迁移：伊芙利特S2灼烧收益近似与减抗语义代理。",
+  },
+  {
+    id: "phase1.cerber2.hotblade_aspd_proxy",
+    scope: "skill",
+    match: (ctx) => ctx.skill.id === "skchr_cerber_2",
+    transform: (effects) => ({
+      ...effects,
+      attackSpeedBonus: effects.attackSpeedBonus + 65,
+      attackScale: Math.max(effects.attackScale, 1.2),
+    }),
+    note: "第一批迁移：刻俄柏S2高频打击语义近似。",
+  },
+  {
+    id: "phase1.mlynar3.verdict_true_stream",
+    scope: "skill",
+    match: (ctx) => ctx.skill.id === "skchr_mlynar_3",
+    transform: (effects, ctx) => ({
+      ...effects,
+      attackScale: Math.max(effects.attackScale, 2.4),
+      defShredRate: Math.max(effects.defShredRate, 0.55),
+      extraTrueDamageScale: ctx.battle.conditionEnabled
+        ? Math.max(effects.extraTrueDamageScale, 0.35)
+        : effects.extraTrueDamageScale,
+    }),
+    note: "第一批迁移：玛恩纳S3裁决附伤与破甲语义近似。",
+  },
+  {
+    id: "phase1.ghost23.burst_threshold_proxy",
+    scope: "skill",
+    match: (ctx) => ctx.skill.id === "skchr_ghost2_3",
+    transform: (effects, ctx) => ({
+      ...effects,
+      atkBuffRatio: Math.max(effects.atkBuffRatio, 0.55),
+      attackScale: Math.max(effects.attackScale, 1.9),
+      attackSpeedBonus: effects.attackSpeedBonus + 35,
+      extraTrueDamageScale: ctx.battle.conditionEnabled
+        ? Math.max(effects.extraTrueDamageScale, 0.12)
+        : effects.extraTrueDamageScale,
+    }),
+    note: "第一批迁移：归鲨S3阈值爆发近似处理。",
+  },
+  {
+    id: "phase1.ironmn2.iter_amp_proxy",
+    scope: "skill",
+    match: (ctx) => ctx.skill.id === "skchr_ironmn_2",
+    transform: (effects) => ({
+      ...effects,
+      atkBuffRatio: Math.max(effects.atkBuffRatio, 0.45),
+      attackSpeedBonus: effects.attackSpeedBonus + 45,
+      attackScale: Math.max(effects.attackScale, 1.1),
+    }),
+    note: "第一批迁移：白铁S2增幅节奏语义近似。",
+  },
+  {
+    id: "phase1.qiubai3.switch_magical_burst",
+    scope: "skill",
+    match: (ctx) => ctx.skill.id === "skchr_qiubai_3",
+    transform: (effects) => ({
+      ...effects,
+      attackType: "magical",
+      atkBuffRatio: Math.max(effects.atkBuffRatio, 0.9),
+      attackSpeedBonus: effects.attackSpeedBonus + 80,
+    }),
+    note: "第一批迁移：仇白S3法伤化与爆发近似。",
+  },
+  {
+    id: "phase1.logos3.arts_burst_variant",
+    scope: "skill",
+    match: (ctx) => ctx.skill.id === "skchr_logos_3",
+    transform: (effects) => ({
+      ...effects,
+      atkBuffRatio: Math.max(effects.atkBuffRatio, 0.75),
+      attackScale: Math.max(effects.attackScale, 1.7),
+    }),
+    note: "第一批迁移：逻各斯S3高阶术式爆发近似。",
+  },
+  {
+    id: "phase1.reed23.burn_echo_proxy",
+    scope: "skill",
+    match: (ctx) => ctx.skill.id === "skchr_reed2_3",
+    transform: (effects, ctx) => ({
+      ...effects,
+      atkBuffRatio: Math.max(effects.atkBuffRatio, 0.65),
+      attackScale: Math.max(effects.attackScale, 1.4),
+      extraTrueDamageScale: ctx.battle.conditionEnabled
+        ? Math.max(effects.extraTrueDamageScale, 0.3)
+        : effects.extraTrueDamageScale,
+    }),
+    note: "第一批迁移：焰影苇草S3灼地回响近似。",
+  },
+  {
     id: "phase1.damage_type.switch_magical",
     scope: "skill",
     match: (ctx) => (ctx.skill.customTags ?? []).includes("switch_magical"),

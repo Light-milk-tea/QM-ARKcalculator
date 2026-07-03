@@ -3,6 +3,10 @@ import type { OperatorData } from "@qm/calc-core";
 
 defineProps<{
   operator: OperatorData | null;
+  currentAttack?: number;
+  currentAttackInterval?: number;
+  selectedModuleName?: string;
+  moduleStageLabel?: string;
 }>();
 </script>
 
@@ -17,7 +21,7 @@ defineProps<{
         </tr>
         <tr>
           <th>攻击</th>
-          <td>{{ operator.baseAttack }}</td>
+          <td>{{ (currentAttack ?? operator.baseAttack).toFixed(2) }}</td>
         </tr>
         <tr>
           <th>防御</th>
@@ -29,11 +33,19 @@ defineProps<{
         </tr>
         <tr>
           <th>攻击间隔</th>
-          <td>{{ operator.baseAttackInterval.toFixed(2) }} s</td>
+          <td>{{ (currentAttackInterval ?? operator.baseAttackInterval).toFixed(2) }} s</td>
         </tr>
         <tr>
           <th>攻击类型</th>
           <td>{{ operator.defaultAttackType }}</td>
+        </tr>
+        <tr>
+          <th>模组</th>
+          <td>{{ selectedModuleName ?? "未选择" }}</td>
+        </tr>
+        <tr>
+          <th>模组阶段</th>
+          <td>{{ moduleStageLabel ?? "未装配" }}</td>
         </tr>
       </tbody>
     </table>

@@ -16,6 +16,17 @@ export interface SkillData {
   hasAmbiguousSemantic?: boolean;
 }
 
+export interface ModuleStageBonus {
+  atk: number;
+  attackSpeed: number;
+}
+
+export interface ModuleData {
+  id: string;
+  name: string;
+  stageBonuses: [ModuleStageBonus, ModuleStageBonus, ModuleStageBonus, ModuleStageBonus];
+}
+
 export interface OperatorData {
   id: string;
   name: string;
@@ -25,6 +36,7 @@ export interface OperatorData {
   baseMagicResistance: number;
   baseAttackInterval: number;
   baseAttackSpeed: number;
+  modules?: ModuleData[];
   defaultAttackType: AttackType;
   skills: SkillData[];
 }
@@ -39,6 +51,15 @@ export interface BattleConfig {
   minPhysicalDamageRatio: number;
 }
 
+export interface DevelopmentConfig {
+  eliteStage: 0 | 1 | 2;
+  skillLevel: 7 | 8 | 9 | 10;
+  potentialRank: 0 | 1 | 2 | 3 | 4 | 5 | 6;
+  trust: number;
+  moduleStage: 0 | 1 | 2 | 3;
+  moduleId?: string;
+}
+
 export interface OperatorSelection {
   operatorId: string;
   skillId: string;
@@ -48,13 +69,16 @@ export interface CalculationInput {
   selection: OperatorSelection;
   enemy: EnemyConfig;
   battle: BattleConfig;
+  development?: Partial<DevelopmentConfig>;
 }
 
 export interface CalculationContext {
   operator: OperatorData;
   skill: SkillData;
+  selectedModule?: ModuleData;
   enemy: EnemyConfig;
   battle: BattleConfig;
+  development: DevelopmentConfig;
 }
 
 export interface NormalizedEffects {

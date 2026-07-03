@@ -122,4 +122,106 @@ describe("useCalculation", () => {
       true,
     );
   });
+
+  it("调整养成参数会影响 DPS", async () => {
+    const { useSelectionStore } = await import("../stores/useSelectionStore");
+    const { useBattleConfigStore } = await import("../stores/useBattleConfigStore");
+    const { useDevelopmentConfigStore } = await import("../stores/useDevelopmentConfigStore");
+    const { useCalculation } = await import("./useCalculation");
+
+    const selectionStore = useSelectionStore();
+    const battleStore = useBattleConfigStore();
+    const developmentStore = useDevelopmentConfigStore();
+    const { result } = useCalculation();
+
+    selectionStore.operatorId = "char_350_surtr";
+    selectionStore.skillId = "skchr_surtr_3";
+    battleStore.defense = 400;
+    battleStore.magicResistance = 50;
+    battleStore.conditionEnabled = true;
+    developmentStore.skillLevel = 10;
+    developmentStore.eliteStage = 2;
+    developmentStore.potentialRank = 6;
+    developmentStore.trust = 100;
+    developmentStore.moduleStage = 0;
+
+    await nextTick();
+    const baseline = result.value!.summary.dps;
+
+    developmentStore.skillLevel = 7;
+    developmentStore.potentialRank = 0;
+    developmentStore.trust = 0;
+    developmentStore.eliteStage = 0;
+    await nextTick();
+
+    expect(result.value!.summary.dps).toBeLessThan(baseline);
+  });
+
+  it("切换模组后结果会刷新且数值变化", async () => {
+    const { useSelectionStore } = await import("../stores/useSelectionStore");
+    const { useBattleConfigStore } = await import("../stores/useBattleConfigStore");
+    const { useDevelopmentConfigStore } = await import("../stores/useDevelopmentConfigStore");
+    const { useCalculation } = await import("./useCalculation");
+
+    mockIndexRef.value = {
+      operators: {
+        module_case: {
+          id: "module_case",
+          name: "模组验证样例",
+          baseHealth: 1000,
+          baseAttack: 700,
+          baseDefense: 100,
+          baseMagicResistance: 0,
+          baseAttackInterval: 1,
+          baseAttackSpeed: 0,
+          defaultAttackType: "physical",
+          modules: [
+            {
+              id: "mod-atk",
+              name: "攻击模组",
+              stageBonuses: [
+                { atk: 0, attackSpeed: 0 },
+                { atk: 20, attackSpeed: 0 },
+                { atk: 40, attackSpeed: 5 },
+                { atk: 60, attackSpeed: 10 },
+              ],
+            },
+            {
+              id: "mod-aspd",
+              name: "攻速模组",
+              stageBonuses: [
+                { atk: 0, attackSpeed: 0 },
+                { atk: 0, attackSpeed: 10 },
+                { atk: 0, attackSpeed: 20 },
+                { atk: 0, attackSpeed: 35 },
+              ],
+            },
+          ],
+          skills: [{ id: "skill", name: "测试技能", durationSeconds: 20, attackScale: 1.4 }],
+        },
+      },
+    };
+
+    const selectionStore = useSelectionStore();
+    const battleStore = useBattleConfigStore();
+    const developmentStore = useDevelopmentConfigStore();
+    const { result } = useCalculation();
+
+    selectionStore.operatorId = "module_case";
+    selectionStore.skillId = "skill";
+    battleStore.defense = 300;
+    battleStore.magicResistance = 10;
+    battleStore.conditionEnabled = true;
+    developmentStore.moduleStage = 3;
+    developmentStore.moduleId = "mod-atk";
+
+    await nextTick();
+    const atkModuleDps = result.value!.summary.dps;
+
+    developmentStore.moduleId = "mod-aspd";
+    await nextTick();
+
+    expect(result.value).not.toBeNull();
+    expect(result.value!.summary.dps).not.toBe(atkModuleDps);
+  });
 });

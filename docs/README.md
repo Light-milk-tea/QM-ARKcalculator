@@ -12,7 +12,6 @@
 
 | 文档 | 用途 |
 |---|---|
-| [roadmap/mid-long-term-project-plan.md](roadmap/mid-long-term-project-plan.md) | 9–12 个月中长期规划 + 可执行任务清单（§12） |
 | [roadmap/completion-engineering-code-plan.md](roadmap/completion-engineering-code-plan.md) | 完工态代码蓝图（架构图 + 时序图 + 模块与落地清单） |
 
 ## 规则与策略

@@ -2,9 +2,9 @@
 
 - Source knowledge base: `../ArknightCalculator/docs/custom-key-reference`
 - Current phase: MVP-DPS first batch
-- Last generated: 2026-07-03T03:06:39.665Z
-- Rule version: v0.3.0
-- Top20 progress: ready=12, pending=8
+- Last generated: 2026-07-03T06:30:56.110Z
+- Rule version: v0.4.0
+- Top20 progress: ready=20, pending=0
 
 ## Planned first-batch categories
 
@@ -29,14 +29,14 @@
 | top20-010 | 假日威龙陈 | S3 假日风暴 | char_1013_chen2 | skchr_chen2_3 | ready | phase1.chen2s3.holiday_trigger_window |
 | top20-011 | 水月 | S2 湍流 | char_437_mizuki | skchr_mizuki_2 | ready | phase1.mizuki2.attack_interval_shift |
 | top20-012 | 棘刺 | S3 至高之术 | char_293_thorns | skchr_thorns_3 | ready | phase1.thorns3.stable_stage |
-| top20-013 | 伊芙利特 | S2 炎爆 | - | - | pending | - |
-| top20-014 | 刻俄柏 | S2 很热的刀 | - | - | pending | - |
-| top20-015 | 玛恩纳 | S3 圣约裁决 | - | - | pending | - |
-| top20-016 | 归鲨 | S3 终曲震撼 | - | - | pending | - |
-| top20-017 | 白铁 | S2 迭代增幅 | - | - | pending | - |
-| top20-018 | 仇白 | S3 断罪 | - | - | pending | - |
-| top20-019 | 逻各斯 | S3 高阶术式 | - | - | pending | - |
-| top20-020 | 焰影苇草 | S3 灼地回响 | - | - | pending | - |
+| top20-013 | 伊芙利特 | S2 炎爆 | char_134_ifrit | skchr_ifrit_2 | ready | - |
+| top20-014 | 刻俄柏 | S2 很热的刀 | char_2013_cerber | skchr_cerber_2 | ready | - |
+| top20-015 | 玛恩纳 | S3 圣约裁决 | char_4064_mlynar | skchr_mlynar_3 | ready | - |
+| top20-016 | 归鲨 | S3 终曲震撼 | char_1023_ghost2 | skchr_ghost2_3 | ready | - |
+| top20-017 | 白铁 | S2 迭代增幅 | char_4072_ironmn | skchr_ironmn_2 | ready | - |
+| top20-018 | 仇白 | S3 断罪 | char_4082_qiubai | skchr_qiubai_3 | ready | - |
+| top20-019 | 逻各斯 | S3 高阶术式 | char_4133_logos | skchr_logos_3 | ready | - |
+| top20-020 | 焰影苇草 | S3 灼地回响 | char_1020_reed2 | skchr_reed2_3 | ready | - |
 
 ## Notes
 

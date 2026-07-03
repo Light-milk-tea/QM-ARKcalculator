@@ -145,82 +145,98 @@
   },
   {
     "id": "top20-013",
+    "operatorId": "char_134_ifrit",
+    "skillId": "skchr_ifrit_2",
     "operator": "伊芙利特",
     "skill": "S2 炎爆",
-    "status": "pending",
+    "status": "ready",
     "scenario": "arts_resistance_interaction",
     "enemy": { "defense": 400, "magicResistance": 60 },
     "conditionEnabled": true,
-    "expected": { "hitDamage": null, "totalDamage": null, "dps": null, "tolerance": 0.02 }
+    "expected": { "hitDamage": 1421, "totalDamage": 1421, "dps": 14210, "tolerance": 0.02 }
   },
   {
     "id": "top20-014",
+    "operatorId": "char_2013_cerber",
+    "skillId": "skchr_cerber_2",
     "operator": "刻俄柏",
     "skill": "S2 很热的刀",
-    "status": "pending",
+    "status": "ready",
     "scenario": "enemy_stat_dependent_damage",
     "enemy": { "defense": 1500, "magicResistance": 10 },
     "conditionEnabled": true,
-    "expected": { "hitDamage": null, "totalDamage": null, "dps": null, "tolerance": 0.03 }
+    "expected": { "hitDamage": 914.4576, "totalDamage": 37721.376, "dps": 943.0344, "tolerance": 0.03 }
   },
   {
     "id": "top20-015",
+    "operatorId": "char_4064_mlynar",
+    "skillId": "skchr_mlynar_3",
     "operator": "玛恩纳",
     "skill": "S3 圣约裁决",
-    "status": "pending",
+    "status": "ready",
     "scenario": "condition_toggle_compare",
     "enemy": { "defense": 1000, "magicResistance": 30 },
     "conditionEnabled": false,
-    "expected": { "hitDamage": null, "totalDamage": null, "dps": null, "tolerance": 0.03 }
+    "expected": { "hitDamage": 534, "totalDamage": 12460, "dps": 445, "tolerance": 0.03 }
   },
   {
     "id": "top20-016",
+    "operatorId": "char_1023_ghost2",
+    "skillId": "skchr_ghost2_3",
     "operator": "归鲨",
     "skill": "S3 终曲震撼",
-    "status": "pending",
+    "status": "ready",
     "scenario": "short_burst_high_scale",
     "enemy": { "defense": 1100, "magicResistance": 20 },
     "conditionEnabled": true,
-    "expected": { "hitDamage": null, "totalDamage": null, "dps": null, "tolerance": 0.03 }
+    "expected": { "hitDamage": 4714, "totalDamage": 135450, "dps": 5418, "tolerance": 0.03 }
   },
   {
     "id": "top20-017",
+    "operatorId": "char_4072_ironmn",
+    "skillId": "skchr_ironmn_2",
     "operator": "白铁",
     "skill": "S2 迭代增幅",
-    "status": "pending",
+    "status": "ready",
     "scenario": "aspd_scale_link",
     "enemy": { "defense": 900, "magicResistance": 30 },
     "conditionEnabled": true,
-    "expected": { "hitDamage": null, "totalDamage": null, "dps": null, "tolerance": 0.03 }
+    "expected": { "hitDamage": 528.08, "totalDamage": 15314.32, "dps": 510.4773, "tolerance": 0.03 }
   },
   {
     "id": "top20-018",
+    "operatorId": "char_4082_qiubai",
+    "skillId": "skchr_qiubai_3",
     "operator": "仇白",
     "skill": "S3 断罪",
-    "status": "pending",
+    "status": "ready",
     "scenario": "multi_stream_burst",
     "enemy": { "defense": 950, "magicResistance": 25 },
     "conditionEnabled": true,
-    "expected": { "hitDamage": null, "totalDamage": null, "dps": null, "tolerance": 0.03 }
+    "expected": { "hitDamage": 1131.45, "totalDamage": 50393.0423, "dps": 1679.7681, "tolerance": 0.03 }
   },
   {
     "id": "top20-019",
+    "operatorId": "char_4133_logos",
+    "skillId": "skchr_logos_3",
     "operator": "逻各斯",
     "skill": "S3 高阶术式",
-    "status": "pending",
+    "status": "ready",
     "scenario": "arts_burst_variant",
     "enemy": { "defense": 600, "magicResistance": 50 },
     "conditionEnabled": true,
-    "expected": { "hitDamage": null, "totalDamage": null, "dps": null, "tolerance": 0.03 }
+    "expected": { "hitDamage": 2679.2, "totalDamage": 50235, "dps": 1674.5, "tolerance": 0.03 }
   },
   {
     "id": "top20-020",
+    "operatorId": "char_1020_reed2",
+    "skillId": "skchr_reed2_3",
     "operator": "焰影苇草",
     "skill": "S3 灼地回响",
-    "status": "pending",
+    "status": "ready",
     "scenario": "special_semantics_pending",
     "enemy": { "defense": 700, "magicResistance": 35 },
     "conditionEnabled": true,
-    "expected": { "hitDamage": null, "totalDamage": null, "dps": null, "tolerance": 0.03 }
+    "expected": { "hitDamage": 733.1524, "totalDamage": 1759.2728, "dps": 58.6424, "tolerance": 0.03 }
   }
 ]

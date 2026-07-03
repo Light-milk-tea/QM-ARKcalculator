@@ -1,4 +1,12 @@
-import type { AttackType, OperatorData, OperatorIndex, RawGameData, SkillData } from "./types";
+import type {
+  AttackType,
+  ModuleData,
+  ModuleStageBonus,
+  OperatorData,
+  OperatorIndex,
+  RawGameData,
+  SkillData,
+} from "./types";
 
 function toNumber(value: unknown, fallback = 0): number {
   return typeof value === "number" && Number.isFinite(value) ? value : fallback;
@@ -67,6 +75,20 @@ type SkillLike = {
     blackboard?: Array<{ key?: string; value?: number }>;
     spData?: { levelUpCost?: number };
   }>;
+};
+
+type UniequipTableLike = {
+  charEquip?: Record<string, string[]>;
+  equipDict?: Record<string, { uniEquipName?: string }>;
+};
+
+type BattleEquipPhaseLike = {
+  equipLevel?: number;
+  attributeBlackboard?: Array<{ key?: string; value?: number }>;
+};
+
+type BattleEquipEntryLike = {
+  phases?: BattleEquipPhaseLike[];
 };
 
 const knownBlackboardKeys = new Set([
@@ -350,9 +372,44 @@ function resolveTalentBonus(character: CharacterLike, currentPhase: number, curr
   return bonus;
 }
 
+function readModuleStageBonus(phase?: BattleEquipPhaseLike): ModuleStageBonus {
+  const board = phase?.attributeBlackboard ?? [];
+  const atk = toNumber(board.find((item) => item.key === "atk")?.value, 0);
+  const attackSpeed = toNumber(board.find((item) => item.key === "attack_speed")?.value, 0);
+  return { atk, attackSpeed };
+}
+
+function resolveModules(
+  charId: string,
+  uniequipTable: UniequipTableLike,
+  battleEquipTable: Record<string, BattleEquipEntryLike>,
+): ModuleData[] {
+  const equipIds = uniequipTable.charEquip?.[charId] ?? [];
+  return equipIds
+    .filter((equipId) => equipId in battleEquipTable)
+    .map((equipId) => {
+      const phases = battleEquipTable[equipId]?.phases ?? [];
+      const byLevel = new Map<number, ModuleStageBonus>();
+      for (const phase of phases) {
+        byLevel.set(toNumber(phase.equipLevel, byLevel.size + 1), readModuleStageBonus(phase));
+      }
+
+      const stage1 = byLevel.get(1) ?? readModuleStageBonus(phases[0]);
+      const stage2 = byLevel.get(2) ?? readModuleStageBonus(phases[1]) ?? stage1;
+      const stage3 = byLevel.get(3) ?? readModuleStageBonus(phases[2]) ?? stage2;
+      return {
+        id: equipId,
+        name: uniequipTable.equipDict?.[equipId]?.uniEquipName ?? equipId,
+        stageBonuses: [{ atk: 0, attackSpeed: 0 }, stage1, stage2, stage3],
+      } satisfies ModuleData;
+    });
+}
+
 export function buildOperatorIndexFromRaw(rawData: RawGameData): OperatorIndex {
   const characters = rawData.character_table as Record<string, CharacterLike>;
   const skills = rawData.skill_table as Record<string, SkillLike>;
+  const uniequipTable = rawData.uniequip_table as UniequipTableLike;
+  const battleEquipTable = rawData.battle_equip_table as Record<string, BattleEquipEntryLike>;
   const operators: Record<string, OperatorData> = {};
 
   for (const [charId, character] of Object.entries(characters)) {
@@ -395,6 +452,7 @@ export function buildOperatorIndexFromRaw(rawData: RawGameData): OperatorIndex {
       baseMagicResistance: beforeTalentMagicResistance + talentBonus.magicResistanceFlat,
       baseAttackInterval: toNumber(keyFrame?.baseAttackTime, 1) + talentBonus.baseAttackTimeFlat,
       baseAttackSpeed: 0,
+      modules: resolveModules(charId, uniequipTable, battleEquipTable),
       defaultAttackType: resolveAttackType(character.profession, character.subProfessionId),
       skills: parsedSkills,
     };

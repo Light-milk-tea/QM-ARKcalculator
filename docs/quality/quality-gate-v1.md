@@ -7,7 +7,7 @@
 
 ## 门禁步骤
 
-0. Sync Data：`npm run sync:data`（前置，保证数据版本一致）
+0. Sync Data：`npm run sync:data`（可选前置；本地做数据更新时必须执行）
 1. Typecheck：`npm run typecheck`
 2. Unit/Regression：`npm run test`
 3. Build：`npm run build`
@@ -31,8 +31,9 @@
 ## 与 CI 对齐
 
 - CI 工作流定义：`.github/workflows/ci.yml`
-- CI 会显式先执行 `sync:data`，再执行 `quality:gate`。
-- 本地与 CI 使用同一命令，避免“本地通过/CI失败”的流程漂移。
+- CI 执行 `npm run quality:gate` 并设置 `SKIP_QUALITY_SYNC=true`（跳过 `sync:data`）。
+- 建议在涉及 JSON 数据更新的 PR 中，本地先执行一次 `npm run sync:data`，再跑 `npm run quality:gate`。
+- 非数据变更场景下，本地与 CI 都可直接使用 `npm run quality:gate`。
 
 ## 版本范围
 

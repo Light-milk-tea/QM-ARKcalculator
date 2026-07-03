@@ -12,6 +12,29 @@ const index: OperatorIndex = {
       baseDefense: 100,
       baseMagicResistance: 0,
       baseAttackInterval: 1,
+      baseAttackSpeed: 0,
+      modules: [
+        {
+          id: "mod-alpha",
+          name: "强攻模块",
+          stageBonuses: [
+            { atk: 0, attackSpeed: 0 },
+            { atk: 20, attackSpeed: 0 },
+            { atk: 40, attackSpeed: 10 },
+            { atk: 60, attackSpeed: 20 },
+          ],
+        },
+        {
+          id: "mod-beta",
+          name: "速攻模块",
+          stageBonuses: [
+            { atk: 0, attackSpeed: 0 },
+            { atk: 0, attackSpeed: 10 },
+            { atk: 0, attackSpeed: 20 },
+            { atk: 0, attackSpeed: 35 },
+          ],
+        },
+      ],
       defaultAttackType: "physical",
       skills: [
         {
@@ -33,6 +56,7 @@ const index: OperatorIndex = {
       baseDefense: 80,
       baseMagicResistance: 10,
       baseAttackInterval: 1.6,
+      baseAttackSpeed: 0,
       defaultAttackType: "magical",
       skills: [
         {
@@ -53,6 +77,7 @@ const index: OperatorIndex = {
       baseDefense: 90,
       baseMagicResistance: 0,
       baseAttackInterval: 1.3,
+      baseAttackSpeed: 0,
       defaultAttackType: "physical",
       skills: [
         {
@@ -101,5 +126,34 @@ describe("calculateSkillDps", () => {
     expect(result.streams.length).toBe(2);
     expect(result.streams[1].attackType).toBe("true");
     expect(result.summary.totalDamage).toBeGreaterThan(result.streams[0].totalDamage);
+  });
+
+  it("切换模组与阶段后数值应变化", () => {
+    const baseInput = makeInput("exusiai_like", "s3");
+    const noModule = calculateSkillDps(
+      {
+        ...baseInput,
+        development: { moduleStage: 0 },
+      },
+      index,
+    );
+    const moduleAlpha = calculateSkillDps(
+      {
+        ...baseInput,
+        development: { moduleId: "mod-alpha", moduleStage: 3 },
+      },
+      index,
+    );
+    const moduleBeta = calculateSkillDps(
+      {
+        ...baseInput,
+        development: { moduleId: "mod-beta", moduleStage: 3 },
+      },
+      index,
+    );
+
+    expect(moduleAlpha.summary.dps).toBeGreaterThan(noModule.summary.dps);
+    expect(moduleBeta.summary.dps).toBeGreaterThan(noModule.summary.dps);
+    expect(moduleAlpha.summary.dps).not.toBe(moduleBeta.summary.dps);
   });
 });
