@@ -8,7 +8,7 @@ const top20CasesPath = resolve(root, "packages/calc-core/__tests__/fixtures/top2
 
 const MIN_BLACKBOARD_COVERAGE = 0.75;
 const MAX_LIKELY_CUSTOM_RATIO = 0.25;
-const MIN_READY_TOP20 = 3;
+const MIN_READY_TOP20 = Number.parseInt(process.env.MIN_READY_TOP20 ?? "12", 10);
 
 const raw = await readFile(skillsPath, "utf8");
 const skillTable = JSON.parse(raw);

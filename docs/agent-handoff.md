@@ -31,10 +31,11 @@
 新对话优先按下面顺序阅读，不要先扫全仓库。
 
 1. 本文件：`docs/agent-handoff.md`
-2. 项目总目标：`QMcalculator.md`
-3. 新架构约束：`docs/architecture.md`
-4. 中长期路线：`docs/roadmap/mid-long-term-project-plan.md`
-5. 当前规则迁移状态：`docs/custom/custom-rule-status.md`
+2. 文档索引：`docs/README.md`
+3. 项目总目标与开发顺序：`QMcalculator.md`
+4. 新架构约束：`docs/architecture.md`
+5. 中长期路线与任务清单：`docs/roadmap/mid-long-term-project-plan.md`（§12 为可执行任务池）
+6. 当前规则迁移状态：`docs/custom/custom-rule-status.md`
 
 只有遇到下面情况，才继续读旧项目：
 

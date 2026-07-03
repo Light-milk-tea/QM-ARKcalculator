@@ -12,6 +12,7 @@ const sampleIndex: OperatorIndex = {
       baseDefense: 100,
       baseMagicResistance: 0,
       baseAttackInterval: 1,
+      baseAttackSpeed: 0,
       defaultAttackType: "physical",
       skills: [{ id: "s1", name: "物理技能", durationSeconds: 10, attackScale: 1.5 }],
     },
@@ -23,6 +24,7 @@ const sampleIndex: OperatorIndex = {
       baseDefense: 80,
       baseMagicResistance: 10,
       baseAttackInterval: 1.6,
+      baseAttackSpeed: 0,
       defaultAttackType: "magical",
       skills: [{ id: "s2", name: "法术技能", durationSeconds: 15, attackScale: 1.8 }],
     },
@@ -34,6 +36,7 @@ const sampleIndex: OperatorIndex = {
       baseDefense: 120,
       baseMagicResistance: 0,
       baseAttackInterval: 1.2,
+      baseAttackSpeed: 0,
       defaultAttackType: "physical",
       skills: [
         {

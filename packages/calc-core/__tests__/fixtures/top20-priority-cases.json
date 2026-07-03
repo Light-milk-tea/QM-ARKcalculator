@@ -61,73 +61,87 @@
   },
   {
     "id": "top20-006",
+    "operatorId": "char_010_chen",
+    "skillId": "skchr_chen_2",
     "operator": "陈（近卫）",
     "skill": "S2 赤霄·拔刀",
-    "status": "pending",
+    "status": "ready",
     "scenario": "multi_hit_main_stream",
     "enemy": { "defense": 900, "magicResistance": 30 },
     "conditionEnabled": true,
-    "expected": { "hitDamage": null, "totalDamage": null, "dps": null, "tolerance": 0.03 }
+    "expected": { "hitDamage": 2719.9, "totalDamage": 19039.3, "dps": 19039.3, "tolerance": 0.03 }
   },
   {
     "id": "top20-007",
+    "operatorId": "char_4039_horn",
+    "skillId": "skchr_horn_3",
     "operator": "号角",
     "skill": "S3 终曲",
-    "status": "pending",
+    "status": "ready",
     "scenario": "conditional_switch",
     "enemy": { "defense": 1000, "magicResistance": 30 },
     "conditionEnabled": false,
-    "expected": { "hitDamage": null, "totalDamage": null, "dps": null, "tolerance": 0.03 }
+    "expected": { "hitDamage": 1166.276, "totalDamage": 9996.6514, "dps": 416.5271, "tolerance": 0.03 }
   },
   {
     "id": "top20-008",
+    "operatorId": "char_377_gdglow",
+    "skillId": "skchr_gdglow_3",
     "operator": "澄闪",
     "skill": "S3 澄净闪耀",
-    "status": "pending",
+    "status": "ready",
     "scenario": "charge_like_behavior",
     "enemy": { "defense": 700, "magicResistance": 35 },
     "conditionEnabled": true,
-    "expected": { "hitDamage": null, "totalDamage": null, "dps": null, "tolerance": 0.03 }
+    "expected": { "hitDamage": 876.096, "totalDamage": 20217.6, "dps": 673.92, "tolerance": 0.03 }
   },
   {
     "id": "top20-009",
+    "operatorId": "char_1028_texas2",
+    "skillId": "skchr_texas2_3",
     "operator": "缄默德克萨斯",
     "skill": "S3 剑雨滂沱",
-    "status": "pending",
+    "status": "ready",
     "scenario": "main_other_stream_split",
     "enemy": { "defense": 700, "magicResistance": 20 },
     "conditionEnabled": true,
-    "expected": { "hitDamage": null, "totalDamage": null, "dps": null, "tolerance": 0.03 }
+    "expected": { "hitDamage": 362.36, "totalDamage": 2756.96, "dps": 344.62, "tolerance": 0.03 }
   },
   {
     "id": "top20-010",
+    "operatorId": "char_1013_chen2",
+    "skillId": "skchr_chen2_3",
     "operator": "假日威龙陈",
     "skill": "S3 假日风暴",
-    "status": "pending",
+    "status": "ready",
     "scenario": "ammo_based_schedule",
     "enemy": { "defense": 1200, "magicResistance": 20 },
     "conditionEnabled": true,
-    "expected": { "hitDamage": null, "totalDamage": null, "dps": null, "tolerance": 0.03 }
+    "expected": { "hitDamage": 1152, "totalDamage": 1284.9, "dps": 1204.5938, "tolerance": 0.03 }
   },
   {
     "id": "top20-011",
+    "operatorId": "char_437_mizuki",
+    "skillId": "skchr_mizuki_2",
     "operator": "水月",
     "skill": "S2 湍流",
-    "status": "pending",
+    "status": "ready",
     "scenario": "extra_stream",
     "enemy": { "defense": 850, "magicResistance": 25 },
     "conditionEnabled": true,
-    "expected": { "hitDamage": null, "totalDamage": null, "dps": null, "tolerance": 0.03 }
+    "expected": { "hitDamage": 616.192, "totalDamage": 7764.0192, "dps": 369.7152, "tolerance": 0.03 }
   },
   {
     "id": "top20-012",
+    "operatorId": "char_293_thorns",
+    "skillId": "skchr_thorns_3",
     "operator": "棘刺",
     "skill": "S3 至高之术",
-    "status": "pending",
+    "status": "ready",
     "scenario": "warmup_to_stable_stage",
     "enemy": { "defense": 900, "magicResistance": 20 },
     "conditionEnabled": true,
-    "expected": { "hitDamage": null, "totalDamage": null, "dps": null, "tolerance": 0.03 }
+    "expected": { "hitDamage": 787.4, "totalDamage": 31798.8462, "dps": 1059.9615, "tolerance": 0.03 }
   },
   {
     "id": "top20-013",

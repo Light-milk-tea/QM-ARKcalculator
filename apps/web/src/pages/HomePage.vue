@@ -92,7 +92,7 @@ onMounted(async () => {
     <AppHeader :loading="loading" :loaded="loaded" :error="error" />
 
     <div class="wiki-shell">
-      <ArticleTitleBar title="单目标 DPS 计算闭环" />
+      <ArticleTitleBar title="干员伤害计算" />
 
       <div class="lg:grid lg:grid-cols-[200px_minmax(0,1fr)] lg:gap-8">
         <div class="hidden lg:block">

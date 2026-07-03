@@ -41,14 +41,22 @@ export function buildCalculationContext(
 
 function buildSchedule(context: CalculationContext, effects: NormalizedEffects) {
   const duration = Math.max(0.1, context.skill.durationSeconds);
-  const aspdFactor = 100 / (100 + effects.attackSpeedBonus);
+  const totalAttackSpeedBonus = (context.operator.baseAttackSpeed ?? 0) + effects.attackSpeedBonus;
+  const aspdFactor = 100 / (100 + totalAttackSpeedBonus);
   const attackInterval = Math.max(0.1, context.operator.baseAttackInterval * aspdFactor);
   const attackCountFromSkill = context.skill.attackCount !== undefined;
   const attackCount = Math.max(
     1,
     context.skill.attackCount ?? duration / attackInterval,
   );
-  return { duration, aspdFactor, attackInterval, attackCount, attackCountFromSkill };
+  return {
+    duration,
+    aspdFactor,
+    attackInterval,
+    attackCount,
+    attackCountFromSkill,
+    totalAttackSpeedBonus,
+  };
 }
 
 function buildScheduleFormula(
@@ -73,7 +81,9 @@ function buildScheduleFormula(
       expression: "aspdFactor = 100 / (100 + attackSpeedBonus)",
       value: schedule.aspdFactor,
       inputs: {
-        attackSpeedBonus: effects.attackSpeedBonus,
+        operatorAttackSpeedBonus: context.operator.baseAttackSpeed,
+        skillAttackSpeedBonus: effects.attackSpeedBonus,
+        attackSpeedBonus: schedule.totalAttackSpeedBonus,
       },
     },
     {
@@ -329,6 +339,12 @@ export function calculateSkillDps(
   if ((context.skill.customTags ?? []).includes("semantic_ambiguous")) {
     warnings.push({
       ...warningCatalog.WARN_MANUAL_REVIEW_REQUIRED,
+      source: context.skill.id,
+    });
+  }
+  if ((context.skill.customTags ?? []).includes("assumption_applied")) {
+    warnings.push({
+      ...warningCatalog.WARN_ASSUMPTION_APPLIED,
       source: context.skill.id,
     });
   }

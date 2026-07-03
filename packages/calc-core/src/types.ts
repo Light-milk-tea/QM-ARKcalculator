@@ -24,6 +24,7 @@ export interface OperatorData {
   baseDefense: number;
   baseMagicResistance: number;
   baseAttackInterval: number;
+  baseAttackSpeed: number;
   defaultAttackType: AttackType;
   skills: SkillData[];
 }

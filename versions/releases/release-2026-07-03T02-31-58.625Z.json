@@ -1,0 +1,24 @@
+{
+  "releaseId": "release-2026-07-03T02:31:58.625Z",
+  "createdAt": "2026-07-03T02:31:58.625Z",
+  "dataVersion": {
+    "dataVersionId": "20260702-1",
+    "source": "ArknightCalculator/public/json",
+    "syncedAt": "2026-07-02T00:00:00.000Z",
+    "notes": "Initial MVP snapshot from local legacy project."
+  },
+  "ruleVersion": {
+    "ruleVersionId": "v0.2.0",
+    "phase": "mvp-dps",
+    "includes": [
+      "phase1.damage_type.switch_magical",
+      "phase1.defense.shred_ratio",
+      "phase1.other_stream.extra_true",
+      "phase1.duration.burst_short_window",
+      "phase1.chen2.instant_multi_hit",
+      "phase1.horn3.conditional_overload",
+      "phase1.texas2.appear_extra_stream"
+    ],
+    "notes": "Phase1 custom migration expanded for week-1 sprint targets."
+  }
+}

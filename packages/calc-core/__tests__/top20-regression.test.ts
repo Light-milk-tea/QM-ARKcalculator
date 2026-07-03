@@ -74,6 +74,41 @@ describe("top20-priority-regression", () => {
       assertWithinTolerance(result.summary.totalDamage, item.expected.totalDamage ?? 0, tolerance);
       assertWithinTolerance(result.summary.dps, item.expected.dps ?? 0, tolerance);
       expect(result.formula.summary.length, `${item.id} missing formula.summary`).toBeGreaterThan(0);
+      if (item.id === "top20-009") {
+        expect(result.streams.some((stream) => stream.id === "OTHER_TRUE")).toBe(true);
+      }
+      if (item.id === "top20-010") {
+        expect(result.warnings.some((warning) => warning.code === "WARN_ASSUMPTION_APPLIED")).toBe(
+          true,
+        );
+      }
+      if (item.id === "top20-011") {
+        expect(
+          result.warnings.some((warning) => warning.code === "WARN_PARTIAL_RULE_COVERAGE"),
+        ).toBe(true);
+      }
     }
+  });
+
+  it("条件开关样例：号角 S3 开启条件后 DPS 应提升", () => {
+    const baseCase = top20Cases.find((item) => item.id === "top20-007");
+    expect(baseCase).toBeTruthy();
+
+    const offResult = calculateSkillDps(buildInput(baseCase!), index);
+    const onResult = calculateSkillDps(
+      buildInput({
+        ...baseCase!,
+        conditionEnabled: true,
+      }),
+      index,
+    );
+
+    expect(onResult.summary.dps).toBeGreaterThan(offResult.summary.dps);
+    expect(
+      onResult.ruleTrace.some(
+        (trace) =>
+          trace.ruleId === "phase1.horn3.conditional_overload" && trace.applied,
+      ),
+    ).toBe(true);
   });
 });

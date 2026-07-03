@@ -92,9 +92,24 @@ const knownBlackboardKeys = new Set([
   "attack@stun",
   "attack@prob",
   "attack@move_speed",
+  "attack@sluggish",
   "attack@force",
   "attack@heal_scale",
   "attack@ep_damage_ratio",
+  "attack@max_target",
+  "attack@trigger_time",
+  "max_target",
+  "stun",
+  "appear.atk_scale",
+  "appear.stun",
+  "horn_s_3[overload_start].atk",
+  "horn_s_3[overload_start].interval",
+  "horn_s_3[overload_start].hp_ratio",
+  "horn_s_3[overload_start].damage_duration",
+  "texas2_s_3[sword].interval",
+  "thorns_s_3[b].atk",
+  "thorns_s_3[b].attack_speed",
+  "thorns_s_3[b].duration",
 ]);
 
 const knownBlackboardPrefixes = ["talent@", "recipe.", "sandbox_res_collector."];
@@ -130,6 +145,7 @@ function inferCustomTags(params: {
   atkBuffRatio: number;
   unmappedBlackboardKeys: string[];
   hasAmbiguousSemantic: boolean;
+  assumptionApplied: boolean;
 }): string[] {
   const tags = new Set<string>();
   const keySet = new Set(params.keys);
@@ -160,6 +176,27 @@ function inferCustomTags(params: {
   if (params.hasAmbiguousSemantic) {
     tags.add("semantic_ambiguous");
   }
+  if (params.assumptionApplied) {
+    tags.add("assumption_applied");
+  }
+  if (params.skillId === "skchr_horn_3") {
+    tags.add("conditional_overload");
+  }
+  if (params.skillId === "skchr_texas2_3") {
+    tags.add("extra_true");
+  }
+  if (params.skillId === "skchr_chen_2") {
+    tags.add("burst_short");
+  }
+  if (params.skillId === "skchr_chen2_3") {
+    tags.add("conditional_overload");
+  }
+  if (params.skillId === "skchr_mizuki_2") {
+    tags.add("burst_short");
+  }
+  if (params.skillId === "skchr_thorns_3") {
+    tags.add("assumption_applied");
+  }
 
   return [...tags];
 }
@@ -178,11 +215,27 @@ function parseSkill(skillId: string, raw: SkillLike): SkillData {
     blackboardKeys.includes("mode") ||
     blackboardKeys.includes("branch_id") ||
     (blackboardKeys.includes("atk") && blackboardKeys.includes("attack@atk"));
-  const durationSeconds = toNumber(level?.duration, 1);
+  const triggerTime = board.get("attack@trigger_time") ?? board.get("trigger_time");
+  const rawDuration = toNumber(level?.duration, 1);
+  let durationSeconds = rawDuration;
+  let assumptionApplied = false;
+  if (
+    skillId === "skchr_chen2_3" &&
+    durationSeconds <= 0 &&
+    typeof triggerTime === "number" &&
+    triggerTime > 0
+  ) {
+    durationSeconds = triggerTime / 30;
+    assumptionApplied = true;
+  }
+  if (skillId === "skchr_chen_2" && durationSeconds <= 0) {
+    durationSeconds = 1;
+    assumptionApplied = true;
+  }
   const attackScale = board.get("atk_scale") ?? board.get("attack@atk_scale") ?? 1;
   const atkBuffRatio = board.get("atk") ?? board.get("attack@atk") ?? 0;
   const attackSpeedBonus = board.get("attack_speed") ?? 0;
-  const attackCount = board.get("cnt") ?? board.get("times");
+  const attackCount = board.get("cnt") ?? board.get("times") ?? board.get("max_target");
   const skillName = toString(level?.name, skillId);
   const customTags = inferCustomTags({
     skillId,
@@ -194,6 +247,7 @@ function parseSkill(skillId: string, raw: SkillLike): SkillData {
     atkBuffRatio,
     unmappedBlackboardKeys,
     hasAmbiguousSemantic,
+    assumptionApplied,
   });
 
   return {
@@ -218,12 +272,13 @@ function resolvePhaseOrder(phase: string | undefined): number {
 }
 
 function resolvePotentialBonus(character: CharacterLike) {
-  const bonus = { maxHp: 0, atk: 0, def: 0, magicResistance: 0 };
+  const bonus = { maxHp: 0, atk: 0, def: 0, magicResistance: 0, attackSpeed: 0 };
   const keyMap: Record<string, keyof typeof bonus> = {
     MAX_HP: "maxHp",
     ATK: "atk",
     DEF: "def",
     MAGIC_RESISTANCE: "magicResistance",
+    ATTACK_SPEED: "attackSpeed",
   };
 
   for (const rank of character.potentialRanks ?? []) {
@@ -259,6 +314,7 @@ function resolveTalentBonus(character: CharacterLike, currentPhase: number, curr
     defRatio: 0,
     magicResistanceFlat: 0,
     baseAttackTimeFlat: 0,
+    attackSpeedFlat: 0,
   };
 
   for (const talentGroup of character.talents ?? []) {
@@ -287,6 +343,7 @@ function resolveTalentBonus(character: CharacterLike, currentPhase: number, curr
       if (key === "def") bonus.defRatio += value;
       if (key === "magic_resistance") bonus.magicResistanceFlat += value;
       if (key === "base_attack_time") bonus.baseAttackTimeFlat += value;
+      if (key === "attack_speed") bonus.attackSpeedFlat += value;
     }
   }
 
@@ -337,6 +394,7 @@ export function buildOperatorIndexFromRaw(rawData: RawGameData): OperatorIndex {
       baseDefense: beforeTalentDefense * (1 + talentBonus.defRatio),
       baseMagicResistance: beforeTalentMagicResistance + talentBonus.magicResistanceFlat,
       baseAttackInterval: toNumber(keyFrame?.baseAttackTime, 1) + talentBonus.baseAttackTimeFlat,
+      baseAttackSpeed: 0,
       defaultAttackType: resolveAttackType(character.profession, character.subProfessionId),
       skills: parsedSkills,
     };

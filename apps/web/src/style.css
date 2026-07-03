@@ -125,7 +125,7 @@
   }
 
   .wiki-toc-title {
-    @apply text-[0.7rem] uppercase tracking-wider text-[#f3f4f6] mb-2 border-b border-[#4b5563] pb-1 bg-[#374151] px-2 py-1;
+    @apply text-[0.7rem] uppercase tracking-wider text-[#57606a] mb-2 border border-[#d0d7de] pb-1 bg-[#f6f8fa] px-2 py-1 rounded-wiki;
   }
 
   .wiki-toc-list {
@@ -301,7 +301,7 @@
   }
 
   .wiki-table th {
-    @apply bg-[#313b46] font-semibold text-center text-[#f8fafc];
+    @apply bg-[#f6f8fa] font-semibold text-center text-[#24292f];
   }
 
   .wiki-table td {

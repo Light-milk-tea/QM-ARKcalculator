@@ -13,6 +13,12 @@
 3. Build：`npm run build`
 4. Custom Audit：`npm run audit:custom`
 
+当前阶段附加阈值（由 `audit:custom` 校验）：
+
+- `blackboardCoverage >= 0.75`
+- `likelyCustomRatio <= 0.25`
+- `readyTop20 >= 12`（可通过 `MIN_READY_TOP20` 环境变量临时覆盖）
+
 统一入口：`npm run quality:gate`
 
 ## 失败处理策略

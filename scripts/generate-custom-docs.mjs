@@ -1,18 +1,50 @@
-import { mkdir, writeFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = resolve(fileURLToPath(new URL("..", import.meta.url)));
 const docsDir = resolve(root, "docs/custom");
 const outPath = resolve(docsDir, "custom-rule-status.md");
+const fixturePath = resolve(root, "packages/calc-core/__tests__/fixtures/top20-priority-cases.json");
+const ruleVersionPath = resolve(root, "versions/rule-version.json");
 
 await mkdir(docsDir, { recursive: true });
+
+const [fixtureRaw, ruleVersionRaw] = await Promise.all([
+  readFile(fixturePath, "utf8"),
+  readFile(ruleVersionPath, "utf8"),
+]);
+
+const top20Cases = JSON.parse(fixtureRaw);
+const ruleVersion = JSON.parse(ruleVersionRaw);
+
+const readyCount = top20Cases.filter((item) => item.status === "ready").length;
+const pendingCount = top20Cases.filter((item) => item.status !== "ready").length;
+
+const skillRows = top20Cases
+  .map((item) => {
+    const status = item.status === "ready" ? "ready" : "pending";
+    const ruleHints = [];
+    if (item.skillId === "skcom_magic_rage[1]") ruleHints.push("phase1.lava.s1.schedule_parity");
+    if (item.skillId === "skchr_chen_2") ruleHints.push("phase1.chen2.instant_multi_hit");
+    if (item.skillId === "skchr_gdglow_3") ruleHints.push("phase1.gdglow3.multi_hit");
+    if (item.skillId === "skchr_horn_3") ruleHints.push("phase1.horn3.conditional_overload");
+    if (item.skillId === "skchr_texas2_3") ruleHints.push("phase1.texas2.appear_extra_stream");
+    if (item.skillId === "skchr_chen2_3") ruleHints.push("phase1.chen2s3.holiday_trigger_window");
+    if (item.skillId === "skchr_mizuki_2") ruleHints.push("phase1.mizuki2.attack_interval_shift");
+    if (item.skillId === "skchr_thorns_3") ruleHints.push("phase1.thorns3.stable_stage");
+    if (!ruleHints.length) ruleHints.push("-");
+    return `| ${item.id} | ${item.operator} | ${item.skill} | ${item.operatorId ?? "-"} | ${item.skillId ?? "-"} | ${status} | ${ruleHints.join(", ")} |`;
+  })
+  .join("\n");
 
 const content = `# Custom Rule Status
 
 - Source knowledge base: \`../ArknightCalculator/docs/custom-key-reference\`
 - Current phase: MVP-DPS first batch
 - Last generated: ${new Date().toISOString()}
+- Rule version: ${ruleVersion.ruleVersionId}
+- Top20 progress: ready=${readyCount}, pending=${pendingCount}
 
 ## Planned first-batch categories
 
@@ -20,6 +52,12 @@ const content = `# Custom Rule Status
 2. Defense shred / resistance shred
 3. Extra damage stream (OTHER_*)
 4. Duration/attack-count special handling
+
+## Skill-level migration status
+
+| Case | Operator | Skill | operatorId | skillId | Status | Rule linkage |
+|---|---|---|---|---|---|---|
+${skillRows}
 
 ## Notes
 

@@ -1,11 +1,19 @@
 {
-  "ruleVersionId": "v0.1.0",
+  "ruleVersionId": "v0.3.0",
   "phase": "mvp-dps",
   "includes": [
     "phase1.damage_type.switch_magical",
     "phase1.defense.shred_ratio",
     "phase1.other_stream.extra_true",
-    "phase1.duration.burst_short_window"
+    "phase1.duration.burst_short_window",
+    "phase1.lava.s1.schedule_parity",
+    "phase1.gdglow3.multi_hit",
+    "phase1.chen2s3.holiday_trigger_window",
+    "phase1.mizuki2.attack_interval_shift",
+    "phase1.thorns3.stable_stage",
+    "phase1.chen2.instant_multi_hit",
+    "phase1.horn3.conditional_overload",
+    "phase1.texas2.appear_extra_stream"
   ],
-  "notes": "Initial phase1 custom migration batch."
+  "notes": "Phase1 migration expanded to Top20 ready>=12 and lava schedule parity."
 }

@@ -2,7 +2,9 @@
 
 - Source knowledge base: `../ArknightCalculator/docs/custom-key-reference`
 - Current phase: MVP-DPS first batch
-- Last generated: 2026-07-02T02:17:48.796Z
+- Last generated: 2026-07-03T03:06:39.665Z
+- Rule version: v0.3.0
+- Top20 progress: ready=12, pending=8
 
 ## Planned first-batch categories
 
@@ -10,6 +12,31 @@
 2. Defense shred / resistance shred
 3. Extra damage stream (OTHER_*)
 4. Duration/attack-count special handling
+
+## Skill-level migration status
+
+| Case | Operator | Skill | operatorId | skillId | Status | Rule linkage |
+|---|---|---|---|---|---|---|
+| top20-001 | 能天使 | S3 过载模式 | char_103_angel | skchr_angel_3 | ready | - |
+| top20-002 | 艾雅法拉 | S2 点燃 | char_180_amgoat | skchr_amgoat_2 | ready | - |
+| top20-003 | 阿米娅（术） | S3 奇美拉 | char_002_amiya | skchr_amiya_3 | ready | - |
+| top20-004 | 银灰 | S3 真银斩 | char_172_svrash | skchr_svrash_3 | ready | - |
+| top20-005 | 史尔特尔 | S3 黄昏 | char_350_surtr | skchr_surtr_3 | ready | - |
+| top20-006 | 陈（近卫） | S2 赤霄·拔刀 | char_010_chen | skchr_chen_2 | ready | phase1.chen2.instant_multi_hit |
+| top20-007 | 号角 | S3 终曲 | char_4039_horn | skchr_horn_3 | ready | phase1.horn3.conditional_overload |
+| top20-008 | 澄闪 | S3 澄净闪耀 | char_377_gdglow | skchr_gdglow_3 | ready | phase1.gdglow3.multi_hit |
+| top20-009 | 缄默德克萨斯 | S3 剑雨滂沱 | char_1028_texas2 | skchr_texas2_3 | ready | phase1.texas2.appear_extra_stream |
+| top20-010 | 假日威龙陈 | S3 假日风暴 | char_1013_chen2 | skchr_chen2_3 | ready | phase1.chen2s3.holiday_trigger_window |
+| top20-011 | 水月 | S2 湍流 | char_437_mizuki | skchr_mizuki_2 | ready | phase1.mizuki2.attack_interval_shift |
+| top20-012 | 棘刺 | S3 至高之术 | char_293_thorns | skchr_thorns_3 | ready | phase1.thorns3.stable_stage |
+| top20-013 | 伊芙利特 | S2 炎爆 | - | - | pending | - |
+| top20-014 | 刻俄柏 | S2 很热的刀 | - | - | pending | - |
+| top20-015 | 玛恩纳 | S3 圣约裁决 | - | - | pending | - |
+| top20-016 | 归鲨 | S3 终曲震撼 | - | - | pending | - |
+| top20-017 | 白铁 | S2 迭代增幅 | - | - | pending | - |
+| top20-018 | 仇白 | S3 断罪 | - | - | pending | - |
+| top20-019 | 逻各斯 | S3 高阶术式 | - | - | pending | - |
+| top20-020 | 焰影苇草 | S3 灼地回响 | - | - | pending | - |
 
 ## Notes
 
