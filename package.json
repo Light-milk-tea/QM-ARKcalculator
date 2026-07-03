@@ -12,11 +12,14 @@
     "build": "npm run build --workspaces --if-present",
     "typecheck": "npm run typecheck --workspaces --if-present",
     "test": "npm run test --workspaces --if-present",
+    "replace:gate": "npm run test:replace-gate -w @qm/calc-core",
     "regression": "npm run test -w @qm/calc-core",
     "sync:data": "node scripts/sync-game-data.mjs",
     "audit:custom": "node scripts/audit-custom-coverage.mjs",
     "docs:custom": "node scripts/generate-custom-docs.mjs",
     "quality:gate": "node scripts/quality-gate.mjs",
-    "release:snapshot": "node scripts/release-snapshot.mjs"
+    "release:snapshot": "node scripts/release-snapshot.mjs",
+    "release:verify": "node scripts/verify-release-snapshot.mjs",
+    "release:rollback": "node scripts/rollback-release.mjs"
   }
 }

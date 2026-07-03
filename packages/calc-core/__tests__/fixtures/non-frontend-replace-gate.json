@@ -1,0 +1,42 @@
+[
+  {
+    "id": "gate-001",
+    "operatorId": "char_103_angel",
+    "skillId": "skchr_angel_3",
+    "enemy": { "defense": 1000, "magicResistance": 30 },
+    "conditionEnabled": false,
+    "requireStreamIds": ["MAIN"],
+    "requireRuleIds": [],
+    "maxWarnings": 5
+  },
+  {
+    "id": "gate-002",
+    "operatorId": "char_1028_texas2",
+    "skillId": "skchr_texas2_3",
+    "enemy": { "defense": 1000, "magicResistance": 30 },
+    "conditionEnabled": true,
+    "requireStreamIds": ["MAIN", "OTHER_TRUE"],
+    "requireRuleIds": ["phase1.texas2.appear_extra_stream"],
+    "maxWarnings": 6
+  },
+  {
+    "id": "gate-003",
+    "operatorId": "char_4039_horn",
+    "skillId": "skchr_horn_3",
+    "enemy": { "defense": 1200, "magicResistance": 20 },
+    "conditionEnabled": true,
+    "requireStreamIds": ["MAIN"],
+    "requireRuleIds": ["phase1.horn3.conditional_overload"],
+    "maxWarnings": 6
+  },
+  {
+    "id": "gate-004",
+    "operatorId": "char_121_lava",
+    "skillId": "skcom_magic_rage[1]",
+    "enemy": { "defense": 1000, "magicResistance": 0 },
+    "conditionEnabled": false,
+    "requireStreamIds": ["MAIN"],
+    "requireRuleIds": ["phase1.lava.s1.schedule_parity"],
+    "maxWarnings": 5
+  }
+]

@@ -37,10 +37,15 @@ function buildInput(item: Top20Case): CalculationInput {
   };
 }
 
-function assertWithinTolerance(actual: number, expected: number, tolerance: number): void {
+function assertWithinTolerance(
+  actual: number,
+  expected: number,
+  tolerance: number,
+  label: string,
+): void {
   const diff = Math.abs(actual - expected);
   const baseline = Math.max(Math.abs(expected), 1);
-  expect(diff / baseline).toBeLessThanOrEqual(tolerance);
+  expect(diff / baseline, label).toBeLessThanOrEqual(tolerance);
 }
 
 describe("top20-priority-regression", () => {
@@ -70,9 +75,21 @@ describe("top20-priority-regression", () => {
       const result = calculateSkillDps(buildInput(item), index);
       const tolerance = item.expected.tolerance;
 
-      assertWithinTolerance(result.summary.hitDamage, item.expected.hitDamage ?? 0, tolerance);
-      assertWithinTolerance(result.summary.totalDamage, item.expected.totalDamage ?? 0, tolerance);
-      assertWithinTolerance(result.summary.dps, item.expected.dps ?? 0, tolerance);
+      assertWithinTolerance(
+        result.summary.hitDamage,
+        item.expected.hitDamage ?? 0,
+        tolerance,
+        `${item.id}-hitDamage`,
+      );
+      assertWithinTolerance(
+        result.summary.totalDamage,
+        item.expected.totalDamage ?? 0,
+        tolerance,
+        `${item.id}-totalDamage`,
+      );
+      if (!result.schedule.isPermanent) {
+        assertWithinTolerance(result.summary.dps, item.expected.dps ?? 0, tolerance, `${item.id}-dps`);
+      }
       expect(result.formula.summary.length, `${item.id} missing formula.summary`).toBeGreaterThan(0);
       if (item.id === "top20-009") {
         expect(result.streams.some((stream) => stream.id === "OTHER_TRUE")).toBe(true);

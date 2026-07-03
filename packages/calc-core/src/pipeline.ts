@@ -1,6 +1,7 @@
 import { applyRules, defaultSkillRules } from "./rules";
 import { warningCatalog } from "./warningCatalog";
 import type {
+  AttackType,
   CalculationContext,
   CalculationFormula,
   CalculationInput,
@@ -62,6 +63,10 @@ function resolveDevelopmentFactors(context: CalculationContext) {
   const selectedStageBonus = selectedModule?.stageBonuses[context.development.moduleStage] ?? {
     atk: 0,
     attackSpeed: 0,
+    atkScale: 1,
+    damageScale: 1,
+    defPenetrateFixed: 0,
+    magicResistanceReduction: 0,
   };
   const eliteAttackFactor = [0.78, 0.9, 1][context.development.eliteStage];
   const eliteAttackIntervalFactor = [1.1, 1.04, 1][context.development.eliteStage];
@@ -77,6 +82,10 @@ function resolveDevelopmentFactors(context: CalculationContext) {
     trustFactor,
     skillLevelFactor,
   };
+}
+
+function normalizeDuration(duration: number): number {
+  return duration < 1 ? 1 : duration;
 }
 
 export function buildCalculationContext(
@@ -104,27 +113,39 @@ export function buildCalculationContext(
 }
 
 function buildSchedule(context: CalculationContext, effects: NormalizedEffects) {
-  const duration = Math.max(0.1, context.skill.durationSeconds);
+  const rawDuration = effects.durationOverride ?? context.skill.durationSeconds;
+  const duration = normalizeDuration(rawDuration + effects.durationAdjustment);
   const { eliteAttackIntervalFactor, selectedStageBonus } = resolveDevelopmentFactors(context);
-  const moduleAttackSpeedBonus = selectedStageBonus.attackSpeed;
-  const totalAttackSpeedBonus =
-    (context.operator.baseAttackSpeed ?? 0) + effects.attackSpeedBonus + moduleAttackSpeedBonus;
-  const aspdFactor = 100 / (100 + totalAttackSpeedBonus);
+  const totalAttackSpeedBonus = (context.operator.baseAttackSpeed ?? 0) + effects.attackSpeedBonus;
+  const aspdFactor = 100 / Math.max(1, 100 + totalAttackSpeedBonus);
+  const revisedBaseAttackInterval = Math.max(
+    0.1,
+    context.operator.baseAttackInterval * eliteAttackIntervalFactor + effects.attackIntervalAdjustment,
+  );
   const attackInterval = Math.max(
     0.1,
-    context.operator.baseAttackInterval * eliteAttackIntervalFactor * aspdFactor,
+    revisedBaseAttackInterval * aspdFactor,
   );
-  const attackCountFromSkill = context.skill.attackCount !== undefined;
+  const attackCountFromSkill = effects.attackCountOverride !== undefined;
   const attackCount = Math.max(
     1,
-    context.skill.attackCount ?? duration / attackInterval,
+    effects.attackCountOverride ?? duration / attackInterval,
   );
+  const attackTimes = Math.max(0, effects.attackTimes);
+  const mainAttackTimes = Math.max(1, effects.mainAttackTimes);
+  const ammoCount = Math.max(0, effects.ammoCount);
+  const isPermanent = context.skill.durationSeconds < 0 || rawDuration < 0;
   return {
     duration,
     aspdFactor,
     attackInterval,
     attackCount,
     attackCountFromSkill,
+    attackTimes,
+    mainAttackTimes,
+    ammoCount,
+    isPermanent,
+    revisedBaseAttackInterval,
     totalAttackSpeedBonus,
   };
 }
@@ -153,18 +174,26 @@ function buildScheduleFormula(
       inputs: {
         operatorAttackSpeedBonus: context.operator.baseAttackSpeed,
         skillAttackSpeedBonus: effects.attackSpeedBonus,
-        moduleAttackSpeedBonus:
-          context.selectedModule?.stageBonuses[context.development.moduleStage]?.attackSpeed ?? 0,
         attackSpeedBonus: schedule.totalAttackSpeedBonus,
+      },
+    },
+    {
+      key: "revisedBaseAttackInterval",
+      label: "修正后基础攻间",
+      expression: "revisedBaseAttackInterval = baseAttackInterval + attackIntervalAdjustment",
+      value: schedule.revisedBaseAttackInterval,
+      inputs: {
+        baseAttackInterval: context.operator.baseAttackInterval,
+        attackIntervalAdjustment: effects.attackIntervalAdjustment,
       },
     },
     {
       key: "attackInterval",
       label: "实际攻击间隔",
-      expression: "attackInterval = max(0.1, baseAttackInterval * aspdFactor)",
+      expression: "attackInterval = max(0.1, revisedBaseAttackInterval * aspdFactor)",
       value: schedule.attackInterval,
       inputs: {
-        baseAttackInterval: context.operator.baseAttackInterval,
+        revisedBaseAttackInterval: schedule.revisedBaseAttackInterval,
         aspdFactor: schedule.aspdFactor,
       },
     },
@@ -182,10 +211,23 @@ function buildScheduleFormula(
     {
       key: "duration",
       label: "技能持续时间",
-      expression: "duration = max(0.1, skill.durationSeconds)",
+      expression: "duration = max(1, (durationOverride || skill.durationSeconds) + durationAdjustment)",
       value: schedule.duration,
       inputs: {
         skillDuration: context.skill.durationSeconds,
+        durationOverride: effects.durationOverride ?? "none",
+        durationAdjustment: effects.durationAdjustment,
+      },
+    },
+    {
+      key: "streamTiming",
+      label: "流式结算参数",
+      expression: "attackTimes/mainAttackTimes/ammoCount 驱动多流总伤",
+      value: `${schedule.attackTimes}/${schedule.mainAttackTimes}/${schedule.ammoCount}`,
+      inputs: {
+        attackTimes: schedule.attackTimes,
+        mainAttackTimes: schedule.mainAttackTimes,
+        ammoCount: schedule.ammoCount,
       },
     },
   ];
@@ -194,7 +236,7 @@ function buildScheduleFormula(
 function calculateOneHitMainDamage(
   context: CalculationContext,
   effects: NormalizedEffects,
-): { hitDamage: number; formulaSteps: FormulaStep[] } {
+): { hitDamage: number; formulaSteps: FormulaStep[]; scaledAttack: number; developmentBaseAttack: number } {
   const formulaSteps: FormulaStep[] = [];
   const factors = resolveDevelopmentFactors(context);
   const developmentBaseAttack =
@@ -203,7 +245,7 @@ function calculateOneHitMainDamage(
       factors.potentialFactor *
       factors.trustFactor +
     factors.selectedStageBonus.atk;
-  const attack = developmentBaseAttack * (1 + effects.atkBuffRatio);
+  const attack = developmentBaseAttack * (1 + effects.atkBuffRatio) + effects.flatAttack;
   const scaledAttack = attack * effects.attackScale * effects.damageScale * factors.skillLevelFactor;
   formulaSteps.push(
     {
@@ -229,11 +271,12 @@ function calculateOneHitMainDamage(
     {
       key: "attack",
       label: "攻击力加成后数值",
-      expression: "attack = developmentBaseAttack * (1 + atkBuffRatio)",
+      expression: "attack = developmentBaseAttack * (1 + atkBuffRatio) + flatAttack",
       value: attack,
       inputs: {
         developmentBaseAttack,
         atkBuffRatio: effects.atkBuffRatio,
+        flatAttack: effects.flatAttack,
       },
     },
     {
@@ -252,7 +295,7 @@ function calculateOneHitMainDamage(
 
   if (effects.attackType === "physical") {
     const defenseAfterShred = Math.max(
-      context.enemy.defense * (1 - effects.defShredRate) - effects.defShredFlat,
+      context.enemy.defense * (1 - effects.defShredRate) - effects.defShredFlat - effects.defPenetrateFixed,
       0,
     );
     const raw = scaledAttack - defenseAfterShred;
@@ -268,6 +311,7 @@ function calculateOneHitMainDamage(
           enemyDefense: context.enemy.defense,
           defShredRate: effects.defShredRate,
           defShredFlat: effects.defShredFlat,
+          defPenetrateFixed: effects.defPenetrateFixed,
         },
       },
       {
@@ -297,11 +341,12 @@ function calculateOneHitMainDamage(
         value: hitDamage,
       },
     );
-    return { hitDamage, formulaSteps };
+    return { hitDamage, formulaSteps, scaledAttack, developmentBaseAttack };
   }
 
   if (effects.attackType === "magical") {
-    const mr = clamp(context.enemy.magicResistance, 0, 95);
+    const reducedMr = context.enemy.magicResistance * (1 - effects.magicResistanceReductionRatio) + effects.magicResistanceReductionFlat;
+    const mr = clamp(reducedMr, 0, 95);
     const magicMultiplier = 1 - mr / 100;
     const hitDamage = scaledAttack * magicMultiplier;
     formulaSteps.push(
@@ -312,6 +357,8 @@ function calculateOneHitMainDamage(
         value: mr,
         inputs: {
           enemyMagicResistance: context.enemy.magicResistance,
+          magicResistanceReductionRatio: effects.magicResistanceReductionRatio,
+          magicResistanceReductionFlat: effects.magicResistanceReductionFlat,
         },
       },
       {
@@ -328,7 +375,17 @@ function calculateOneHitMainDamage(
         value: hitDamage,
       },
     );
-    return { hitDamage, formulaSteps };
+    return { hitDamage, formulaSteps, scaledAttack, developmentBaseAttack };
+  }
+
+  if (effects.attackType === "heal" || effects.attackType === "none") {
+    formulaSteps.push({
+      key: "hitDamage",
+      label: "单次伤害",
+      expression: "heal/none 不参与伤害结算",
+      value: 0,
+    });
+    return { hitDamage: 0, formulaSteps, scaledAttack, developmentBaseAttack };
   }
 
   formulaSteps.push({
@@ -337,7 +394,76 @@ function calculateOneHitMainDamage(
     expression: "hitDamage = scaledAttack",
     value: scaledAttack,
   });
-  return { hitDamage: scaledAttack, formulaSteps };
+  return { hitDamage: scaledAttack, formulaSteps, scaledAttack, developmentBaseAttack };
+}
+
+function resolveStreamTotal(params: {
+  hitDamage: number;
+  attackCount: number;
+  hitMultiplier?: number;
+  interval?: number;
+  duration?: number;
+  times?: number;
+  schedule: ReturnType<typeof buildSchedule>;
+}): number {
+  const hitMultiplier = params.hitMultiplier ?? 1;
+  const baseTotal = params.hitDamage * params.attackCount * hitMultiplier;
+  const resolvedTimes = params.times ?? params.schedule.attackTimes;
+  const resolvedDuration = params.duration ?? params.schedule.duration;
+  const resolvedInterval = params.interval ?? params.schedule.attackInterval;
+  if (resolvedTimes > 0) {
+    return baseTotal * resolvedTimes;
+  }
+  if (params.schedule.ammoCount > 0) {
+    return params.hitDamage * hitMultiplier * params.schedule.ammoCount;
+  }
+  if (
+    params.interval !== undefined &&
+    params.duration !== undefined &&
+    (params.interval !== params.schedule.attackInterval || params.duration !== params.schedule.duration)
+  ) {
+    const streamCount = Math.max(1, resolvedDuration / Math.max(0.1, resolvedInterval));
+    return params.hitDamage * streamCount * hitMultiplier;
+  }
+  return baseTotal;
+}
+
+function buildStreamDps(totalDamage: number, schedule: ReturnType<typeof buildSchedule>): number {
+  if (schedule.attackTimes > 0) {
+    return totalDamage;
+  }
+  if (schedule.ammoCount > 0) {
+    const activeDuration = schedule.attackInterval * schedule.ammoCount;
+    return activeDuration > 0 ? totalDamage / activeDuration : totalDamage;
+  }
+  return totalDamage / schedule.duration;
+}
+
+function calculateHitDamageByType(params: {
+  attackType: AttackType;
+  attackPower: number;
+  enemyDefense: number;
+  enemyMagicResistance: number;
+  minPhysicalDamageRatio: number;
+  effects: NormalizedEffects;
+}): number {
+  const { attackType, attackPower, enemyDefense, enemyMagicResistance, minPhysicalDamageRatio, effects } = params;
+  if (attackType === "physical") {
+    const defense = Math.max(
+      enemyDefense * (1 - effects.defShredRate) - effects.defShredFlat - effects.defPenetrateFixed,
+      0,
+    );
+    return Math.max(attackPower - defense, attackPower * minPhysicalDamageRatio);
+  }
+  if (attackType === "magical") {
+    const reducedMr = enemyMagicResistance * (1 - effects.magicResistanceReductionRatio) + effects.magicResistanceReductionFlat;
+    const mr = clamp(reducedMr, 0, 95);
+    return attackPower * (1 - mr / 100);
+  }
+  if (attackType === "true") {
+    return attackPower;
+  }
+  return 0;
 }
 
 function buildSummaryFormula(
@@ -379,40 +505,93 @@ export function calculateSkillDps(
 ): CalculationResult {
   const context = buildCalculationContext(input, index);
   context.selectedModule = resolveSelectedModule(context);
-  const { effects, trace } = applyRules(context, rules);
+  const { effects: ruleEffects, trace } = applyRules(context, rules);
+  const moduleBonus = context.selectedModule?.stageBonuses[context.development.moduleStage];
+  const effects: NormalizedEffects = moduleBonus
+    ? {
+        ...ruleEffects,
+        attackSpeedBonus: ruleEffects.attackSpeedBonus + moduleBonus.attackSpeed,
+      }
+    : ruleEffects;
   const schedule = buildSchedule(context, effects);
   const mainHit = calculateOneHitMainDamage(context, effects);
 
-  const streams: DamageStreamResult[] = [
-    {
-      id: "MAIN",
-      attackType: effects.attackType,
-      hitDamage: mainHit.hitDamage,
-      attackCount: schedule.attackCount,
-      totalDamage: mainHit.hitDamage * schedule.attackCount,
-    },
-  ];
+  const streams: DamageStreamResult[] = [];
+  const mainTotalDamage = resolveStreamTotal({
+    hitDamage: mainHit.hitDamage,
+    attackCount: schedule.attackCount,
+    hitMultiplier: schedule.mainAttackTimes,
+    interval: schedule.attackInterval,
+    duration: schedule.duration,
+    schedule,
+  });
+  streams.push({
+    id: "MAIN",
+    attackType: effects.attackType,
+    hitDamage: mainHit.hitDamage,
+    attackCount: schedule.attackCount,
+    interval: schedule.attackInterval,
+    duration: schedule.duration,
+    times: schedule.mainAttackTimes,
+    totalDamage: mainTotalDamage,
+  });
 
   if (effects.extraTrueDamageScale > 0) {
-    const factors = resolveDevelopmentFactors(context);
-    const extraBaseAttack =
-      context.operator.baseAttack *
-        factors.eliteAttackFactor *
-        factors.potentialFactor *
-        factors.trustFactor +
-      factors.selectedStageBonus.atk;
+    const extraBaseAttack = mainHit.developmentBaseAttack;
     const extraHitDamage = extraBaseAttack * effects.extraTrueDamageScale;
+    const totalDamage = resolveStreamTotal({
+      hitDamage: extraHitDamage,
+      attackCount: schedule.attackCount,
+      interval: effects.extraAttackInterval,
+      duration: effects.extraDuration,
+      times: effects.extraAttackTimes,
+      schedule,
+    });
     streams.push({
       id: "OTHER_TRUE",
       attackType: "true",
       hitDamage: extraHitDamage,
       attackCount: schedule.attackCount,
-      totalDamage: extraHitDamage * schedule.attackCount,
+      interval: effects.extraAttackInterval ?? schedule.attackInterval,
+      duration: effects.extraDuration ?? schedule.duration,
+      times: effects.extraAttackTimes ?? schedule.attackTimes,
+      totalDamage,
+    });
+  }
+
+  if (effects.extraAttackScale > 0) {
+    const extraAttackType = effects.extraAttackType ?? effects.attackType;
+    const extraAttackPower = mainHit.scaledAttack * effects.extraAttackScale;
+    const extraHitDamage = calculateHitDamageByType({
+      attackType: extraAttackType,
+      attackPower: extraAttackPower,
+      enemyDefense: context.enemy.defense,
+      enemyMagicResistance: context.enemy.magicResistance,
+      minPhysicalDamageRatio: context.battle.minPhysicalDamageRatio,
+      effects,
+    });
+    const totalDamage = resolveStreamTotal({
+      hitDamage: extraHitDamage,
+      attackCount: schedule.attackCount,
+      interval: effects.extraAttackInterval,
+      duration: effects.extraDuration,
+      times: effects.extraAttackTimes,
+      schedule,
+    });
+    streams.push({
+      id: extraAttackType === "magical" ? "OTHER_MAGICAL" : "OTHER_PHYSICAL",
+      attackType: extraAttackType,
+      hitDamage: extraHitDamage,
+      attackCount: schedule.attackCount,
+      interval: effects.extraAttackInterval ?? schedule.attackInterval,
+      duration: effects.extraDuration ?? schedule.duration,
+      times: effects.extraAttackTimes ?? schedule.attackTimes,
+      totalDamage,
     });
   }
 
   const totalDamage = streams.reduce((sum, item) => sum + item.totalDamage, 0);
-  const dps = totalDamage / schedule.duration;
+  const dps = buildStreamDps(totalDamage, schedule);
   const formula: CalculationFormula = {
     mainHit: mainHit.formulaSteps,
     schedule: buildScheduleFormula(context, effects, schedule),
@@ -450,6 +629,12 @@ export function calculateSkillDps(
       source: context.skill.id,
     });
   }
+  if (effects.attackType === "heal" || effects.attackType === "none" || effects.disableTraitExtra) {
+    warnings.push({
+      ...warningCatalog.WARN_INFO_LIMITATION,
+      source: context.skill.id,
+    });
+  }
 
   return {
     summary: {
@@ -462,6 +647,10 @@ export function calculateSkillDps(
       attackCount: schedule.attackCount,
       attackCountFromSkill: schedule.attackCountFromSkill,
       duration: schedule.duration,
+      attackTimes: schedule.attackTimes,
+      mainAttackTimes: schedule.mainAttackTimes,
+      ammoCount: schedule.ammoCount,
+      isPermanent: schedule.isPermanent,
     },
     streams,
     breakdown: [

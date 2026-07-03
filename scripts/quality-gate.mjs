@@ -14,6 +14,10 @@ const steps = [
   { name: "UnitAndRegression", cmd: "npm", args: ["run", "test"] },
   { name: "Build", cmd: "npm", args: ["run", "build"] },
   { name: "CustomAudit", cmd: "npm", args: ["run", "audit:custom"] },
+  { name: "ReplaceGate", cmd: "npm", args: ["run", "replace:gate"] },
+  ...(process.env.SKIP_RELEASE_VERIFY === "true"
+    ? []
+    : [{ name: "ReleaseSnapshotVerify", cmd: "npm", args: ["run", "release:verify"] }]),
 ];
 
 function runStep(step) {

@@ -18,20 +18,20 @@ const index: OperatorIndex = {
           id: "mod-alpha",
           name: "强攻模块",
           stageBonuses: [
-            { atk: 0, attackSpeed: 0 },
-            { atk: 20, attackSpeed: 0 },
-            { atk: 40, attackSpeed: 10 },
-            { atk: 60, attackSpeed: 20 },
+            { atk: 0, attackSpeed: 0, atkScale: 1, damageScale: 1, defPenetrateFixed: 0, magicResistanceReduction: 0 },
+            { atk: 20, attackSpeed: 0, atkScale: 1, damageScale: 1, defPenetrateFixed: 0, magicResistanceReduction: 0 },
+            { atk: 40, attackSpeed: 10, atkScale: 1, damageScale: 1, defPenetrateFixed: 0, magicResistanceReduction: 0 },
+            { atk: 60, attackSpeed: 20, atkScale: 1, damageScale: 1, defPenetrateFixed: 0, magicResistanceReduction: 0 },
           ],
         },
         {
           id: "mod-beta",
           name: "速攻模块",
           stageBonuses: [
-            { atk: 0, attackSpeed: 0 },
-            { atk: 0, attackSpeed: 10 },
-            { atk: 0, attackSpeed: 20 },
-            { atk: 0, attackSpeed: 35 },
+            { atk: 0, attackSpeed: 0, atkScale: 1, damageScale: 1, defPenetrateFixed: 0, magicResistanceReduction: 0 },
+            { atk: 0, attackSpeed: 10, atkScale: 1, damageScale: 1, defPenetrateFixed: 0, magicResistanceReduction: 0 },
+            { atk: 0, attackSpeed: 20, atkScale: 1, damageScale: 1, defPenetrateFixed: 0, magicResistanceReduction: 0 },
+            { atk: 0, attackSpeed: 35, atkScale: 1, damageScale: 1, defPenetrateFixed: 0, magicResistanceReduction: 0 },
           ],
         },
       ],
@@ -86,6 +86,25 @@ const index: OperatorIndex = {
           durationSeconds: 12,
           attackScale: 2.2,
           customTags: ["switch_magical", "extra_true"],
+        },
+      ],
+    },
+    fang_like: {
+      id: "fang_like",
+      name: "芬样例",
+      baseHealth: 1300,
+      baseAttack: 325,
+      baseDefense: 200,
+      baseMagicResistance: 0,
+      baseAttackInterval: 1,
+      baseAttackSpeed: 0,
+      defaultAttackType: "physical",
+      skills: [
+        {
+          id: "utility",
+          name: "无输出技能",
+          durationSeconds: 0.1,
+          attackScale: 1,
         },
       ],
     },
@@ -155,5 +174,11 @@ describe("calculateSkillDps", () => {
     expect(moduleAlpha.summary.dps).toBeGreaterThan(noModule.summary.dps);
     expect(moduleBeta.summary.dps).toBeGreaterThan(noModule.summary.dps);
     expect(moduleAlpha.summary.dps).not.toBe(moduleBeta.summary.dps);
+  });
+
+  it("无输出瞬发技能不应被 0.1 秒放大 DPS", () => {
+    const result = calculateSkillDps(makeInput("fang_like", "utility"), index);
+    expect(result.schedule.duration).toBe(1);
+    expect(result.summary.dps).toBeCloseTo(result.summary.totalDamage, 6);
   });
 });

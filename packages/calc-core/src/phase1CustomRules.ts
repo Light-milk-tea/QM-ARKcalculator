@@ -235,4 +235,38 @@ export const phase1CustomRules: RuleDefinition[] = [
     }),
     note: "第一批迁移：短时爆发技能排程修正。",
   },
+  {
+    id: "phase2.skill.stop_attacking_minset",
+    scope: "skill",
+    match: (ctx) =>
+      new Set([
+        "skchr_myrtle_1",
+        "skchr_myrtle_2",
+        "skchr_podego_1",
+        "skchr_gummy_1",
+      ]).has(ctx.skill.id),
+    transform: (effects) => ({
+      ...effects,
+      attackType: "none",
+      disableTraitExtra: true,
+    }),
+    note: "第二批最小迁移：停攻技能标记为 none，避免错误输出伤害。",
+  },
+  {
+    id: "phase2.skill.magical_extra_stream_minset",
+    scope: "skill",
+    match: (ctx) =>
+      new Set([
+        "skchr_indigo_2",
+        "skchr_whitew_1",
+        "skchr_liesel_2",
+      ]).has(ctx.skill.id),
+    transform: (effects) => ({
+      ...effects,
+      extraAttackType: "magical",
+      extraAttackScale: Math.max(effects.extraAttackScale, 0.35),
+      extraAttackInterval: effects.extraAttackInterval ?? 1,
+    }),
+    note: "第二批最小迁移：附加法伤流基础口径。",
+  },
 ];

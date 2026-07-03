@@ -254,6 +254,11 @@ function parseSkill(skillId: string, raw: SkillLike): SkillData {
     durationSeconds = 1;
     assumptionApplied = true;
   }
+  if (skillId === "skchr_ascln_1" && durationSeconds <= 0) {
+    // 阿斯卡纶一技能为瞬发多段，原始时长为 -1；统一按 1 秒兜底避免 DPS 被 0.1s 放大。
+    durationSeconds = 1;
+    assumptionApplied = true;
+  }
   const attackScale = board.get("atk_scale") ?? board.get("attack@atk_scale") ?? 1;
   const atkBuffRatio = board.get("atk") ?? board.get("attack@atk") ?? 0;
   const attackSpeedBonus = board.get("attack_speed") ?? 0;
@@ -281,6 +286,20 @@ function parseSkill(skillId: string, raw: SkillLike): SkillData {
     atkBuffRatio,
     attackSpeedBonus,
     attackCount: toNumber(attackCount, 0) > 0 ? toNumber(attackCount, 0) : undefined,
+    // 以下扩展字段由 custom 规则系统注入，避免直接套用 blackboard 导致语义误判。
+    attackIntervalAdjustment: 0,
+    attackTimes: undefined,
+    mainAttackTimes: undefined,
+    durationOverride: undefined,
+    durationAdjustment: 0,
+    flatAttack: 0,
+    defPenetrateFixed: 0,
+    magicResistanceReduction: 0,
+    extraAttackScale: 0,
+    extraAttackInterval: undefined,
+    extraAttackTimes: undefined,
+    extraDuration: undefined,
+    ammoCount: undefined,
     customTags,
     unmappedBlackboardKeys,
     hasAmbiguousSemantic,
@@ -376,7 +395,14 @@ function readModuleStageBonus(phase?: BattleEquipPhaseLike): ModuleStageBonus {
   const board = phase?.attributeBlackboard ?? [];
   const atk = toNumber(board.find((item) => item.key === "atk")?.value, 0);
   const attackSpeed = toNumber(board.find((item) => item.key === "attack_speed")?.value, 0);
-  return { atk, attackSpeed };
+  const atkScale = toNumber(board.find((item) => item.key === "atk_scale")?.value, 1);
+  const damageScale = toNumber(board.find((item) => item.key === "damage_scale")?.value, 1);
+  const defPenetrateFixed = toNumber(board.find((item) => item.key === "def_penetrate_fixed")?.value, 0);
+  const magicResistanceReduction = toNumber(
+    board.find((item) => item.key === "magic_resistance")?.value,
+    0,
+  );
+  return { atk, attackSpeed, atkScale, damageScale, defPenetrateFixed, magicResistanceReduction };
 }
 
 function resolveModules(
@@ -400,7 +426,19 @@ function resolveModules(
       return {
         id: equipId,
         name: uniequipTable.equipDict?.[equipId]?.uniEquipName ?? equipId,
-        stageBonuses: [{ atk: 0, attackSpeed: 0 }, stage1, stage2, stage3],
+        stageBonuses: [
+          {
+            atk: 0,
+            attackSpeed: 0,
+            atkScale: 1,
+            damageScale: 1,
+            defPenetrateFixed: 0,
+            magicResistanceReduction: 0,
+          },
+          stage1,
+          stage2,
+          stage3,
+        ],
       } satisfies ModuleData;
     });
 }
@@ -452,6 +490,7 @@ export function buildOperatorIndexFromRaw(rawData: RawGameData): OperatorIndex {
       baseMagicResistance: beforeTalentMagicResistance + talentBonus.magicResistanceFlat,
       baseAttackInterval: toNumber(keyFrame?.baseAttackTime, 1) + talentBonus.baseAttackTimeFlat,
       baseAttackSpeed: 0,
+      subProfessionId: character.subProfessionId,
       modules: resolveModules(charId, uniequipTable, battleEquipTable),
       defaultAttackType: resolveAttackType(character.profession, character.subProfessionId),
       skills: parsedSkills,

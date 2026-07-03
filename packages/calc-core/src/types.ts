@@ -1,6 +1,6 @@
 import type { WarningCode, WarningLevel } from "./warningCatalog";
 
-export type AttackType = "physical" | "magical" | "true";
+export type AttackType = "physical" | "magical" | "true" | "heal" | "none";
 
 export interface SkillData {
   id: string;
@@ -10,7 +10,22 @@ export interface SkillData {
   damageScale?: number;
   atkBuffRatio?: number;
   attackSpeedBonus?: number;
+  attackIntervalAdjustment?: number;
   attackCount?: number;
+  attackTimes?: number;
+  mainAttackTimes?: number;
+  ammoCount?: number;
+  durationOverride?: number;
+  durationAdjustment?: number;
+  flatAttack?: number;
+  defPenetrateFixed?: number;
+  magicResistanceReduction?: number;
+  extraAttackType?: AttackType;
+  extraAttackScale?: number;
+  extraAttackInterval?: number;
+  extraAttackTimes?: number;
+  extraDuration?: number;
+  disableTraitExtra?: boolean;
   customTags?: string[];
   unmappedBlackboardKeys?: string[];
   hasAmbiguousSemantic?: boolean;
@@ -19,6 +34,10 @@ export interface SkillData {
 export interface ModuleStageBonus {
   atk: number;
   attackSpeed: number;
+  atkScale: number;
+  damageScale: number;
+  defPenetrateFixed: number;
+  magicResistanceReduction: number;
 }
 
 export interface ModuleData {
@@ -36,6 +55,7 @@ export interface OperatorData {
   baseMagicResistance: number;
   baseAttackInterval: number;
   baseAttackSpeed: number;
+  subProfessionId?: string;
   modules?: ModuleData[];
   defaultAttackType: AttackType;
   skills: SkillData[];
@@ -84,19 +104,39 @@ export interface CalculationContext {
 export interface NormalizedEffects {
   attackType: AttackType;
   atkBuffRatio: number;
+  flatAttack: number;
   attackScale: number;
   damageScale: number;
   attackSpeedBonus: number;
+  attackIntervalAdjustment: number;
+  attackCountOverride?: number;
+  durationOverride?: number;
+  durationAdjustment: number;
+  attackTimes: number;
+  mainAttackTimes: number;
+  ammoCount: number;
   defShredFlat: number;
   defShredRate: number;
+  defPenetrateFixed: number;
+  magicResistanceReductionFlat: number;
+  magicResistanceReductionRatio: number;
+  extraAttackType?: AttackType;
+  extraAttackScale: number;
+  extraAttackInterval?: number;
+  extraAttackTimes?: number;
+  extraDuration?: number;
   extraTrueDamageScale: number;
+  disableTraitExtra: boolean;
 }
 
 export interface DamageStreamResult {
-  id: "MAIN" | "OTHER_TRUE";
+  id: "MAIN" | "OTHER_TRUE" | "OTHER_PHYSICAL" | "OTHER_MAGICAL";
   attackType: AttackType;
   hitDamage: number;
   attackCount: number;
+  interval: number;
+  duration: number;
+  times: number;
   totalDamage: number;
 }
 
@@ -137,6 +177,10 @@ export interface CalculationResult {
     attackCount: number;
     attackCountFromSkill: boolean;
     duration: number;
+    attackTimes: number;
+    mainAttackTimes: number;
+    ammoCount: number;
+    isPermanent: boolean;
   };
   streams: DamageStreamResult[];
   breakdown: BreakdownItem[];

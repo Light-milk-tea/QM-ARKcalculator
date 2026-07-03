@@ -1,0 +1,64 @@
+{
+  "releaseId": "release-2026-07-03T08:53:48.301Z",
+  "createdAt": "2026-07-03T08:53:48.301Z",
+  "dataVersion": {
+    "dataVersionId": "20260702-1",
+    "source": "ArknightCalculator/public/json",
+    "syncedAt": "2026-07-02T00:00:00.000Z",
+    "notes": "Initial MVP snapshot from local legacy project."
+  },
+  "ruleVersion": {
+    "ruleVersionId": "v0.4.0",
+    "phase": "mvp-dps",
+    "includes": [
+      "phase1.damage_type.switch_magical",
+      "phase1.defense.shred_ratio",
+      "phase1.other_stream.extra_true",
+      "phase1.duration.burst_short_window",
+      "phase1.lava.s1.schedule_parity",
+      "phase1.gdglow3.multi_hit",
+      "phase1.chen2s3.holiday_trigger_window",
+      "phase1.mizuki2.attack_interval_shift",
+      "phase1.thorns3.stable_stage",
+      "phase1.chen2.instant_multi_hit",
+      "phase1.horn3.conditional_overload",
+      "phase1.texas2.appear_extra_stream",
+      "phase1.ifrit2.burn_def_shred_proxy",
+      "phase1.cerber2.hotblade_aspd_proxy",
+      "phase1.mlynar3.verdict_true_stream",
+      "phase1.ghost23.burst_threshold_proxy",
+      "phase1.ironmn2.iter_amp_proxy",
+      "phase1.qiubai3.switch_magical_burst",
+      "phase1.logos3.arts_burst_variant",
+      "phase1.reed23.burn_echo_proxy"
+    ],
+    "notes": "Phase1 migration expanded to Top20 ready=20 with second-batch proxy rules."
+  },
+  "dataHashes": [
+    {
+      "file": "battle_equip_table.json",
+      "sha256": "0b70f10885a38cd410c658b2ad6098efbf70fad5125e640ad124ad22d27b116f"
+    },
+    {
+      "file": "character_table.json",
+      "sha256": "b03565fa5b7c103dc3cc2b6e13e92d9679a5e06fdf6bd23c0c4a108531f7fc7f"
+    },
+    {
+      "file": "profession.json",
+      "sha256": "d7261c5f59e1bb34c497b0b612ac9c4b6085c365d05aa4efba310ddafd68c4cd"
+    },
+    {
+      "file": "skill_table.json",
+      "sha256": "1f60c4f3483565c0d176e1986bb2e2329aa77e612d968e4eb099d02888b8d59d"
+    },
+    {
+      "file": "subProfessionId.json",
+      "sha256": "7b5b5e59344df665bfff0ee78965c6fd8c4a9f87ffb9e87ea7f4f379e7c1ba44"
+    },
+    {
+      "file": "uniequip_table.json",
+      "sha256": "871bfb5a96c7c0780b7278e522e38003027216353bcae739962207f047422652"
+    }
+  ],
+  "dataSnapshotCaptured": false
+}
