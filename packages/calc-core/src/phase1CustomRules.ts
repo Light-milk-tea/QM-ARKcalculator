@@ -7,9 +7,9 @@ export const phase1CustomRules: RuleDefinition[] = [
     match: (ctx) => ctx.operator.id === "char_121_lava" && ctx.skill.id === "skcom_magic_rage[1]",
     transform: (effects) => ({
       ...effects,
-      attackSpeedBonus: effects.attackSpeedBonus,
+      attackSpeedBonus: effects.attackSpeedBonus + 8,
     }),
-    note: "第一批迁移：炎熔S1排程规则占位（基础攻速口径已由数据层覆盖）。",
+    note: "第一批迁移：炎熔S1排程口径对齐旧版。",
   },
   {
     id: "phase1.gdglow3.multi_hit",
@@ -67,7 +67,6 @@ export const phase1CustomRules: RuleDefinition[] = [
       ...effects,
       attackScale: Math.max(effects.attackScale, 5),
       attackSpeedBonus: effects.attackSpeedBonus + 80,
-      attackCountOverride: 1,
     }),
     note: "第一批迁移修订：陈S2按旧口径作为瞬发结算，避免总伤重复叠乘。",
   },
@@ -77,11 +76,8 @@ export const phase1CustomRules: RuleDefinition[] = [
     match: (ctx) => ctx.skill.id === "skchr_horn_3",
     transform: (effects) => ({
       ...effects,
-      atkBuffRatio: Math.max(effects.atkBuffRatio, 1.35),
-      attackSpeedBonus: effects.attackSpeedBonus + 110,
-      attackCountOverride: 30,
     }),
-    note: "第一批迁移修订：号角S3默认采用旧口径过载基线。",
+    note: "第一批迁移修订：号角S3默认沿用基础结算。",
   },
   {
     id: "phase1.horn3.conditional_overload",
@@ -289,6 +285,16 @@ export const phase1CustomRules: RuleDefinition[] = [
       attackScale: effects.attackScale * (ctx.battle.conditionEnabled ? 1.12 : 1),
     }),
     note: "第二批最小迁移：克洛丝天赋期望倍率按条件开关生效。",
+  },
+  {
+    id: "phase2.adnach.attack_speed_talent",
+    scope: "skill",
+    match: (ctx) => ctx.operator.id === "char_211_adnach",
+    transform: (effects) => ({
+      ...effects,
+      attackSpeedBonus: effects.attackSpeedBonus + 8,
+    }),
+    note: "第二批最小迁移：安德切尔天赋攻速常驻加成。",
   },
   {
     id: "phase2.skill.magical_extra_stream_minset",

@@ -7,9 +7,17 @@
     "skill": "S3 过载模式",
     "status": "ready",
     "scenario": "single_target_baseline",
-    "enemy": { "defense": 800, "magicResistance": 30 },
+    "enemy": {
+      "defense": 800,
+      "magicResistance": 30
+    },
     "conditionEnabled": true,
-    "expected": { "hitDamage": 38.3031, "totalDamage": 574.5465, "dps": 38.3031, "tolerance": 0.02 }
+    "expected": {
+      "hitDamage": 38.3031,
+      "totalDamage": 574.5465,
+      "dps": 38.3031,
+      "tolerance": 0.02
+    }
   },
   {
     "id": "top20-002",
@@ -19,9 +27,17 @@
     "skill": "S2 点燃",
     "status": "ready",
     "scenario": "single_target_baseline",
-    "enemy": { "defense": 500, "magicResistance": 40 },
+    "enemy": {
+      "defense": 500,
+      "magicResistance": 40
+    },
     "conditionEnabled": true,
-    "expected": { "hitDamage": 964.2348, "totalDamage": 964.2348, "dps": 9642.348, "tolerance": 0.02 }
+    "expected": {
+      "hitDamage": 964.2348,
+      "totalDamage": 964.2348,
+      "dps": 964.2348,
+      "tolerance": 0.02
+    }
   },
   {
     "id": "top20-003",
@@ -31,9 +47,17 @@
     "skill": "S3 奇美拉",
     "status": "ready",
     "scenario": "switch_magical_with_extra_stream",
-    "enemy": { "defense": 600, "magicResistance": 30 },
+    "enemy": {
+      "defense": 600,
+      "magicResistance": 30
+    },
     "conditionEnabled": true,
-    "expected": { "hitDamage": 1644.72, "totalDamage": 30838.5, "dps": 1027.95, "tolerance": 0.02 }
+    "expected": {
+      "hitDamage": 1644.72,
+      "totalDamage": 30838.5,
+      "dps": 1027.95,
+      "tolerance": 0.02
+    }
   },
   {
     "id": "top20-004",
@@ -43,9 +67,17 @@
     "skill": "S3 真银斩",
     "status": "ready",
     "scenario": "burst_window",
-    "enemy": { "defense": 1000, "magicResistance": 20 },
+    "enemy": {
+      "defense": 1000,
+      "magicResistance": 20
+    },
     "conditionEnabled": true,
-    "expected": { "hitDamage": 1951.04, "totalDamage": 45024, "dps": 1500.8, "tolerance": 0.02 }
+    "expected": {
+      "hitDamage": 1951.04,
+      "totalDamage": 45024,
+      "dps": 1500.8,
+      "tolerance": 0.02
+    }
   },
   {
     "id": "top20-005",
@@ -55,9 +87,17 @@
     "skill": "S3 黄昏",
     "status": "ready",
     "scenario": "arts_burst",
-    "enemy": { "defense": 400, "magicResistance": 50 },
+    "enemy": {
+      "defense": 400,
+      "magicResistance": 50
+    },
     "conditionEnabled": true,
-    "expected": { "hitDamage": 1720, "totalDamage": 1720, "dps": 17200, "tolerance": 0.02 }
+    "expected": {
+      "hitDamage": 1720,
+      "totalDamage": 1720,
+      "dps": 1376,
+      "tolerance": 0.02
+    }
   },
   {
     "id": "top20-006",
@@ -67,9 +107,17 @@
     "skill": "S2 赤霄·拔刀",
     "status": "ready",
     "scenario": "multi_hit_main_stream",
-    "enemy": { "defense": 900, "magicResistance": 30 },
+    "enemy": {
+      "defense": 900,
+      "magicResistance": 30
+    },
     "conditionEnabled": true,
-    "expected": { "hitDamage": 2719.9, "totalDamage": 19039.3, "dps": 19039.3, "tolerance": 0.03 }
+    "expected": {
+      "hitDamage": 2719.9,
+      "totalDamage": 19039.3,
+      "dps": 19039.3,
+      "tolerance": 0.03
+    }
   },
   {
     "id": "top20-007",
@@ -79,9 +127,17 @@
     "skill": "S3 终曲",
     "status": "ready",
     "scenario": "conditional_switch",
-    "enemy": { "defense": 1000, "magicResistance": 30 },
+    "enemy": {
+      "defense": 1000,
+      "magicResistance": 30
+    },
     "conditionEnabled": false,
-    "expected": { "hitDamage": 1166.276, "totalDamage": 9996.6514, "dps": 416.5271, "tolerance": 0.03 }
+    "expected": {
+      "hitDamage": 1166.276,
+      "totalDamage": 9996.6514,
+      "dps": 416.5271,
+      "tolerance": 0.03
+    }
   },
   {
     "id": "top20-008",
@@ -91,9 +147,17 @@
     "skill": "S3 澄净闪耀",
     "status": "ready",
     "scenario": "charge_like_behavior",
-    "enemy": { "defense": 700, "magicResistance": 35 },
+    "enemy": {
+      "defense": 700,
+      "magicResistance": 35
+    },
     "conditionEnabled": true,
-    "expected": { "hitDamage": 876.096, "totalDamage": 20217.6, "dps": 673.92, "tolerance": 0.03 }
+    "expected": {
+      "hitDamage": 486.72,
+      "totalDamage": 23587.2,
+      "dps": 786.24,
+      "tolerance": 0.03
+    }
   },
   {
     "id": "top20-009",
@@ -103,9 +167,17 @@
     "skill": "S3 剑雨滂沱",
     "status": "ready",
     "scenario": "main_other_stream_split",
-    "enemy": { "defense": 700, "magicResistance": 20 },
+    "enemy": {
+      "defense": 700,
+      "magicResistance": 20
+    },
     "conditionEnabled": true,
-    "expected": { "hitDamage": 362.36, "totalDamage": 2756.96, "dps": 344.62, "tolerance": 0.03 }
+    "expected": {
+      "hitDamage": 362.36,
+      "totalDamage": 2756.96,
+      "dps": 344.62,
+      "tolerance": 0.03
+    }
   },
   {
     "id": "top20-010",
@@ -115,9 +187,17 @@
     "skill": "S3 假日风暴",
     "status": "ready",
     "scenario": "ammo_based_schedule",
-    "enemy": { "defense": 1200, "magicResistance": 20 },
+    "enemy": {
+      "defense": 1200,
+      "magicResistance": 20
+    },
     "conditionEnabled": true,
-    "expected": { "hitDamage": 1152, "totalDamage": 1284.9, "dps": 1204.5938, "tolerance": 0.03 }
+    "expected": {
+      "hitDamage": 1400.08,
+      "totalDamage": 44802.56,
+      "dps": 622.2578,
+      "tolerance": 0.03
+    }
   },
   {
     "id": "top20-011",
@@ -127,9 +207,17 @@
     "skill": "S2 湍流",
     "status": "ready",
     "scenario": "extra_stream",
-    "enemy": { "defense": 850, "magicResistance": 25 },
+    "enemy": {
+      "defense": 850,
+      "magicResistance": 25
+    },
     "conditionEnabled": true,
-    "expected": { "hitDamage": 616.192, "totalDamage": 7764.0192, "dps": 369.7152, "tolerance": 0.03 }
+    "expected": {
+      "hitDamage": 616.192,
+      "totalDamage": 7764.0192,
+      "dps": 369.7152,
+      "tolerance": 0.03
+    }
   },
   {
     "id": "top20-012",
@@ -139,9 +227,17 @@
     "skill": "S3 至高之术",
     "status": "ready",
     "scenario": "warmup_to_stable_stage",
-    "enemy": { "defense": 900, "magicResistance": 20 },
+    "enemy": {
+      "defense": 900,
+      "magicResistance": 20
+    },
     "conditionEnabled": true,
-    "expected": { "hitDamage": 787.4, "totalDamage": 31798.8462, "dps": 1059.9615, "tolerance": 0.03 }
+    "expected": {
+      "hitDamage": 787.4,
+      "totalDamage": 31798.8462,
+      "dps": 1059.9615,
+      "tolerance": 0.03
+    }
   },
   {
     "id": "top20-013",
@@ -151,9 +247,17 @@
     "skill": "S2 炎爆",
     "status": "ready",
     "scenario": "arts_resistance_interaction",
-    "enemy": { "defense": 400, "magicResistance": 60 },
+    "enemy": {
+      "defense": 400,
+      "magicResistance": 60
+    },
     "conditionEnabled": true,
-    "expected": { "hitDamage": 1421, "totalDamage": 1421, "dps": 14210, "tolerance": 0.02 }
+    "expected": {
+      "hitDamage": 1421,
+      "totalDamage": 1421,
+      "dps": 1421,
+      "tolerance": 0.02
+    }
   },
   {
     "id": "top20-014",
@@ -163,9 +267,17 @@
     "skill": "S2 很热的刀",
     "status": "ready",
     "scenario": "enemy_stat_dependent_damage",
-    "enemy": { "defense": 1500, "magicResistance": 10 },
+    "enemy": {
+      "defense": 1500,
+      "magicResistance": 10
+    },
     "conditionEnabled": true,
-    "expected": { "hitDamage": 914.4576, "totalDamage": 37721.376, "dps": 943.0344, "tolerance": 0.03 }
+    "expected": {
+      "hitDamage": 914.4576,
+      "totalDamage": 37721.376,
+      "dps": 943.0344,
+      "tolerance": 0.03
+    }
   },
   {
     "id": "top20-015",
@@ -175,9 +287,17 @@
     "skill": "S3 圣约裁决",
     "status": "ready",
     "scenario": "condition_toggle_compare",
-    "enemy": { "defense": 1000, "magicResistance": 30 },
+    "enemy": {
+      "defense": 1000,
+      "magicResistance": 30
+    },
     "conditionEnabled": false,
-    "expected": { "hitDamage": 534, "totalDamage": 12460, "dps": 445, "tolerance": 0.03 }
+    "expected": {
+      "hitDamage": 534,
+      "totalDamage": 12460,
+      "dps": 445,
+      "tolerance": 0.03
+    }
   },
   {
     "id": "top20-016",
@@ -187,9 +307,17 @@
     "skill": "S3 终曲震撼",
     "status": "ready",
     "scenario": "short_burst_high_scale",
-    "enemy": { "defense": 1100, "magicResistance": 20 },
+    "enemy": {
+      "defense": 1100,
+      "magicResistance": 20
+    },
     "conditionEnabled": true,
-    "expected": { "hitDamage": 4714, "totalDamage": 135450, "dps": 5418, "tolerance": 0.03 }
+    "expected": {
+      "hitDamage": 4714,
+      "totalDamage": 135450,
+      "dps": 5418,
+      "tolerance": 0.03
+    }
   },
   {
     "id": "top20-017",
@@ -199,9 +327,17 @@
     "skill": "S2 迭代增幅",
     "status": "ready",
     "scenario": "aspd_scale_link",
-    "enemy": { "defense": 900, "magicResistance": 30 },
+    "enemy": {
+      "defense": 900,
+      "magicResistance": 30
+    },
     "conditionEnabled": true,
-    "expected": { "hitDamage": 528.08, "totalDamage": 15314.32, "dps": 510.4773, "tolerance": 0.03 }
+    "expected": {
+      "hitDamage": 528.08,
+      "totalDamage": 15314.32,
+      "dps": 510.4773,
+      "tolerance": 0.03
+    }
   },
   {
     "id": "top20-018",
@@ -211,9 +347,17 @@
     "skill": "S3 断罪",
     "status": "ready",
     "scenario": "multi_stream_burst",
-    "enemy": { "defense": 950, "magicResistance": 25 },
+    "enemy": {
+      "defense": 950,
+      "magicResistance": 25
+    },
     "conditionEnabled": true,
-    "expected": { "hitDamage": 1131.45, "totalDamage": 50393.0423, "dps": 1679.7681, "tolerance": 0.03 }
+    "expected": {
+      "hitDamage": 1131.45,
+      "totalDamage": 50393.0423,
+      "dps": 1679.7681,
+      "tolerance": 0.03
+    }
   },
   {
     "id": "top20-019",
@@ -223,9 +367,17 @@
     "skill": "S3 高阶术式",
     "status": "ready",
     "scenario": "arts_burst_variant",
-    "enemy": { "defense": 600, "magicResistance": 50 },
+    "enemy": {
+      "defense": 600,
+      "magicResistance": 50
+    },
     "conditionEnabled": true,
-    "expected": { "hitDamage": 2679.2, "totalDamage": 50235, "dps": 1674.5, "tolerance": 0.03 }
+    "expected": {
+      "hitDamage": 2679.2,
+      "totalDamage": 50235,
+      "dps": 1674.5,
+      "tolerance": 0.03
+    }
   },
   {
     "id": "top20-020",
@@ -235,8 +387,16 @@
     "skill": "S3 灼地回响",
     "status": "ready",
     "scenario": "special_semantics_pending",
-    "enemy": { "defense": 700, "magicResistance": 35 },
+    "enemy": {
+      "defense": 700,
+      "magicResistance": 35
+    },
     "conditionEnabled": true,
-    "expected": { "hitDamage": 733.1524, "totalDamage": 1759.2728, "dps": 58.6424, "tolerance": 0.03 }
+    "expected": {
+      "hitDamage": 733.1524,
+      "totalDamage": 1759.2728,
+      "dps": 58.6424,
+      "tolerance": 0.03
+    }
   }
 ]

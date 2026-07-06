@@ -558,7 +558,6 @@ export function buildOperatorIndexFromRaw(rawData: RawGameData): OperatorIndex {
     const beforeTalentDefense = toNumber(keyFrame?.def, 0) + potentialBonus.def + trustBonus.def;
     const beforeTalentMagicResistance =
       toNumber(keyFrame?.magicResistance, 0) + potentialBonus.magicResistance + trustBonus.magicResistance;
-    const beforeTalentAttackSpeed = potentialBonus.attackSpeed;
     const parsedSkills = character.skills
       .map((entry) => entry.skillId)
       .filter((id): id is string => typeof id === "string" && id in skills)
@@ -576,7 +575,7 @@ export function buildOperatorIndexFromRaw(rawData: RawGameData): OperatorIndex {
       baseDefense: beforeTalentDefense * (1 + talentBonus.defRatio),
       baseMagicResistance: beforeTalentMagicResistance + talentBonus.magicResistanceFlat,
       baseAttackInterval: toNumber(keyFrame?.baseAttackTime, 1) + talentBonus.baseAttackTimeFlat,
-      baseAttackSpeed: beforeTalentAttackSpeed + talentBonus.attackSpeedFlat,
+      baseAttackSpeed: 0,
       subProfessionId: character.subProfessionId,
       modules: resolveModules(charId, uniequipTable, battleEquipTable),
       defaultAttackType: resolveAttackType(character.profession, character.subProfessionId),

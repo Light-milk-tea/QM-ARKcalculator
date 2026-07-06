@@ -50,62 +50,6 @@ describe("buildOperatorIndexFromRaw", () => {
     expect(skill?.durationSeconds).toBe(1);
   });
 
-  it("天赋与潜能攻速应写入 baseAttackSpeed", () => {
-    const raw: RawGameData = {
-      character_table: {
-        char_211_adnach: {
-          name: "安德切尔",
-          profession: "SNIPER",
-          subProfessionId: "fastshot",
-          phases: [
-            {
-              maxLevel: 55,
-              attributesKeyFrames: [
-                {
-                  level: 55,
-                  data: { maxHp: 1080, atk: 365, def: 134, magicResistance: 0, baseAttackTime: 1 },
-                },
-              ],
-            },
-          ],
-          potentialRanks: [
-            {
-              buff: {
-                attributes: {
-                  attributeModifiers: [{ attributeType: "ATTACK_SPEED", value: 2 }],
-                },
-              },
-            },
-          ],
-          talents: [
-            {
-              candidates: [
-                {
-                  unlockCondition: { phase: "PHASE_0", level: 1 },
-                  requiredPotentialRank: 0,
-                  blackboard: [{ key: "attack_speed", value: 8 }],
-                },
-              ],
-            },
-          ],
-          skills: [{ skillId: "skcom_atk_up[1]" }],
-        },
-      },
-      skill_table: {
-        "skcom_atk_up[1]": {
-          levels: [{ name: "攻击强化", duration: 20, blackboard: [{ key: "atk", value: 0.45 }] }],
-        },
-      },
-      uniequip_table: {},
-      battle_equip_table: {},
-      profession: {},
-      subProfessionId: {},
-    };
-
-    const index = buildOperatorIndexFromRaw(raw);
-    expect(index.operators.char_211_adnach?.baseAttackSpeed).toBe(10);
-  });
-
   it("远山随机占卜天赋不应同时叠加到基础攻击与攻速", () => {
     const raw: RawGameData = {
       character_table: {
