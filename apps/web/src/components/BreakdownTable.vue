@@ -4,6 +4,36 @@ import type { BreakdownItem } from "@qm/calc-core";
 defineProps<{
   breakdown: BreakdownItem[];
 }>();
+
+const breakdownKeyLabels: Record<string, string> = {
+  baseAttack: "基础攻击力",
+  development: "养成参数",
+  atkBuffRatio: "攻击加成系数",
+  attackScale: "技能攻击倍率",
+  damageScale: "最终伤害倍率",
+  attackType: "攻击类型",
+};
+
+const attackTypeLabels: Record<string, string> = {
+  physical: "物理",
+  magical: "法术",
+  true: "真实",
+  heal: "治疗",
+  none: "无伤害",
+};
+
+function localizeKey(key: string): string {
+  return breakdownKeyLabels[key] ?? key;
+}
+
+function localizeValue(key: string, value: number | string): string {
+  if (key !== "attackType") {
+    return typeof value === "number" ? value.toFixed(4) : String(value);
+  }
+
+  const raw = String(value);
+  return attackTypeLabels[raw] ?? raw;
+}
 </script>
 
 <template>
@@ -21,8 +51,8 @@ defineProps<{
       </thead>
       <tbody>
         <tr v-for="item in breakdown" :key="item.key">
-          <td class="font-mono">{{ item.key }}</td>
-          <td class="font-mono">{{ typeof item.value === "number" ? item.value.toFixed(4) : item.value }}</td>
+          <td>{{ localizeKey(item.key) }}</td>
+          <td class="font-mono">{{ localizeValue(item.key, item.value) }}</td>
           <td>{{ item.description }}</td>
         </tr>
       </tbody>

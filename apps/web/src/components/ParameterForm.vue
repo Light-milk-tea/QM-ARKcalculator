@@ -59,7 +59,7 @@ const emit = defineEmits<{
               @change="emit('update:operatorId', ($event.target as HTMLSelectElement).value)"
             >
               <option v-for="op in operators" :key="op.id" :value="op.id">
-                {{ op.name }} ({{ op.id }})
+                {{ op.name }}
               </option>
             </select>
             <div class="text-[0.78rem] text-arkrec-note mt-1">* {{ defaultLevelText }}</div>
