@@ -127,6 +127,26 @@ const index: OperatorIndex = {
         },
       ],
     },
+    kroos_like: {
+      id: "char_124_kroos",
+      name: "克洛丝样例",
+      baseHealth: 1060,
+      baseAttack: 375,
+      baseDefense: 126,
+      baseMagicResistance: 0,
+      baseAttackInterval: 1,
+      baseAttackSpeed: 0,
+      defaultAttackType: "physical",
+      skills: [
+        {
+          id: "skchr_kroos_1",
+          name: "二连射",
+          durationSeconds: 1,
+          attackScale: 1.66,
+          attackCount: 2,
+        },
+      ],
+    },
     medic_like: {
       id: "medic_like",
       name: "治疗样例",
@@ -250,6 +270,31 @@ describe("calculateSkillDps", () => {
     expect(
       result.ruleTrace.some(
         (rule) => rule.ruleId === "phase2.skill.stop_attacking_minset" && rule.applied,
+      ),
+    ).toBe(true);
+  });
+
+  it("克洛丝 S1 在条件开启时应叠加天赋期望倍率", () => {
+    const on = calculateSkillDps(
+      {
+        ...makeInput("kroos_like", "skchr_kroos_1"),
+        enemy: { defense: 0, magicResistance: 0 },
+        battle: { conditionEnabled: true, minPhysicalDamageRatio: 0.05 },
+      },
+      index,
+    );
+    const off = calculateSkillDps(
+      {
+        ...makeInput("kroos_like", "skchr_kroos_1"),
+        enemy: { defense: 0, magicResistance: 0 },
+        battle: { conditionEnabled: false, minPhysicalDamageRatio: 0.05 },
+      },
+      index,
+    );
+    expect(on.summary.hitDamage / off.summary.hitDamage).toBeCloseTo(1.12, 6);
+    expect(
+      on.ruleTrace.some(
+        (rule) => rule.ruleId === "phase2.kroos1.expected_talent_scale" && rule.applied,
       ),
     ).toBe(true);
   });

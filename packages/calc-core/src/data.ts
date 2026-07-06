@@ -443,6 +443,37 @@ function resolveTalentBonus(character: CharacterLike, currentPhase: number, curr
   return bonus;
 }
 
+const talentExclusionByOperatorId: Record<
+  string,
+  Partial<{
+    atkRatio: true;
+    hpRatio: true;
+    defRatio: true;
+    magicResistanceFlat: true;
+    baseAttackTimeFlat: true;
+    attackSpeedFlat: true;
+  }>
+> = {
+  // 远山“占卜”为随机三选一，不应将 atk / attack_speed / max_hp 同时计入基础面板。
+  char_109_fmout: { atkRatio: true, hpRatio: true, attackSpeedFlat: true },
+};
+
+function applyTalentExclusions(
+  charId: string,
+  bonus: ReturnType<typeof resolveTalentBonus>,
+): ReturnType<typeof resolveTalentBonus> {
+  const rule = talentExclusionByOperatorId[charId];
+  if (!rule) return bonus;
+  return {
+    atkRatio: rule.atkRatio ? 0 : bonus.atkRatio,
+    hpRatio: rule.hpRatio ? 0 : bonus.hpRatio,
+    defRatio: rule.defRatio ? 0 : bonus.defRatio,
+    magicResistanceFlat: rule.magicResistanceFlat ? 0 : bonus.magicResistanceFlat,
+    baseAttackTimeFlat: rule.baseAttackTimeFlat ? 0 : bonus.baseAttackTimeFlat,
+    attackSpeedFlat: rule.attackSpeedFlat ? 0 : bonus.attackSpeedFlat,
+  };
+}
+
 function readModuleStageBonus(phase?: BattleEquipPhaseLike): ModuleStageBonus {
   const board = phase?.attributeBlackboard ?? [];
   const atk = toNumber(board.find((item) => item.key === "atk")?.value, 0);
@@ -517,13 +548,17 @@ export function buildOperatorIndexFromRaw(rawData: RawGameData): OperatorIndex {
     );
     const potentialBonus = resolvePotentialBonus(character);
     const trustBonus = resolveTrustBonus(character);
-    const talentBonus = resolveTalentBonus(character, finalPhaseIndex, currentLevel);
+    const talentBonus = applyTalentExclusions(
+      charId,
+      resolveTalentBonus(character, finalPhaseIndex, currentLevel),
+    );
 
     const beforeTalentAttack = toNumber(keyFrame?.atk, 100) + potentialBonus.atk + trustBonus.atk;
     const beforeTalentHealth = toNumber(keyFrame?.maxHp, 0) + potentialBonus.maxHp + trustBonus.maxHp;
     const beforeTalentDefense = toNumber(keyFrame?.def, 0) + potentialBonus.def + trustBonus.def;
     const beforeTalentMagicResistance =
       toNumber(keyFrame?.magicResistance, 0) + potentialBonus.magicResistance + trustBonus.magicResistance;
+    const beforeTalentAttackSpeed = potentialBonus.attackSpeed;
     const parsedSkills = character.skills
       .map((entry) => entry.skillId)
       .filter((id): id is string => typeof id === "string" && id in skills)
@@ -541,7 +576,7 @@ export function buildOperatorIndexFromRaw(rawData: RawGameData): OperatorIndex {
       baseDefense: beforeTalentDefense * (1 + talentBonus.defRatio),
       baseMagicResistance: beforeTalentMagicResistance + talentBonus.magicResistanceFlat,
       baseAttackInterval: toNumber(keyFrame?.baseAttackTime, 1) + talentBonus.baseAttackTimeFlat,
-      baseAttackSpeed: 0,
+      baseAttackSpeed: beforeTalentAttackSpeed + talentBonus.attackSpeedFlat,
       subProfessionId: character.subProfessionId,
       modules: resolveModules(charId, uniequipTable, battleEquipTable),
       defaultAttackType: resolveAttackType(character.profession, character.subProfessionId),

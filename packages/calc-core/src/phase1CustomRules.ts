@@ -7,9 +7,9 @@ export const phase1CustomRules: RuleDefinition[] = [
     match: (ctx) => ctx.operator.id === "char_121_lava" && ctx.skill.id === "skcom_magic_rage[1]",
     transform: (effects) => ({
       ...effects,
-      attackSpeedBonus: effects.attackSpeedBonus + 8,
+      attackSpeedBonus: effects.attackSpeedBonus,
     }),
-    note: "第一批迁移：炎熔S1排程口径对齐旧版。",
+    note: "第一批迁移：炎熔S1排程规则占位（基础攻速口径已由数据层覆盖）。",
   },
   {
     id: "phase1.gdglow3.multi_hit",
@@ -279,6 +279,16 @@ export const phase1CustomRules: RuleDefinition[] = [
       disableTraitExtra: true,
     }),
     note: "第二批最小迁移：停攻技能标记为 none，避免错误输出伤害。",
+  },
+  {
+    id: "phase2.kroos1.expected_talent_scale",
+    scope: "skill",
+    match: (ctx) => ctx.operator.id === "char_124_kroos" && ctx.skill.id === "skchr_kroos_1",
+    transform: (effects, ctx) => ({
+      ...effects,
+      attackScale: effects.attackScale * (ctx.battle.conditionEnabled ? 1.12 : 1),
+    }),
+    note: "第二批最小迁移：克洛丝天赋期望倍率按条件开关生效。",
   },
   {
     id: "phase2.skill.magical_extra_stream_minset",
