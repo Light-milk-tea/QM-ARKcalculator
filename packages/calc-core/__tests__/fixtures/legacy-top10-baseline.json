@@ -1,0 +1,62 @@
+[
+  {
+    "id": "top20-001",
+    "operatorId": "char_103_angel",
+    "skillId": "skchr_angel_3",
+    "expected": { "hitDamage": 35.478, "totalDamage": 687.6353932584269, "dps": 45.842359550561795 }
+  },
+  {
+    "id": "top20-002",
+    "operatorId": "char_180_amgoat",
+    "skillId": "skchr_amgoat_2",
+    "expected": { "hitDamage": 1144.6763999999998, "totalDamage": 1144.6763999999998, "dps": 1144.6763999999998 }
+  },
+  {
+    "id": "top20-003",
+    "operatorId": "char_002_amiya",
+    "skillId": "skchr_amiya_3",
+    "expected": { "hitDamage": 1644.7199999999998, "totalDamage": 30838.499999999993, "dps": 1027.9499999999998 }
+  },
+  {
+    "id": "top20-004",
+    "operatorId": "char_172_svrash",
+    "skillId": "skchr_svrash_3",
+    "expected": { "hitDamage": 1651.04, "totalDamage": 38100.92307692308, "dps": 1270.0307692307692 }
+  },
+  {
+    "id": "top20-005",
+    "operatorId": "char_350_surtr",
+    "skillId": "skchr_surtr_3",
+    "expected": { "hitDamage": 1720, "totalDamage": 1720, "dps": 1376 }
+  },
+  {
+    "id": "top20-006",
+    "operatorId": "char_010_chen",
+    "skillId": "skchr_chen_2",
+    "expected": { "hitDamage": 2719.9, "totalDamage": 2719.9, "dps": 2719.9 }
+  },
+  {
+    "id": "top20-007",
+    "operatorId": "char_4039_horn",
+    "skillId": "skchr_horn_3",
+    "expected": { "hitDamage": 2058.272, "totalDamage": 59772.218880000015, "dps": 2490.5091200000006 }
+  },
+  {
+    "id": "top20-008",
+    "operatorId": "char_377_gdglow",
+    "skillId": "skchr_gdglow_3",
+    "expected": { "hitDamage": 486.7200000000001, "totalDamage": 23587.200000000004, "dps": 786.2400000000001 }
+  },
+  {
+    "id": "top20-009",
+    "operatorId": "char_1028_texas2",
+    "skillId": "skchr_texas2_3",
+    "expected": { "hitDamage": 362.3599999999999, "totalDamage": 3428.7827956989236, "dps": 428.59784946236545 }
+  },
+  {
+    "id": "top20-010",
+    "operatorId": "char_1013_chen2",
+    "skillId": "skchr_chen2_3",
+    "expected": { "hitDamage": 1458, "totalDamage": 46656, "dps": 633.9130434782609 }
+  }
+]

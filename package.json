@@ -14,6 +14,7 @@
     "test": "npm run test --workspaces --if-present",
     "replace:gate": "npm run test:replace-gate -w @qm/calc-core",
     "regression": "npm run test -w @qm/calc-core",
+    "parity:legacy": "npm run test -w @qm/calc-core -- __tests__/legacy-parity-top10.test.ts",
     "sync:data": "node scripts/sync-game-data.mjs",
     "audit:custom": "node scripts/audit-custom-coverage.mjs",
     "docs:custom": "node scripts/generate-custom-docs.mjs",

@@ -108,6 +108,65 @@ const index: OperatorIndex = {
         },
       ],
     },
+    spot_like: {
+      id: "spot_like",
+      name: "斑点样例",
+      baseHealth: 1450,
+      baseAttack: 350,
+      baseDefense: 260,
+      baseMagicResistance: 0,
+      baseAttackInterval: 1.2,
+      baseAttackSpeed: 0,
+      defaultAttackType: "physical",
+      skills: [
+        {
+          id: "skchr_spot_1",
+          name: "次级治疗模式",
+          durationSeconds: 25,
+          attackScale: 1.45,
+        },
+      ],
+    },
+    medic_like: {
+      id: "medic_like",
+      name: "治疗样例",
+      baseHealth: 800,
+      baseAttack: 450,
+      baseDefense: 60,
+      baseMagicResistance: 0,
+      baseAttackInterval: 2.85,
+      baseAttackSpeed: 0,
+      defaultAttackType: "heal",
+      skills: [
+        {
+          id: "heal_s1",
+          name: "治疗强化",
+          durationSeconds: 15,
+          attackScale: 1,
+          healScale: 1.2,
+        },
+      ],
+    },
+    incantation_like: {
+      id: "incantation_like",
+      name: "咒愈样例",
+      baseHealth: 950,
+      baseAttack: 600,
+      baseDefense: 80,
+      baseMagicResistance: 0,
+      baseAttackInterval: 1.8,
+      baseAttackSpeed: 0,
+      subProfessionId: "incantationmedic",
+      defaultAttackType: "magical",
+      skills: [
+        {
+          id: "incant_s2",
+          name: "伤疗转换",
+          durationSeconds: 18,
+          attackScale: 1.4,
+        },
+      ],
+    },
   },
 };
 
@@ -180,5 +239,32 @@ describe("calculateSkillDps", () => {
     const result = calculateSkillDps(makeInput("fang_like", "utility"), index);
     expect(result.schedule.duration).toBe(1);
     expect(result.summary.dps).toBeCloseTo(result.summary.totalDamage, 6);
+  });
+
+  it("斑点 S1 停攻技能应输出 0 伤害", () => {
+    const result = calculateSkillDps(makeInput("spot_like", "skchr_spot_1"), index);
+    expect(result.summary.hitDamage).toBe(0);
+    expect(result.summary.totalDamage).toBe(0);
+    expect(result.summary.dps).toBe(0);
+    expect(result.streams[0].attackType).toBe("none");
+    expect(
+      result.ruleTrace.some(
+        (rule) => rule.ruleId === "phase2.skill.stop_attacking_minset" && rule.applied,
+      ),
+    ).toBe(true);
+  });
+
+  it("治疗技能应输出 HPS 与治疗流", () => {
+    const result = calculateSkillDps(makeInput("medic_like", "heal_s1"), index);
+    expect(result.healing.enabled).toBe(true);
+    expect(result.healing.hps).toBeGreaterThan(0);
+    expect(result.healing.streams.some((stream) => stream.id === "HEAL_MAIN")).toBe(true);
+    expect(result.formula.healing?.length ?? 0).toBeGreaterThan(0);
+  });
+
+  it("咒愈师应输出伤害转治疗流", () => {
+    const result = calculateSkillDps(makeInput("incantation_like", "incant_s2"), index);
+    expect(result.healing.enabled).toBe(true);
+    expect(result.healing.streams.some((stream) => stream.id === "HEAL_FROM_DAMAGE")).toBe(true);
   });
 });
