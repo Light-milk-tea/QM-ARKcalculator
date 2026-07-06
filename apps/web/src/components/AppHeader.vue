@@ -9,8 +9,12 @@ defineProps<{
 <template>
   <header class="wiki-sitebar">
     <div class="wiki-sitebar-inner">
-      <div class="flex items-baseline">
+      <div class="flex items-baseline gap-4">
         <span class="wiki-sitelogo">ARKcalculator</span>
+        <nav class="hidden md:flex items-center gap-3 text-[0.85rem]">
+          <RouterLink to="/" class="text-arkrec-link hover:underline">单技能计算</RouterLink>
+          <RouterLink to="/leaderboard/skills" class="text-arkrec-link hover:underline">全员榜单</RouterLink>
+        </nav>
       </div>
       <div class="wiki-sitestatus">
         <span v-if="loading" class="text-arkrec-link">数据加载中…</span>

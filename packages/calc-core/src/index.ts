@@ -1,4 +1,4 @@
-export { calculateSkillDps, buildCalculationContext } from "./pipeline";
+export { calculateSkillDps, buildCalculationContext, buildCalculationWarnings } from "./pipeline";
 export { buildOperatorIndexFromRaw } from "./data";
 export { defaultSkillRules } from "./rules";
 export { phase1CustomRules } from "./phase1CustomRules";

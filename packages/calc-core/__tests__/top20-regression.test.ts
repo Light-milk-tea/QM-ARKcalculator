@@ -131,6 +131,22 @@ describe("top20-priority-regression", () => {
     }
   });
 
+  it("Top20 warning 统计应可用于迁移待办", () => {
+    const warningStats = readyCases
+      .map((item) => {
+        const result = calculateSkillDps(buildInput(item), index);
+        return {
+          id: item.id,
+          partial: result.warnings.filter((warning) => warning.code === "WARN_PARTIAL_RULE_COVERAGE").length,
+          unmapped: result.warnings.filter((warning) => warning.code === "WARN_UNMAPPED_KEY").length,
+        };
+      })
+      .sort((a, b) => b.partial * 2 + b.unmapped - (a.partial * 2 + a.unmapped));
+
+    expect(warningStats.length).toBeGreaterThan(0);
+    expect(warningStats.every((item) => Number.isFinite(item.partial) && Number.isFinite(item.unmapped))).toBe(true);
+  });
+
   it("条件开关样例：号角 S3 开启条件后 DPS 应提升", () => {
     const baseCase = top20Cases.find((item) => item.id === "top20-007");
     expect(baseCase).toBeTruthy();

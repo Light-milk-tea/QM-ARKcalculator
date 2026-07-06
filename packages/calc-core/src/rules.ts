@@ -7,6 +7,9 @@ import type {
 import { phase1CustomRules } from "./phase1CustomRules";
 
 export function getBaseEffects(context: CalculationContext): NormalizedEffects {
+  const skillHealFromDamageRatio =
+    context.skill.healFromDamageRatio ??
+    (context.operator.subProfessionId === "incantationmedic" ? 0.5 : 0);
   return {
     attackType: context.operator.defaultAttackType,
     atkBuffRatio: context.skill.atkBuffRatio ?? 0,
@@ -32,6 +35,12 @@ export function getBaseEffects(context: CalculationContext): NormalizedEffects {
     extraAttackTimes: context.skill.extraAttackTimes,
     extraDuration: context.skill.extraDuration,
     extraTrueDamageScale: 0,
+    healScale: context.skill.healScale ?? 0,
+    healFlat: context.skill.healFlat ?? 0,
+    healFromDamageRatio: skillHealFromDamageRatio,
+    healAttackInterval: context.skill.healAttackInterval,
+    healAttackTimes: context.skill.healAttackTimes,
+    healDuration: context.skill.healDuration,
     disableTraitExtra: context.skill.disableTraitExtra ?? false,
   };
 }

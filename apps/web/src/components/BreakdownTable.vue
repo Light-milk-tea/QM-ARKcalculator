@@ -12,6 +12,8 @@ const breakdownKeyLabels: Record<string, string> = {
   attackScale: "技能攻击倍率",
   damageScale: "最终伤害倍率",
   attackType: "攻击类型",
+  healScale: "治疗倍率",
+  healFromDamageRatio: "伤害转治疗比例",
 };
 
 const attackTypeLabels: Record<string, string> = {

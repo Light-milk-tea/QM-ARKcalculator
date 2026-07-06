@@ -11,21 +11,36 @@ const props = defineProps<{
     duration: number;
   };
   streams: DamageStreamResult[];
+  healing?: {
+    enabled: boolean;
+    hitHealing: number;
+    totalHealing: number;
+    hps: number;
+  };
 }>();
+
+const streamIdLabels: Record<string, string> = {
+  MAIN: "主伤害流",
+  OTHER_TRUE: "额外真实流",
+};
+
+function localizeStreamId(streamId: string): string {
+  return streamIdLabels[streamId] ?? streamId;
+}
 
 const streamBreakdown = computed(() =>
   props.streams
     .map(
       (s) =>
-        `${s.id}(${s.hitDamage.toFixed(2)} × ${s.attackCount.toFixed(2)}) = ${s.totalDamage.toFixed(2)}`,
+        `${localizeStreamId(s.id)}(${s.hitDamage.toFixed(2)} × ${s.attackCount.toFixed(2)}) = ${s.totalDamage.toFixed(2)}`,
     )
     .join("  +  "),
 );
 
 const attackCountExpression = computed(() =>
   props.schedule.attackCountFromSkill
-    ? "max(1, skill.attackCount)"
-    : `max(1, duration / attackInterval) = max(1, ${props.schedule.duration.toFixed(2)} / ${props.schedule.attackInterval.toFixed(2)})`,
+    ? "max(1, 技能攻击次数)"
+    : `max(1, 技能持续时间 / 实际攻击间隔) = max(1, ${props.schedule.duration.toFixed(2)} / ${props.schedule.attackInterval.toFixed(2)})`,
 );
 </script>
 
@@ -44,6 +59,16 @@ const attackCountExpression = computed(() =>
             {{ summary.dps.toFixed(2) }}
           </td>
         </tr>
+        <tr v-if="healing?.enabled">
+          <th>单次治疗</th>
+          <td class="font-mono font-semibold">
+            {{ healing.hitHealing.toFixed(2) }}
+          </td>
+          <th>每秒治疗 (HPS)</th>
+          <td class="font-mono font-semibold text-arkrec-success">
+            {{ healing.hps.toFixed(2) }}
+          </td>
+        </tr>
         <tr>
           <th>技能总伤</th>
           <td colspan="3" class="font-mono">
@@ -53,6 +78,12 @@ const attackCountExpression = computed(() =>
             <div class="text-arkrec-softInk text-[0.78rem] leading-5 mt-0.5 break-all">
               = 各伤害流总和  =  {{ streamBreakdown }}
             </div>
+          </td>
+        </tr>
+        <tr v-if="healing?.enabled">
+          <th>技能总治疗</th>
+          <td colspan="3" class="font-mono font-semibold">
+            {{ healing.totalHealing.toFixed(2) }}
           </td>
         </tr>
         <tr>
@@ -71,14 +102,14 @@ const attackCountExpression = computed(() =>
           <td class="font-mono">
             <div>= {{ schedule.attackInterval.toFixed(2) }} s</div>
             <div class="text-arkrec-softInk text-[0.78rem] leading-5 mt-0.5">
-              = max(0.1, baseAttackInterval × aspdFactor)
+              = max(0.1, 基础攻击间隔 × 攻速系数)
             </div>
           </td>
           <th>技能持续时间</th>
           <td class="font-mono">
             <div>= {{ schedule.duration.toFixed(2) }} s</div>
             <div class="text-arkrec-softInk text-[0.78rem] leading-5 mt-0.5">
-              = max(0.1, skill.durationSeconds)
+              = max(0.1, 技能持续秒数)
             </div>
           </td>
         </tr>

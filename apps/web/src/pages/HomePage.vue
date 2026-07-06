@@ -14,10 +14,7 @@ import ArticleFooter from "../components/ArticleFooter.vue";
 import OperatorInfobox from "../components/OperatorInfobox.vue";
 import ParameterForm from "../components/ParameterForm.vue";
 import EnemyEffectsPanel from "../components/EnemyEffectsPanel.vue";
-import ResultSummary from "../components/ResultSummary.vue";
-import CollapsibleSection from "../components/CollapsibleSection.vue";
-import RuleTracePanel from "../components/RuleTracePanel.vue";
-import FormulaViewer from "../components/FormulaViewer.vue";
+import CalculationDetailSections from "../components/CalculationDetailSections.vue";
 import ruleVersionMeta from "../../../../versions/rule-version.json";
 import dataVersionMeta from "../../../../versions/data-version.json";
 
@@ -199,40 +196,7 @@ onMounted(async () => {
             @update:condition-enabled="battleStore.conditionEnabled = $event"
           />
 
-          <section id="result">
-            <h2 class="wiki-section">
-              <span>计算结果</span>
-            </h2>
-            <ResultSummary
-              v-if="result"
-              :summary="result.summary"
-              :schedule="result.schedule"
-              :streams="result.streams"
-            />
-            <div v-else class="wiki-callout">
-              请先在参数设置中选择有效的干员与技能以查看结果。
-            </div>
-          </section>
-
-          <section v-if="result" id="formula">
-            <h2 class="wiki-section">
-              <span>计算公式</span>
-            </h2>
-            <FormulaViewer
-              :formula="result.formula"
-              :summary="result.summary"
-              :schedule="result.schedule"
-              :streams="result.streams"
-              :breakdown="result.breakdown"
-            />
-          </section>
-
-          <CollapsibleSection v-if="result" id="rules" title="规则与警告" :default-open="false">
-            <RuleTracePanel
-              :rule-trace="result.ruleTrace"
-              :warnings="result.warnings"
-            />
-          </CollapsibleSection>
+          <CalculationDetailSections :result="result" />
         </article>
       </div>
 

@@ -10,6 +10,12 @@ const props = defineProps<{
   schedule: { attackInterval: number; attackCount: number; duration: number };
   streams: DamageStreamResult[];
   breakdown: BreakdownItem[];
+  healing?: {
+    enabled: boolean;
+    hitHealing: number;
+    totalHealing: number;
+    hps: number;
+  };
 }>();
 
 const showDetails = ref(false);
@@ -18,6 +24,11 @@ const dpsEquation = computed(
   () =>
     `DPS = 总伤 / 持续时间 = ${props.summary.totalDamage.toFixed(2)} / ${props.schedule.duration.toFixed(2)} = ${props.summary.dps.toFixed(2)}`,
 );
+
+const hpsEquation = computed(() => {
+  if (!props.healing?.enabled) return "";
+  return `HPS = 总治疗 / 持续时间 = ${props.healing.totalHealing.toFixed(2)} / ${props.schedule.duration.toFixed(2)} = ${props.healing.hps.toFixed(2)}`;
+});
 
 function toNumber(value: number | string | undefined): number | null {
   if (typeof value !== "number") return null;
@@ -87,6 +98,7 @@ function describe(
 
   <div v-if="showDetails" class="mt-4 space-y-6">
     <div class="wiki-formula-equation">{{ dpsEquation }}</div>
+    <div v-if="healing?.enabled" class="wiki-formula-equation">{{ hpsEquation }}</div>
 
     <section>
       <h4 class="wiki-minor">步骤 1：单次伤害推导</h4>
@@ -149,6 +161,30 @@ function describe(
           </thead>
           <tbody>
             <tr v-for="item in formula.summary" :key="item.key">
+              <td>{{ item.label }}</td>
+              <td>{{ describe(item) }}</td>
+              <td class="font-mono text-[0.88rem]">
+                {{ typeof item.value === "number" ? item.value.toFixed(4) : item.value }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section v-if="formula.healing && formula.healing.length > 0">
+      <h4 class="wiki-minor">步骤 3b：总治疗与 HPS</h4>
+      <div class="wiki-table-wrap">
+        <table class="wiki-table wiki-table--zebra">
+          <thead>
+            <tr>
+              <th style="width: 22%;">步骤</th>
+              <th>中文说明</th>
+              <th style="width: 18%;">结果</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="item in formula.healing" :key="item.key">
               <td>{{ item.label }}</td>
               <td>{{ describe(item) }}</td>
               <td class="font-mono text-[0.88rem]">

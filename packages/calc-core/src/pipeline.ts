@@ -498,6 +498,82 @@ function buildSummaryFormula(
   ];
 }
 
+function buildHealingFormula(
+  healingStreams: DamageStreamResult[],
+  totalHealing: number,
+  duration: number,
+  hps: number,
+): FormulaStep[] {
+  const streamSummary = healingStreams
+    .map((stream) => `${stream.id}:${stream.totalDamage.toFixed(2)}`)
+    .join(" + ");
+  return [
+    {
+      key: "healingTotal",
+      label: "治疗流汇总",
+      expression: "totalHealing = sum(healingStream.totalHealing)",
+      value: totalHealing,
+      inputs: {
+        streams: streamSummary || "none",
+      },
+    },
+    {
+      key: "hps",
+      label: "每秒治疗",
+      expression: "hps = totalHealing / duration",
+      value: hps,
+      inputs: {
+        totalHealing,
+        duration,
+      },
+    },
+  ];
+}
+
+export function buildCalculationWarnings(
+  context: CalculationContext,
+  effects: NormalizedEffects,
+): CalculationWarning[] {
+  const warnings: CalculationWarning[] = [];
+  if ((context.skill.unmappedBlackboardKeys ?? []).length > 0) {
+    warnings.push({
+      ...warningCatalog.WARN_UNMAPPED_KEY,
+      source: context.skill.unmappedBlackboardKeys?.join(", "),
+    });
+  }
+  if (context.skill.hasAmbiguousSemantic) {
+    warnings.push({
+      ...warningCatalog.WARN_AMBIGUOUS_SEMANTIC,
+      source: context.skill.id,
+    });
+  }
+  if ((context.skill.customTags ?? []).includes("legacy_unmapped")) {
+    warnings.push({
+      ...warningCatalog.WARN_PARTIAL_RULE_COVERAGE,
+      source: context.skill.id,
+    });
+  }
+  if ((context.skill.customTags ?? []).includes("semantic_ambiguous")) {
+    warnings.push({
+      ...warningCatalog.WARN_MANUAL_REVIEW_REQUIRED,
+      source: context.skill.id,
+    });
+  }
+  if ((context.skill.customTags ?? []).includes("assumption_applied")) {
+    warnings.push({
+      ...warningCatalog.WARN_ASSUMPTION_APPLIED,
+      source: context.skill.id,
+    });
+  }
+  if (effects.attackType === "none" || effects.disableTraitExtra) {
+    warnings.push({
+      ...warningCatalog.WARN_INFO_LIMITATION,
+      source: context.skill.id,
+    });
+  }
+  return warnings;
+}
+
 export function calculateSkillDps(
   input: CalculationInput,
   index: OperatorIndex,
@@ -590,50 +666,83 @@ export function calculateSkillDps(
     });
   }
 
+  const healingStreams: DamageStreamResult[] = [];
+  const directHealScale = effects.healScale > 0 ? effects.healScale : effects.attackType === "heal" ? 1 : 0;
+  if (directHealScale > 0) {
+    const directHealHit = Math.max(mainHit.scaledAttack * directHealScale + effects.healFlat, 0);
+    const totalHealing = resolveStreamTotal({
+      hitDamage: directHealHit,
+      attackCount: schedule.attackCount,
+      interval: effects.healAttackInterval,
+      duration: effects.healDuration,
+      times: effects.healAttackTimes,
+      schedule,
+    });
+    healingStreams.push({
+      id: "HEAL_MAIN",
+      attackType: "heal",
+      hitDamage: directHealHit,
+      attackCount: schedule.attackCount,
+      interval: effects.healAttackInterval ?? schedule.attackInterval,
+      duration: effects.healDuration ?? schedule.duration,
+      times: effects.healAttackTimes ?? schedule.attackTimes,
+      totalDamage: totalHealing,
+    });
+  }
+
+  if (effects.healFromDamageRatio > 0) {
+    const convertFrom = streams.reduce((sum, item) => sum + item.hitDamage, 0);
+    const healFromDamageHit = Math.max(convertFrom * effects.healFromDamageRatio, 0);
+    const totalHealing = resolveStreamTotal({
+      hitDamage: healFromDamageHit,
+      attackCount: schedule.attackCount,
+      interval: effects.healAttackInterval,
+      duration: effects.healDuration,
+      times: effects.healAttackTimes,
+      schedule,
+    });
+    healingStreams.push({
+      id: "HEAL_FROM_DAMAGE",
+      attackType: "heal",
+      hitDamage: healFromDamageHit,
+      attackCount: schedule.attackCount,
+      interval: effects.healAttackInterval ?? schedule.attackInterval,
+      duration: effects.healDuration ?? schedule.duration,
+      times: effects.healAttackTimes ?? schedule.attackTimes,
+      totalDamage: totalHealing,
+    });
+  }
+
   const totalDamage = streams.reduce((sum, item) => sum + item.totalDamage, 0);
   const dps = buildStreamDps(totalDamage, schedule);
+  const totalHealing = healingStreams.reduce((sum, item) => sum + item.totalDamage, 0);
+  const hps = buildStreamDps(totalHealing, schedule);
   const formula: CalculationFormula = {
     mainHit: mainHit.formulaSteps,
     schedule: buildScheduleFormula(context, effects, schedule),
     summary: buildSummaryFormula(streams, totalDamage, schedule.duration, dps),
+    healing: healingStreams.length > 0
+      ? buildHealingFormula(healingStreams, totalHealing, schedule.duration, hps)
+      : undefined,
   };
-
-  const warnings: CalculationWarning[] = [];
-  if ((context.skill.unmappedBlackboardKeys ?? []).length > 0) {
-    warnings.push({
-      ...warningCatalog.WARN_UNMAPPED_KEY,
-      source: context.skill.unmappedBlackboardKeys?.join(", "),
-    });
-  }
-  if (context.skill.hasAmbiguousSemantic) {
-    warnings.push({
-      ...warningCatalog.WARN_AMBIGUOUS_SEMANTIC,
-      source: context.skill.id,
-    });
-  }
-  if ((context.skill.customTags ?? []).includes("legacy_unmapped")) {
-    warnings.push({
-      ...warningCatalog.WARN_PARTIAL_RULE_COVERAGE,
-      source: context.skill.id,
-    });
-  }
-  if ((context.skill.customTags ?? []).includes("semantic_ambiguous")) {
-    warnings.push({
-      ...warningCatalog.WARN_MANUAL_REVIEW_REQUIRED,
-      source: context.skill.id,
-    });
-  }
-  if ((context.skill.customTags ?? []).includes("assumption_applied")) {
-    warnings.push({
-      ...warningCatalog.WARN_ASSUMPTION_APPLIED,
-      source: context.skill.id,
-    });
-  }
-  if (effects.attackType === "heal" || effects.attackType === "none" || effects.disableTraitExtra) {
-    warnings.push({
-      ...warningCatalog.WARN_INFO_LIMITATION,
-      source: context.skill.id,
-    });
+  const warnings = buildCalculationWarnings(context, effects);
+  const breakdown = [
+    { key: "baseAttack", value: context.operator.baseAttack, description: "基础攻击力" },
+    {
+      key: "development",
+      value: `E${context.development.eliteStage}/SL${context.development.skillLevel}/P${context.development.potentialRank}/T${context.development.trust}/M${context.development.moduleStage}(${context.selectedModule?.name ?? "无"})`,
+      description: "养成与模组参数",
+    },
+    { key: "atkBuffRatio", value: effects.atkBuffRatio, description: "攻击力百分比加成" },
+    { key: "attackScale", value: effects.attackScale, description: "技能攻击倍率" },
+    { key: "damageScale", value: effects.damageScale, description: "最终伤害倍率" },
+    { key: "attackType", value: effects.attackType, description: "当前攻击类型" },
+  ];
+  if (healingStreams.length > 0) {
+    breakdown.push(
+      { key: "healScale", value: effects.healScale, description: "治疗倍率" },
+      { key: "healFromDamageRatio", value: effects.healFromDamageRatio, description: "伤害转治疗比例" },
+    );
   }
 
   return {
@@ -641,6 +750,13 @@ export function calculateSkillDps(
       hitDamage: streams[0].hitDamage,
       totalDamage,
       dps,
+    },
+    healing: {
+      enabled: healingStreams.length > 0,
+      hitHealing: healingStreams[0]?.hitDamage ?? 0,
+      totalHealing,
+      hps,
+      streams: healingStreams,
     },
     schedule: {
       attackInterval: schedule.attackInterval,
@@ -653,18 +769,7 @@ export function calculateSkillDps(
       isPermanent: schedule.isPermanent,
     },
     streams,
-    breakdown: [
-      { key: "baseAttack", value: context.operator.baseAttack, description: "基础攻击力" },
-      {
-        key: "development",
-        value: `E${context.development.eliteStage}/SL${context.development.skillLevel}/P${context.development.potentialRank}/T${context.development.trust}/M${context.development.moduleStage}(${context.selectedModule?.name ?? "无"})`,
-        description: "养成与模组参数",
-      },
-      { key: "atkBuffRatio", value: effects.atkBuffRatio, description: "攻击力百分比加成" },
-      { key: "attackScale", value: effects.attackScale, description: "技能攻击倍率" },
-      { key: "damageScale", value: effects.damageScale, description: "最终伤害倍率" },
-      { key: "attackType", value: effects.attackType, description: "当前攻击类型" },
-    ],
+    breakdown,
     formula,
     ruleTrace: trace,
     warnings,

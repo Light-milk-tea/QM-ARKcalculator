@@ -132,6 +132,21 @@ const knownBlackboardKeys = new Set([
   "thorns_s_3[b].atk",
   "thorns_s_3[b].attack_speed",
   "thorns_s_3[b].duration",
+  "heal_scale",
+  "heal_hpratio",
+  "heal_hp_ratio",
+  "heal_ratio",
+  "heal",
+  "heal_by_atk",
+  "attack@heal_scale",
+  "attack@heal_ratio",
+  "attack@heal_hpratio",
+  "heal_interval",
+  "heal_times",
+  "heal_duration",
+  "attack@heal_interval",
+  "attack@heal_times",
+  "attack@heal_duration",
 ]);
 
 const knownBlackboardPrefixes = ["talent@", "recipe.", "sandbox_res_collector."];
@@ -142,8 +157,19 @@ function isKnownBlackboardKey(key: string): boolean {
 }
 
 function resolveAttackType(profession: string | undefined, subProfessionId: string | undefined): AttackType {
-  if (profession === "CASTER" || profession === "MEDIC") {
+  if (profession === "MEDIC") {
+    if (subProfessionId === "incantationmedic") {
+      return "magical";
+    }
+    return "heal";
+  }
+
+  if (profession === "CASTER") {
     return "magical";
+  }
+
+  if (subProfessionId === "blessing") {
+    return "heal";
   }
 
   const magicalSubprofessionHints = ["arts", "incantation", "mysticcaster", "corecaster", "phalanxcaster"];
@@ -155,6 +181,19 @@ function resolveAttackType(profession: string | undefined, subProfessionId: stri
   }
 
   return "physical";
+}
+
+function collectUnmappedBlackboardKeys(keys: string[]): string[] {
+  return keys.filter((key) => !isKnownBlackboardKey(key));
+}
+
+function deriveWarningSignals(keys: string[]) {
+  return {
+    hasAmbiguousSemantic:
+      keys.includes("mode") ||
+      keys.includes("branch_id") ||
+      (keys.includes("atk") && keys.includes("attack@atk")),
+  };
 }
 
 function inferCustomTags(params: {
@@ -232,11 +271,9 @@ function parseSkill(skillId: string, raw: SkillLike): SkillData {
       .map((entry) => [entry.key as string, toNumber(entry.value)]),
   );
   const blackboardKeys = [...board.keys()];
-  const unmappedBlackboardKeys = blackboardKeys.filter((key) => !isKnownBlackboardKey(key));
-  const hasAmbiguousSemantic =
-    blackboardKeys.includes("mode") ||
-    blackboardKeys.includes("branch_id") ||
-    (blackboardKeys.includes("atk") && blackboardKeys.includes("attack@atk"));
+  const unmappedBlackboardKeys = collectUnmappedBlackboardKeys(blackboardKeys);
+  const warningSignals = deriveWarningSignals(blackboardKeys);
+  const hasAmbiguousSemantic = warningSignals.hasAmbiguousSemantic;
   const triggerTime = board.get("attack@trigger_time") ?? board.get("trigger_time");
   const rawDuration = toNumber(level?.duration, 1);
   let durationSeconds = rawDuration;
@@ -263,6 +300,15 @@ function parseSkill(skillId: string, raw: SkillLike): SkillData {
   const atkBuffRatio = board.get("atk") ?? board.get("attack@atk") ?? 0;
   const attackSpeedBonus = board.get("attack_speed") ?? 0;
   const attackCount = board.get("cnt") ?? board.get("times") ?? board.get("max_target");
+  const healScale =
+    board.get("heal_scale") ??
+    board.get("heal_ratio") ??
+    board.get("heal_hpratio") ??
+    board.get("heal_hp_ratio") ??
+    board.get("attack@heal_scale") ??
+    board.get("attack@heal_ratio") ??
+    board.get("attack@heal_hpratio");
+  const healFlat = board.get("heal") ?? board.get("heal_by_atk") ?? 0;
   const skillName = toString(level?.name, skillId);
   const customTags = inferCustomTags({
     skillId,
@@ -299,6 +345,12 @@ function parseSkill(skillId: string, raw: SkillLike): SkillData {
     extraAttackInterval: undefined,
     extraAttackTimes: undefined,
     extraDuration: undefined,
+    healScale,
+    healFlat,
+    healFromDamageRatio: undefined,
+    healAttackInterval: board.get("heal_interval") ?? board.get("attack@heal_interval"),
+    healAttackTimes: board.get("heal_times") ?? board.get("attack@heal_times"),
+    healDuration: board.get("heal_duration") ?? board.get("attack@heal_duration"),
     ammoCount: undefined,
     customTags,
     unmappedBlackboardKeys,

@@ -1,6 +1,16 @@
 <script setup lang="ts">
 import type { OperatorData } from "@qm/calc-core";
 
+const attackTypeLabels: Record<string, string> = {
+  physical: "物理",
+  magical: "法术",
+  true: "真实",
+};
+
+function localizeAttackType(type: string): string {
+  return attackTypeLabels[type] ?? type;
+}
+
 defineProps<{
   operator: OperatorData | null;
   currentAttack?: number;
@@ -37,7 +47,7 @@ defineProps<{
         </tr>
         <tr>
           <th>攻击类型</th>
-          <td>{{ operator.defaultAttackType }}</td>
+          <td>{{ localizeAttackType(operator.defaultAttackType) }}</td>
         </tr>
         <tr>
           <th>模组</th>

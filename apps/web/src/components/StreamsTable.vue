@@ -10,6 +10,9 @@ const streamIdLabels: Record<string, string> = {
   OTHER_TRUE: "额外真实流",
   OTHER_PHYSICAL: "额外物理流",
   OTHER_MAGICAL: "额外法术流",
+  HEAL_MAIN: "主治疗流",
+  HEAL_FROM_DAMAGE: "伤害转治疗流",
+  HEAL_EXTRA: "额外治疗流",
 };
 
 const attackTypeLabels: Record<string, string> = {
@@ -31,7 +34,7 @@ function localizeAttackType(type: string): string {
 
 <template>
   <p class="wiki-paragraph">
-    伤害流区分主伤害流 (MAIN) 与其他真实伤害流 (OTHER_TRUE),分别统计单次伤害、攻击次数与总伤。
+    流式结算同时支持伤害流与治疗流，分别统计单次值、攻击次数与总量。
   </p>
   <div class="wiki-table-wrap">
     <table class="wiki-table wiki-table--zebra">

@@ -37,11 +37,11 @@
 - Batch B（8-14）：9~15，重点解决复杂 custom 分支。
 - Batch C（15-20）：16~20，覆盖长尾且高争议技能。
 
-## 当前进度（阶段A）
+## 当前进度口径
 
-- 已落地首批可执行回归样例：`top20-001` ~ `top20-005`（标记为 `ready`）。
-- 每条样例已补充 `operatorId` 与 `skillId`，用于机器可执行回归。
-- 其余样例保留 `pending`，待对应规则迁移后补齐期望值。
+- 本文档只维护“优先级与迁移策略”，不手工维护 ready/pending 数字。
+- Top20 实时进度统一以 fixture 为事实源：`packages/calc-core/__tests__/fixtures/top20-priority-cases.json`。
+- 机器生成状态文档见：`docs/custom/custom-rule-status.md`。
 
 ## 样例与回归要求
 

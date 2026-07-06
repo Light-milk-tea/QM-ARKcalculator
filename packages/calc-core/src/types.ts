@@ -25,6 +25,12 @@ export interface SkillData {
   extraAttackInterval?: number;
   extraAttackTimes?: number;
   extraDuration?: number;
+  healScale?: number;
+  healFlat?: number;
+  healFromDamageRatio?: number;
+  healAttackInterval?: number;
+  healAttackTimes?: number;
+  healDuration?: number;
   disableTraitExtra?: boolean;
   customTags?: string[];
   unmappedBlackboardKeys?: string[];
@@ -126,11 +132,24 @@ export interface NormalizedEffects {
   extraAttackTimes?: number;
   extraDuration?: number;
   extraTrueDamageScale: number;
+  healScale: number;
+  healFlat: number;
+  healFromDamageRatio: number;
+  healAttackInterval?: number;
+  healAttackTimes?: number;
+  healDuration?: number;
   disableTraitExtra: boolean;
 }
 
 export interface DamageStreamResult {
-  id: "MAIN" | "OTHER_TRUE" | "OTHER_PHYSICAL" | "OTHER_MAGICAL";
+  id:
+    | "MAIN"
+    | "OTHER_TRUE"
+    | "OTHER_PHYSICAL"
+    | "OTHER_MAGICAL"
+    | "HEAL_MAIN"
+    | "HEAL_FROM_DAMAGE"
+    | "HEAL_EXTRA";
   attackType: AttackType;
   hitDamage: number;
   attackCount: number;
@@ -164,6 +183,7 @@ export interface CalculationFormula {
   mainHit: FormulaStep[];
   schedule: FormulaStep[];
   summary: FormulaStep[];
+  healing?: FormulaStep[];
 }
 
 export interface CalculationResult {
@@ -171,6 +191,13 @@ export interface CalculationResult {
     hitDamage: number;
     totalDamage: number;
     dps: number;
+  };
+  healing: {
+    enabled: boolean;
+    hitHealing: number;
+    totalHealing: number;
+    hps: number;
+    streams: DamageStreamResult[];
   };
   schedule: {
     attackInterval: number;
