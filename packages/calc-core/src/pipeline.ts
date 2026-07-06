@@ -115,7 +115,7 @@ export function buildCalculationContext(
 function buildSchedule(context: CalculationContext, effects: NormalizedEffects) {
   const rawDuration = effects.durationOverride ?? context.skill.durationSeconds;
   const duration = normalizeDuration(rawDuration + effects.durationAdjustment);
-  const { eliteAttackIntervalFactor, selectedStageBonus } = resolveDevelopmentFactors(context);
+  const { eliteAttackIntervalFactor } = resolveDevelopmentFactors(context);
   const totalAttackSpeedBonus = (context.operator.baseAttackSpeed ?? 0) + effects.attackSpeedBonus;
   const aspdFactor = 100 / Math.max(1, 100 + totalAttackSpeedBonus);
   const revisedBaseAttackInterval = Math.max(
