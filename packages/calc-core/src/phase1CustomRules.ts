@@ -314,6 +314,192 @@ export const phase1CustomRules: RuleDefinition[] = [
     note: "第二批最小迁移：附加法伤流基础口径。",
   },
   {
+    id: "phase2.funnel.trait_extra_stream",
+    scope: "skill",
+    match: (ctx) => ctx.operator.id === "char_328_cammou" && ctx.skill.id === "skcom_atk_up[2]",
+    transform: (effects) => ({
+      ...effects,
+      // 旧项目口径下，卡达该样例还叠加了分支常驻攻速（等效 +18）。
+      attackSpeedBonus: effects.attackSpeedBonus + 18,
+      extraAttackType: "magical",
+      extraAttackScale: effects.disableTraitExtra
+        ? effects.extraAttackScale
+        : Math.max(effects.extraAttackScale, 1.1),
+    }),
+    note: "第二批最小迁移：驭械术师分支附加法伤流（旧口径 1.1x）。",
+  },
+  {
+    id: "phase2.indigo1.attack_count_proxy",
+    scope: "skill",
+    match: (ctx) => ctx.skill.id === "skchr_indigo_1",
+    transform: (effects) => ({
+      ...effects,
+      attackCountOverride: Math.max(effects.attackCountOverride ?? 0, 20 / 3),
+    }),
+    note: "第二批最小迁移：深靛S1按旧口径使用固定段数。",
+  },
+  {
+    id: "phase2.jesica1.single_hit",
+    scope: "skill",
+    match: (ctx) => ctx.skill.id === "skchr_jesica_1",
+    transform: (effects) => ({
+      ...effects,
+      attackCountOverride: 1,
+    }),
+    note: "第二批最小迁移：杰西卡S1按旧口径视为单次结算。",
+  },
+  {
+    id: "phase2.shotst1.defense_break_single_hit",
+    scope: "skill",
+    match: (ctx) => ctx.skill.id === "skchr_shotst_1",
+    transform: (effects) => ({
+      ...effects,
+      attackScale: effects.attackScale * 1.4,
+      attackCountOverride: 1,
+      defShredRate: Math.max(effects.defShredRate, 0.35),
+    }),
+    note: "第二批最小迁移：流星S1按旧口径叠加天赋倍率并单次破甲结算（35%减防）。",
+  },
+  {
+    id: "phase2.mm1.single_hit",
+    scope: "skill",
+    match: (ctx) => ctx.skill.id === "skchr_mm_1",
+    transform: (effects) => ({
+      ...effects,
+      attackCountOverride: 1,
+    }),
+    note: "第二批最小迁移：梅S1按旧口径视为单次结算。",
+  },
+  {
+    id: "phase2.pinecn1.single_hit_penetrate",
+    scope: "skill",
+    match: (ctx) => ctx.skill.id === "skchr_pinecn_1",
+    transform: (effects) => ({
+      ...effects,
+      attackScale: effects.attackScale * 1.5,
+      attackCountOverride: 1,
+      defPenetrateFixed: Math.max(effects.defPenetrateFixed, 250),
+    }),
+    note: "第二批最小迁移：松果S1按旧口径应用散射手倍率与固定穿防并单次结算。",
+  },
+  {
+    id: "phase2.glaze1.interval_legacy",
+    scope: "skill",
+    match: (ctx) => ctx.skill.id === "skchr_glaze_1",
+    transform: (effects) => ({
+      ...effects,
+      attackSpeedBonus: effects.attackSpeedBonus + 6,
+    }),
+    note: "第二批最小迁移：安比尔S1按旧口径修正攻速。",
+  },
+  {
+    id: "phase2.totter1.single_hit",
+    scope: "skill",
+    match: (ctx) => ctx.skill.id === "skchr_totter_1",
+    transform: (effects) => ({
+      ...effects,
+      attackCountOverride: 1,
+    }),
+    note: "第二批最小迁移：铅踝S1按旧口径视为单次结算。",
+  },
+  {
+    id: "phase2.caper1.expected_talent",
+    scope: "skill",
+    match: (ctx) => ctx.skill.id === "skchr_caper_1",
+    transform: (effects, ctx) => ({
+      ...effects,
+      attackScale: effects.attackScale * (ctx.battle.conditionEnabled ? 1.15 : 1),
+      attackCountOverride: 1,
+    }),
+    note: "第二批最小迁移：跃跃S1按条件开关叠加天赋期望倍率并单次结算。",
+  },
+  {
+    id: "phase2.vigna1.expected_talent_attack",
+    scope: "skill",
+    match: (ctx) => ctx.skill.id === "skchr_vigna_1",
+    transform: (effects, ctx) => ({
+      ...effects,
+      atkBuffRatio: effects.atkBuffRatio + (ctx.battle.conditionEnabled ? 0.33 : 0),
+    }),
+    note: "第二批最小迁移：红豆S1在条件开启时叠加天赋期望攻击加成。",
+  },
+  {
+    id: "phase2.myrtle.shared_cost_stop_attack",
+    scope: "skill",
+    match: (ctx) => ctx.operator.id === "char_151_myrtle" && ctx.skill.id === "skcom_assist_cost[2]",
+    transform: (effects) => ({
+      ...effects,
+      attackType: "none",
+      disableTraitExtra: true,
+    }),
+    note: "第二批最小迁移：桃金娘共享回费技能按停攻口径结算。",
+  },
+  {
+    id: "phase2.wintim1.single_hit",
+    scope: "skill",
+    match: (ctx) => ctx.skill.id === "skchr_wintim_1",
+    transform: (effects) => ({
+      ...effects,
+      attackCountOverride: 1,
+    }),
+    note: "第二批最小迁移：冬时S1按旧口径视为单次结算。",
+  },
+  {
+    id: "phase2.doberm1.single_hit",
+    scope: "skill",
+    match: (ctx) => ctx.skill.id === "skchr_doberm_1",
+    transform: (effects) => ({
+      ...effects,
+      attackCountOverride: 1,
+    }),
+    note: "第二批最小迁移：杜宾S1按旧口径视为单次结算。",
+  },
+  {
+    id: "phase2.cutter1.multi_hit",
+    scope: "skill",
+    match: (ctx) => ctx.skill.id === "skchr_cutter_1",
+    transform: (effects) => ({
+      ...effects,
+      attackCountOverride: Math.max(effects.attackCountOverride ?? 0, 4),
+    }),
+    note: "第二批最小迁移：刻刀S1按旧口径使用四段结算。",
+  },
+  {
+    id: "phase2.utage1.stop_attack",
+    scope: "skill",
+    match: (ctx) => ctx.skill.id === "skchr_utage_1",
+    transform: (effects) => ({
+      ...effects,
+      attackType: "none",
+      disableTraitExtra: true,
+    }),
+    note: "第二批最小迁移：宴S1按旧口径停攻。",
+  },
+  {
+    id: "phase2.spikes1.double_hit",
+    scope: "skill",
+    match: (ctx) => ctx.skill.id === "skchr_spikes_1",
+    transform: (effects) => ({
+      ...effects,
+      attackScale: effects.attackScale * 1.43,
+      attackCountOverride: Math.max(effects.attackCountOverride ?? 0, 23.0769230769),
+    }),
+    note: "第二批最小迁移：芳汀S1按旧口径叠加天赋倍率并使用双段时窗结算。",
+  },
+  {
+    id: "phase2.wscoot1.guard_counter",
+    scope: "skill",
+    match: (ctx) => ctx.skill.id === "skchr_wscoot_1",
+    transform: (effects) => ({
+      ...effects,
+      atkBuffRatio: effects.atkBuffRatio + 2,
+      defShredRate: 0,
+      extraAttackType: "physical",
+      extraAttackScale: Math.max(effects.extraAttackScale, 0.43),
+    }),
+    note: "第二批最小迁移：骋风S1按旧口径追加反击流并取消正向def键减防代理。",
+  },
+  {
     id: "phase2.heal.default_heal_scale",
     scope: "skill",
     match: (ctx) => ctx.operator.defaultAttackType === "heal" && (ctx.skill.healScale ?? 0) <= 0,

@@ -299,7 +299,7 @@ function parseSkill(skillId: string, raw: SkillLike): SkillData {
   const attackScale = board.get("atk_scale") ?? board.get("attack@atk_scale") ?? 1;
   const atkBuffRatio = board.get("atk") ?? board.get("attack@atk") ?? 0;
   const attackSpeedBonus = board.get("attack_speed") ?? 0;
-  const attackCount = board.get("cnt") ?? board.get("times") ?? board.get("max_target");
+  const attackCount = board.get("cnt") ?? board.get("attack@cnt") ?? board.get("max_target");
   const healScale =
     board.get("heal_scale") ??
     board.get("heal_ratio") ??
@@ -456,6 +456,14 @@ const talentExclusionByOperatorId: Record<
 > = {
   // 远山“占卜”为随机三选一，不应将 atk / attack_speed / max_hp 同时计入基础面板。
   char_109_fmout: { atkRatio: true, hpRatio: true, attackSpeedFlat: true },
+  // 清道夫天赋为条件触发，旧项目默认口径不计入常驻攻击倍率。
+  char_149_scave: { atkRatio: true },
+  // 红豆天赋在旧项目通过期望乘区处理，不直接并入基础面板。
+  char_290_vigna: { atkRatio: true },
+  // 杜宾天赋为队伍条件效果，旧项目默认口径不计入自身常驻攻击倍率。
+  char_130_doberm: { atkRatio: true },
+  // 铅踝天赋为条件触发，旧项目默认口径不直接计入常驻攻击倍率。
+  char_4062_totter: { atkRatio: true },
 };
 
 function applyTalentExclusions(

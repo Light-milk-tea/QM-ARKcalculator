@@ -1,4 +1,4 @@
-# QMcalculator 完工态代码蓝图（Code Plan）
+# QMcalculator 完工态代码蓝图
 
 > 目标：这份文档描述“项目完工后”应具备的工程架构、代码组织与交付标准。  
 > 使用方式：按本文档的目录树、模块职责、时序图与阶段清单推进实现，完成后架构应与本文一致。
@@ -76,7 +76,7 @@ QMcalculator/
 │  ├─ policy/ambiguity-warning-policy.md
 │  ├─ quality/quality-gate-v1.md
 │  ├─ ops/release-rollback-strategy.md
-│  ├─ rules/top20-priority-migration.md
+│  ├─ rules/top20-priority-roadmap.md
 │  └─ roadmap/completion-engineering-code-plan.md
 └─ package.json
 ```
@@ -303,9 +303,9 @@ flowchart LR
 - 打通 `data.ts -> pipeline.ts -> web`
 - 页面能展示 `summary + warnings`
 
-### 阶段 B：规则迁移与解释增强
+### 阶段 B：规则完善与解释增强
 
-- 按 `Top20` 推进规则迁移
+- 按 `Top20` 推进规则覆盖
 - 完善 `ruleTrace` 与 warning 文案
 - 扩充 `streams` 与 `formula` 细节
 
@@ -323,7 +323,7 @@ flowchart LR
 - [ ] `calculateSkillDps()` 是唯一计算入口
 - [ ] 结果固定包含 `summary/schedule/streams/formula/ruleTrace/warnings`
 - [ ] 未映射/歧义语义必有 warning，不静默
-- [ ] Top20 迁移覆盖率达到阶段目标
+- [ ] Top20 规则覆盖率达到阶段目标
 - [ ] `npm run quality:gate` 可稳定通过
 - [ ] `versions` 中有可追溯数据版本、规则版本、发布快照
 

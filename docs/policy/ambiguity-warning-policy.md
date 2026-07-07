@@ -24,7 +24,7 @@
 |---|---|---|---|
 | `WARN_UNMAPPED_KEY` | P0 | 检测到未映射 blackboard key | `cnt`/`prob` 等无法直接归一化 |
 | `WARN_AMBIGUOUS_SEMANTIC` | P0 | 同名 key 在当前上下文语义不唯一 | `atk` 在天赋/技能/模组语义冲突 |
-| `WARN_PARTIAL_RULE_COVERAGE` | P1 | 技能仅部分规则迁移 | 只迁移了主流，额外流未补齐 |
+| `WARN_PARTIAL_RULE_COVERAGE` | P1 | 技能仅部分规则覆盖 | 只覆盖了主流，额外流未补齐 |
 | `WARN_ASSUMPTION_APPLIED` | P1 | 使用默认假设继续计算 | 默认按稳定阶段处理暖机 |
 | `WARN_MANUAL_REVIEW_REQUIRED` | P1 | 标记需人工复核 | 进入 custom 待人工清单 |
 | `WARN_INFO_LIMITATION` | P2 | MVP边界提示 | 召唤物/元素损伤未纳入 |
@@ -41,7 +41,7 @@ flowchart LR
   review -->|No| keep[KeepAsRuntimeWarning]
 ```
 
-## 与规则迁移流程的衔接
+## 与规则迭代流程的衔接
 
 - 新增规则前：先确认是否会消除既有 warning code。
 - 新增规则后：必须验证 warning 数量是否下降或解释一致。

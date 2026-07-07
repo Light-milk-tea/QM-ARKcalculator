@@ -1,8 +1,8 @@
 # Custom Rule Status
 
-- Source knowledge base: `../ArknightCalculator/docs/custom-key-reference`
+- Source: internal calc-core rule inventory
 - Current phase: MVP-DPS first batch
-- Last generated: 2026-07-06T03:23:28.093Z
+- Last generated: 2026-07-06T05:03:45.395Z
 - Rule version: v0.4.0
 - Top20 progress: ready=20, pending=0
 
@@ -13,7 +13,7 @@
 3. Extra damage stream (OTHER_*)
 4. Duration/attack-count special handling
 
-## Skill-level migration status
+## Skill-level rule coverage status
 
 | Case | Operator | Skill | operatorId | skillId | Status | Rule linkage |
 |---|---|---|---|---|---|---|

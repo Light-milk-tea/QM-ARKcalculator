@@ -50,7 +50,7 @@ const skillRows = top20Cases
 
 const content = `# Custom Rule Status
 
-- Source knowledge base: \`../ArknightCalculator/docs/custom-key-reference\`
+- Source: internal calc-core rule inventory
 - Current phase: MVP-DPS first batch
 - Last generated: ${new Date().toISOString()}
 - Rule version: ${ruleVersion.ruleVersionId}
@@ -63,7 +63,7 @@ const content = `# Custom Rule Status
 3. Extra damage stream (OTHER_*)
 4. Duration/attack-count special handling
 
-## Skill-level migration status
+## Skill-level rule coverage status
 
 | Case | Operator | Skill | operatorId | skillId | Status | Rule linkage |
 |---|---|---|---|---|---|---|
