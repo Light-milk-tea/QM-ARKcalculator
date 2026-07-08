@@ -500,6 +500,112 @@ export const phase1CustomRules: RuleDefinition[] = [
     note: "第二批最小迁移：骋风S1按旧口径追加反击流并取消正向def键减防代理。",
   },
   {
+    id: "phase2.gravel1.no_def_shred_single_hit",
+    scope: "skill",
+    match: (ctx) => ctx.skill.id === "skchr_gravel_1",
+    transform: (effects) => ({
+      ...effects,
+      // 砾 S1 的 def 是自身防御强化语义，不应映射为敌方减防。
+      defShredRate: 0,
+      // 旧项目该样例按单次结算口径输出。
+      attackCountOverride: 1,
+    }),
+    note: "第二批最小迁移：砾S1取消减防代理并按单次结算对齐旧口径。",
+  },
+  {
+    id: "phase2.strong1.infected_expected_scale",
+    scope: "skill",
+    match: (ctx) => ctx.skill.id === "skchr_strong_1" && ctx.battle.conditionEnabled,
+    transform: (effects) => ({
+      ...effects,
+      attackScale: effects.attackScale * 1.5,
+      durationOverride: Math.max(effects.durationOverride ?? 0, 2),
+    }),
+    note: "第二批最小迁移：孑S1按旧口径叠加条件天赋倍率并使用2秒结算窗口。",
+  },
+  {
+    id: "phase2.sunbr1.expected_talent_scale",
+    scope: "skill",
+    match: (ctx) => ctx.skill.id === "skchr_sunbr_1" && ctx.battle.conditionEnabled,
+    transform: (effects) => ({
+      ...effects,
+      attackScale: effects.attackScale * 1.18,
+    }),
+    note: "第二批最小迁移：古米S1按旧口径叠加条件天赋期望倍率。",
+  },
+  {
+    id: "phase2.skgoat1.switch_magical",
+    scope: "skill",
+    match: (ctx) => ctx.operator.id === "char_183_skgoat" && ctx.skill.id === "skcom_atk_up[2]",
+    transform: (effects) => ({
+      ...effects,
+      attackType: "magical",
+    }),
+    note: "第二批最小迁移：地灵首技能按旧口径作为法术伤害结算。",
+  },
+  {
+    id: "phase2.pithst1.switch_magical",
+    scope: "skill",
+    match: (ctx) => ctx.skill.id === "skchr_pithst_1",
+    transform: (effects) => ({
+      ...effects,
+      attackType: "magical",
+    }),
+    note: "第二批最小迁移：盟约辅助首技能按旧口径作为法术伤害结算。",
+  },
+  {
+    id: "phase2.ctrail1.expected_talent_scale",
+    scope: "skill",
+    match: (ctx) => ctx.operator.id === "char_4165_ctrail" && ctx.skill.id === "skchr_ctrail_1",
+    transform: (effects, ctx) => ({
+      ...effects,
+      attackScale: effects.attackScale * (ctx.battle.conditionEnabled ? 1.12 : 1),
+    }),
+    note: "第二批最小迁移：云迹S1按条件开关叠加天赋期望倍率。",
+  },
+  {
+    id: "phase2.bubble1.no_def_shred_proxy",
+    scope: "skill",
+    match: (ctx) => ctx.operator.id === "char_381_bubble" && ctx.skill.id === "skcom_def_up[2]",
+    transform: (effects) => ({
+      ...effects,
+      defShredRate: 0,
+    }),
+    note: "第二批最小迁移：泡泡S1的 def 不作为敌方减防代理。",
+  },
+  {
+    id: "phase2.robrta1.no_def_shred_proxy",
+    scope: "skill",
+    match: (ctx) => ctx.operator.id === "char_484_robrta" && ctx.skill.id === "skchr_robrta_1",
+    transform: (effects) => ({
+      ...effects,
+      defShredRate: 0,
+    }),
+    note: "第二批最小迁移：罗比菈塔S1的 def 不作为敌方减防代理。",
+  },
+  {
+    id: "phase2.vrdant1.no_def_shred_proxy",
+    scope: "skill",
+    match: (ctx) => ctx.operator.id === "char_4107_vrdant" && ctx.skill.id === "skchr_vrdant_1",
+    transform: (effects) => ({
+      ...effects,
+      defShredRate: 0,
+    }),
+    note: "第二批最小迁移：维荻S1的 magic_resistance 不走减防代理。",
+  },
+  {
+    id: "phase2.deepcl1.legacy_timing_and_scale",
+    scope: "skill",
+    match: (ctx) => ctx.operator.id === "char_110_deepcl" && ctx.skill.id === "skchr_deepcl_1",
+    transform: (effects) => ({
+      ...effects,
+      attackType: "magical",
+      atkBuffRatio: 0,
+      attackSpeedBonus: effects.attackSpeedBonus + 8,
+    }),
+    note: "第二批最小迁移：深海色S1按旧口径关闭 atk 乘区并补齐攻速。",
+  },
+  {
     id: "phase2.heal.default_heal_scale",
     scope: "skill",
     match: (ctx) => ctx.operator.defaultAttackType === "heal" && (ctx.skill.healScale ?? 0) <= 0,

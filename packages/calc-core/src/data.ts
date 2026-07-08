@@ -464,6 +464,8 @@ const talentExclusionByOperatorId: Record<
   char_130_doberm: { atkRatio: true },
   // 铅踝天赋为条件触发，旧项目默认口径不直接计入常驻攻击倍率。
   char_4062_totter: { atkRatio: true },
+  // 泡泡天赋是敌方攻击下降，不应并入自身攻击倍率。
+  char_381_bubble: { atkRatio: true },
 };
 
 function applyTalentExclusions(

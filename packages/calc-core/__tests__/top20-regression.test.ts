@@ -168,4 +168,128 @@ describe("top20-priority-regression", () => {
       ),
     ).toBe(true);
   });
+
+  it("砾 S1 不应误触发 def 减防代理", () => {
+    const result = calculateSkillDps(
+      {
+        selection: {
+          operatorId: "char_237_gravel",
+          skillId: "skchr_gravel_1",
+        },
+        enemy: {
+          defense: 500,
+          magicResistance: 0,
+        },
+        battle: {
+          conditionEnabled: true,
+          minPhysicalDamageRatio: 0.05,
+        },
+      },
+      index,
+    );
+
+    expect(result.summary.hitDamage).toBeCloseTo(22.6, 4);
+    expect(result.summary.totalDamage).toBeCloseTo(22.6, 4);
+    expect(result.summary.dps).toBeCloseTo(22.6, 4);
+    expect(
+      result.ruleTrace.some(
+        (trace) => trace.ruleId === "phase2.gravel1.no_def_shred_single_hit" && trace.applied,
+      ),
+    ).toBe(true);
+  });
+
+  it("第二批批量修复样例应对齐旧口径", () => {
+    const cases = [
+      {
+        id: "strong-s1",
+        operatorId: "char_272_strong",
+        skillId: "skchr_strong_1",
+        expected: { hitDamage: 1379.35, totalDamage: 2758.7, dps: 1379.35 },
+        ruleId: "phase2.strong1.infected_expected_scale",
+      },
+      {
+        id: "sunbr-s1",
+        operatorId: "char_196_sunbr",
+        skillId: "skchr_sunbr_1",
+        expected: { hitDamage: 38.08, totalDamage: 38.08, dps: 38.08 },
+        ruleId: "phase2.sunbr1.expected_talent_scale",
+      },
+      {
+        id: "skgoat-s1",
+        operatorId: "char_183_skgoat",
+        skillId: "skcom_atk_up[2]",
+        expected: { hitDamage: 694.26, totalDamage: 9135, dps: 365.4 },
+        ruleId: "phase2.skgoat1.switch_magical",
+      },
+      {
+        id: "pithst-s1",
+        operatorId: "char_616_pithst",
+        skillId: "skchr_pithst_1",
+        expected: { hitDamage: 316.4, totalDamage: 11271.75, dps: 375.725 },
+        ruleId: "phase2.pithst1.switch_magical",
+      },
+      {
+        id: "ctrail-s1",
+        operatorId: "char_4165_ctrail",
+        skillId: "skchr_ctrail_1",
+        expected: { hitDamage: 1016.032, totalDamage: 27094.18666666668, dps: 677.354666666667 },
+        ruleId: "phase2.ctrail1.expected_talent_scale",
+      },
+      {
+        id: "bubble-s1",
+        operatorId: "char_381_bubble",
+        skillId: "skcom_def_up[2]",
+        expected: { hitDamage: 18.5, totalDamage: 539.5833333333334, dps: 15.416666666666668 },
+        ruleId: "phase2.bubble1.no_def_shred_proxy",
+      },
+      {
+        id: "deepcl-s1",
+        operatorId: "char_110_deepcl",
+        skillId: "skchr_deepcl_1",
+        expected: { hitDamage: 282.1, totalDamage: 5712.525, dps: 190.4175 },
+        ruleId: "phase2.deepcl1.legacy_timing_and_scale",
+      },
+      {
+        id: "robrta-s1",
+        operatorId: "char_484_robrta",
+        skillId: "skchr_robrta_1",
+        expected: { hitDamage: 355, totalDamage: 8283.333333333332, dps: 236.66666666666663 },
+        ruleId: "phase2.robrta1.no_def_shred_proxy",
+      },
+      {
+        id: "vrdant-s1",
+        operatorId: "char_4107_vrdant",
+        skillId: "skchr_vrdant_1",
+        expected: { hitDamage: 232, totalDamage: 232, dps: 232 },
+        ruleId: "phase2.vrdant1.no_def_shred_proxy",
+      },
+    ];
+
+    for (const item of cases) {
+      const result = calculateSkillDps(
+        {
+          selection: {
+            operatorId: item.operatorId,
+            skillId: item.skillId,
+          },
+          enemy: {
+            defense: 500,
+            magicResistance: 30,
+          },
+          battle: {
+            conditionEnabled: true,
+            minPhysicalDamageRatio: 0.05,
+          },
+        },
+        index,
+      );
+      assertWithinTolerance(result.summary.hitDamage, item.expected.hitDamage, 0.0001, `${item.id}-hit`);
+      assertWithinTolerance(result.summary.totalDamage, item.expected.totalDamage, 0.0001, `${item.id}-total`);
+      assertWithinTolerance(result.summary.dps, item.expected.dps, 0.0001, `${item.id}-dps`);
+      expect(
+        result.ruleTrace.some((trace) => trace.ruleId === item.ruleId && trace.applied),
+        `${item.id}-rule`,
+      ).toBe(true);
+    }
+  });
 });
