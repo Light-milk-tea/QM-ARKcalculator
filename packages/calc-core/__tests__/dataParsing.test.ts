@@ -3,6 +3,78 @@ import { buildOperatorIndexFromRaw } from "../src";
 import type { RawGameData } from "../src";
 
 describe("buildOperatorIndexFromRaw", () => {
+  it("应过滤 TOKEN/TRAP 等非干员条目", () => {
+    const raw: RawGameData = {
+      character_table: {
+        char_1_example: {
+          name: "示例干员",
+          profession: "WARRIOR",
+          subProfessionId: "fighter",
+          phases: [
+            {
+              maxLevel: 50,
+              attributesKeyFrames: [
+                {
+                  level: 50,
+                  data: { maxHp: 1000, atk: 400, def: 200, magicResistance: 0, baseAttackTime: 1.0 },
+                },
+              ],
+            },
+          ],
+          skills: [{ skillId: "skchr_example_1" }],
+        },
+        token_1_example: {
+          name: "示例召唤物",
+          profession: "TOKEN",
+          subProfessionId: "notchar1",
+          phases: [
+            {
+              maxLevel: 1,
+              attributesKeyFrames: [
+                {
+                  level: 1,
+                  data: { maxHp: 1, atk: 1, def: 1, magicResistance: 0, baseAttackTime: 1.0 },
+                },
+              ],
+            },
+          ],
+          skills: [{ skillId: "skchr_example_token" }],
+        },
+        trap_1_example: {
+          name: "示例装置",
+          profession: "TRAP",
+          subProfessionId: "notchar2",
+          phases: [
+            {
+              maxLevel: 1,
+              attributesKeyFrames: [
+                {
+                  level: 1,
+                  data: { maxHp: 1, atk: 1, def: 1, magicResistance: 0, baseAttackTime: 1.0 },
+                },
+              ],
+            },
+          ],
+          skills: [{ skillId: "skchr_example_trap" }],
+        },
+      },
+      skill_table: {
+        skchr_example_1: { levels: [{ name: "示例技能", duration: 10, blackboard: [] }] },
+        skchr_example_token: { levels: [{ name: "召唤技能", duration: 10, blackboard: [] }] },
+        skchr_example_trap: { levels: [{ name: "装置技能", duration: 10, blackboard: [] }] },
+      },
+      uniequip_table: {},
+      battle_equip_table: {},
+      profession: {},
+      subProfessionId: {},
+    };
+
+    const index = buildOperatorIndexFromRaw(raw);
+    expect(Object.keys(index.operators)).toEqual(["char_1_example"]);
+    expect(index.operators.token_1_example).toBeUndefined();
+    expect(index.operators.trap_1_example).toBeUndefined();
+  });
+
   it("阿斯卡纶一技能 duration=-1 时应按 1 秒兜底", () => {
     const raw: RawGameData = {
       character_table: {

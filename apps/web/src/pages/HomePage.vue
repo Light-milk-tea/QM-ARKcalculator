@@ -125,9 +125,15 @@ watch(
 
 onMounted(async () => {
   await load();
-  if (!selectionStore.operatorId && operators.value.length > 0) {
-    selectionStore.operatorId = operators.value[0].id;
-    selectionStore.skillId = operators.value[0].skills[0]?.id ?? "";
+  const firstOperator = operators.value[0];
+  if (!firstOperator) {
+    return;
+  }
+
+  const hasValidOperator = operators.value.some((operator) => operator.id === selectionStore.operatorId);
+  if (!hasValidOperator) {
+    selectionStore.operatorId = firstOperator.id;
+    selectionStore.skillId = firstOperator.skills[0]?.id ?? "";
   }
   if (!selectedModules.value.some((module) => module.id === developmentStore.moduleId)) {
     developmentStore.moduleId = selectedModules.value[0]?.id ?? "";

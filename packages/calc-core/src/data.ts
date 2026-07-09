@@ -183,6 +183,14 @@ function resolveAttackType(profession: string | undefined, subProfessionId: stri
   return "physical";
 }
 
+function isSelectableOperator(character: CharacterLike): boolean {
+  const profession = character.profession;
+  if (profession === "TOKEN" || profession === "TRAP") {
+    return false;
+  }
+  return true;
+}
+
 function collectUnmappedBlackboardKeys(keys: string[]): string[] {
   return keys.filter((key) => !isKnownBlackboardKey(key));
 }
@@ -544,6 +552,10 @@ export function buildOperatorIndexFromRaw(rawData: RawGameData): OperatorIndex {
   const operators: Record<string, OperatorData> = {};
 
   for (const [charId, character] of Object.entries(characters)) {
+    if (!isSelectableOperator(character)) {
+      continue;
+    }
+
     if (!character.skills?.length) {
       continue;
     }
