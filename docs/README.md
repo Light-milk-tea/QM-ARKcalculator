@@ -5,15 +5,15 @@
 | 文档 | 用途 |
 |---|---|
 | [agent-handoff.md](agent-handoff.md) | Agent 接手必读：阅读顺序、目录约定、常用命令 |
-| [../QMcalculator.md](../QMcalculator.md) | 项目执行说明：开发顺序、公式链路、测试与发布 |
-| [architecture.md](architecture.md) | 三层架构与核心约束（速查） |
+| [项目进度.md](项目进度.md) | 分步执行清单与进度回写（后续 AI 必更新） |
+| [roadmap/completion-engineering-code-plan.md](roadmap/completion-engineering-code-plan.md) | 完工态代码蓝图（架构图 + 时序图 + 模块与落地清单） |
 
 ## 路线图与任务
 
 | 文档 | 用途 |
 |---|---|
+| [项目进度.md](项目进度.md) | 阶段 A–E 实现步骤、状态与验收门槛 |
 | [roadmap/completion-engineering-code-plan.md](roadmap/completion-engineering-code-plan.md) | 完工态代码蓝图（架构图 + 时序图 + 模块与落地清单） |
-| [rules/top20-priority-roadmap.md](rules/top20-priority-roadmap.md) | Top20 优先技能清单与覆盖要求 |
 | [custom/top20-sprint-board.md](custom/top20-sprint-board.md) | 本周实现看板（skill -> rule -> warning -> 断言） |
 
 ## 规则与策略

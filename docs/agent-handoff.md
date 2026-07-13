@@ -6,10 +6,9 @@
 
 1. `docs/agent-handoff.md`（本文件）
 2. `docs/README.md`（文档索引）
-3. `QMcalculator.md`（项目目标与执行顺序）
-4. `docs/architecture.md`（分层与边界）
-5. `docs/roadmap/completion-engineering-code-plan.md`（完工蓝图）
-6. `docs/custom/custom-rule-status.md`（当前规则覆盖状态）
+3. `docs/项目进度.md`（分步执行清单与当前进度）
+4. `docs/roadmap/completion-engineering-code-plan.md`（完工蓝图）
+5. `docs/custom/custom-rule-status.md`（当前规则覆盖状态）
 
 ## 2. 工作边界
 
