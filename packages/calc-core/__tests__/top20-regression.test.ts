@@ -98,30 +98,57 @@ describe("top20-priority-regression", () => {
         expect(result.warnings.some((warning) => warning.code === "WARN_ASSUMPTION_APPLIED")).toBe(
           true,
         );
+        expect(result.warnings.some((warning) => warning.code === "WARN_UNMAPPED_KEY")).toBe(false);
+        expect(result.warnings.some((warning) => warning.code === "WARN_PARTIAL_RULE_COVERAGE")).toBe(false);
       }
       if (item.id === "top20-011") {
-        expect(
-          result.warnings.some((warning) => warning.code === "WARN_PARTIAL_RULE_COVERAGE"),
-        ).toBe(true);
+        expect(result.warnings.some((warning) => warning.code === "WARN_UNMAPPED_KEY")).toBe(false);
+        expect(result.warnings.some((warning) => warning.code === "WARN_PARTIAL_RULE_COVERAGE")).toBe(false);
+      }
+      if (item.id === "top20-005") {
+        expect(result.warnings.some((warning) => warning.code === "WARN_UNMAPPED_KEY")).toBe(false);
+        expect(result.warnings.some((warning) => warning.code === "WARN_PARTIAL_RULE_COVERAGE")).toBe(false);
+      }
+      if (item.id === "top20-002") {
+        expect(result.warnings.some((warning) => warning.code === "WARN_UNMAPPED_KEY")).toBe(false);
+        expect(result.warnings.some((warning) => warning.code === "WARN_PARTIAL_RULE_COVERAGE")).toBe(false);
+      }
+      if (item.id === "top20-003") {
+        expect(result.warnings.some((warning) => warning.code === "WARN_UNMAPPED_KEY")).toBe(false);
+        expect(result.warnings.some((warning) => warning.code === "WARN_PARTIAL_RULE_COVERAGE")).toBe(false);
       }
       if (item.id === "top20-015") {
         expect(result.streams.some((stream) => stream.id === "OTHER_TRUE")).toBe(false);
+        expect(result.warnings.some((warning) => warning.code === "WARN_UNMAPPED_KEY")).toBe(false);
+        expect(result.warnings.some((warning) => warning.code === "WARN_PARTIAL_RULE_COVERAGE")).toBe(false);
         expect(
           result.ruleTrace.some(
             (trace) => trace.ruleId === "phase1.mlynar3.verdict_true_stream" && trace.applied,
           ),
         ).toBe(true);
       }
+      if (item.id === "top20-013" || item.id === "top20-016" || item.id === "top20-017") {
+        expect(result.warnings.some((warning) => warning.code === "WARN_UNMAPPED_KEY")).toBe(false);
+        expect(result.warnings.some((warning) => warning.code === "WARN_PARTIAL_RULE_COVERAGE")).toBe(false);
+      }
       if (item.id === "top20-018") {
         expect(result.summary.hitDamage).toBeGreaterThan(0);
+        expect(result.warnings.some((warning) => warning.code === "WARN_UNMAPPED_KEY")).toBe(false);
+        expect(result.warnings.some((warning) => warning.code === "WARN_PARTIAL_RULE_COVERAGE")).toBe(false);
         expect(
           result.ruleTrace.some(
             (trace) => trace.ruleId === "phase1.qiubai3.switch_magical_burst" && trace.applied,
           ),
         ).toBe(true);
       }
+      if (item.id === "top20-019") {
+        expect(result.warnings.some((warning) => warning.code === "WARN_UNMAPPED_KEY")).toBe(false);
+        expect(result.warnings.some((warning) => warning.code === "WARN_PARTIAL_RULE_COVERAGE")).toBe(false);
+      }
       if (item.id === "top20-020") {
         expect(result.streams.some((stream) => stream.id === "OTHER_TRUE")).toBe(true);
+        expect(result.warnings.some((warning) => warning.code === "WARN_UNMAPPED_KEY")).toBe(false);
+        expect(result.warnings.some((warning) => warning.code === "WARN_PARTIAL_RULE_COVERAGE")).toBe(false);
         expect(
           result.ruleTrace.some(
             (trace) => trace.ruleId === "phase1.reed23.burn_echo_proxy" && trace.applied,

@@ -151,6 +151,35 @@ const knownBlackboardKeys = new Set([
 
 const knownBlackboardPrefixes = ["talent@", "recipe.", "sandbox_res_collector."];
 
+const ignoredUnmappedBlackboardKeysBySkillId: Record<string, Set<string>> = {
+  // 艾雅法拉 S2 的以下键在当前单目标 DPS 口径中不作为主结算输入：
+  // - atk_scale_2: 与 atk_scale 重复倍率键
+  // - fk/ct: 触发批次参数，暂不进入主链伤害模型
+  skchr_amgoat_2: new Set(["atk_scale_2", "fk", "ct"]),
+  // 假日威龙陈 S3 的 projectile_life_time 主要影响弹道生命周期，不进入当前 DPS 主结算。
+  skchr_chen2_3: new Set(["attack@projectile_life_time"]),
+  // 玛恩纳 S3 的以下键主要影响特性增益与击杀回转，不进入当前技能窗口 DPS 主结算。
+  skchr_mlynar_3: new Set(["trait_up", "per_kill_reduce"]),
+  // 水月 S2 的 unmovable 为控制语义，不影响当前单目标 DPS 主链。
+  skchr_mizuki_2: new Set(["attack@unmovable"]),
+  // 史尔特尔 S3 的以下键只影响攻击范围/生存，不参与当前 DPS 计算语义。
+  skchr_surtr_3: new Set(["ability_range_forward_extend", "max_hp", "hp_ratio"]),
+  // 伊芙利特 S2 的 burn.atk_scale / ct 主要用于灼烧分段与触发节奏，不直接作为当前单目标主链伤害输入。
+  skchr_ifrit_2: new Set(["burn.atk_scale", "ct"]),
+  // 归鲨 S3 的以下键为生存阈值/额外段语义，当前版本通过自定义规则近似，不直接进入主链面板计算。
+  skchr_ghost2_3: new Set(["max_hp", "attack@atk_scale_ex", "attack@hp_ratio"]),
+  // 白铁 S2 的 fake_interval 用于伪攻间节拍标注，不直接作为主链攻间输入。
+  skchr_ironmn_2: new Set(["fake_interval"]),
+  // 仇白 S3 的以下键用于层数与天赋耦合，不直接作为当前单目标主链 DPS 输入。
+  skchr_qiubai_3: new Set(["max_stack_cnt", "talent_scale"]),
+  // 逻各斯 S3 的 projectile_move_scale 影响弹道运动表现，不进入当前主链结算。
+  skchr_logos_3: new Set(["projectile_move_scale"]),
+  // 焰影苇草 S3 的切换态 atk 键暂由 custom 规则近似承接，不直接纳入主链面板。
+  skchr_reed2_3: new Set(["reed2_skil_3[switch_mode].atk"]),
+  // 阿米娅（术）S3 的 max_hp 为生存语义，不参与当前技能窗口 DPS 主链结算。
+  skchr_amiya_3: new Set(["max_hp"]),
+};
+
 function isKnownBlackboardKey(key: string): boolean {
   if (knownBlackboardKeys.has(key)) return true;
   return knownBlackboardPrefixes.some((prefix) => key.startsWith(prefix));
@@ -191,8 +220,9 @@ function isSelectableOperator(character: CharacterLike): boolean {
   return true;
 }
 
-function collectUnmappedBlackboardKeys(keys: string[]): string[] {
-  return keys.filter((key) => !isKnownBlackboardKey(key));
+function collectUnmappedBlackboardKeys(skillId: string, keys: string[]): string[] {
+  const ignoredKeys = ignoredUnmappedBlackboardKeysBySkillId[skillId];
+  return keys.filter((key) => !isKnownBlackboardKey(key) && !ignoredKeys?.has(key));
 }
 
 function deriveWarningSignals(keys: string[]) {
@@ -279,7 +309,7 @@ function parseSkill(skillId: string, raw: SkillLike): SkillData {
       .map((entry) => [entry.key as string, toNumber(entry.value)]),
   );
   const blackboardKeys = [...board.keys()];
-  const unmappedBlackboardKeys = collectUnmappedBlackboardKeys(blackboardKeys);
+  const unmappedBlackboardKeys = collectUnmappedBlackboardKeys(skillId, blackboardKeys);
   const warningSignals = deriveWarningSignals(blackboardKeys);
   const hasAmbiguousSemantic = warningSignals.hasAmbiguousSemantic;
   const triggerTime = board.get("attack@trigger_time") ?? board.get("trigger_time");
