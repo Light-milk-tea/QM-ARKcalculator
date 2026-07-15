@@ -1,0 +1,242 @@
+[
+  {
+    "id": "e1-top20-001",
+    "operator": "能天使",
+    "operatorId": "char_103_angel",
+    "skillId": "skchr_angel_3",
+    "skillLabel": "S3",
+    "source": "top20"
+  },
+  {
+    "id": "e1-top20-002",
+    "operator": "艾雅法拉",
+    "operatorId": "char_180_amgoat",
+    "skillId": "skchr_amgoat_2",
+    "skillLabel": "S2",
+    "source": "top20"
+  },
+  {
+    "id": "e1-top20-003",
+    "operator": "阿米娅（术）",
+    "operatorId": "char_002_amiya",
+    "skillId": "skchr_amiya_3",
+    "skillLabel": "S3",
+    "source": "top20"
+  },
+  {
+    "id": "e1-top20-004",
+    "operator": "银灰",
+    "operatorId": "char_172_svrash",
+    "skillId": "skchr_svrash_3",
+    "skillLabel": "S3",
+    "source": "top20"
+  },
+  {
+    "id": "e1-top20-005",
+    "operator": "史尔特尔",
+    "operatorId": "char_350_surtr",
+    "skillId": "skchr_surtr_3",
+    "skillLabel": "S3",
+    "source": "top20"
+  },
+  {
+    "id": "e1-top20-006",
+    "operator": "陈（近卫）",
+    "operatorId": "char_010_chen",
+    "skillId": "skchr_chen_2",
+    "skillLabel": "S2",
+    "source": "top20"
+  },
+  {
+    "id": "e1-top20-007",
+    "operator": "号角",
+    "operatorId": "char_4039_horn",
+    "skillId": "skchr_horn_3",
+    "skillLabel": "S3",
+    "source": "top20"
+  },
+  {
+    "id": "e1-top20-008",
+    "operator": "澄闪",
+    "operatorId": "char_377_gdglow",
+    "skillId": "skchr_gdglow_3",
+    "skillLabel": "S3",
+    "source": "top20"
+  },
+  {
+    "id": "e1-top20-009",
+    "operator": "缄默德克萨斯",
+    "operatorId": "char_1028_texas2",
+    "skillId": "skchr_texas2_3",
+    "skillLabel": "S3",
+    "source": "top20"
+  },
+  {
+    "id": "e1-top20-010",
+    "operator": "假日威龙陈",
+    "operatorId": "char_1013_chen2",
+    "skillId": "skchr_chen2_3",
+    "skillLabel": "S3",
+    "source": "top20"
+  },
+  {
+    "id": "e1-top20-011",
+    "operator": "水月",
+    "operatorId": "char_437_mizuki",
+    "skillId": "skchr_mizuki_2",
+    "skillLabel": "S2",
+    "source": "top20"
+  },
+  {
+    "id": "e1-top20-012",
+    "operator": "棘刺",
+    "operatorId": "char_293_thorns",
+    "skillId": "skchr_thorns_3",
+    "skillLabel": "S3",
+    "source": "top20"
+  },
+  {
+    "id": "e1-top20-013",
+    "operator": "伊芙利特",
+    "operatorId": "char_134_ifrit",
+    "skillId": "skchr_ifrit_2",
+    "skillLabel": "S2",
+    "source": "top20"
+  },
+  {
+    "id": "e1-top20-014",
+    "operator": "刻俄柏",
+    "operatorId": "char_2013_cerber",
+    "skillId": "skchr_cerber_2",
+    "skillLabel": "S2",
+    "source": "top20"
+  },
+  {
+    "id": "e1-top20-015",
+    "operator": "玛恩纳",
+    "operatorId": "char_4064_mlynar",
+    "skillId": "skchr_mlynar_3",
+    "skillLabel": "S3",
+    "source": "top20"
+  },
+  {
+    "id": "e1-top20-016",
+    "operator": "归鲨",
+    "operatorId": "char_1023_ghost2",
+    "skillId": "skchr_ghost2_3",
+    "skillLabel": "S3",
+    "source": "top20"
+  },
+  {
+    "id": "e1-top20-017",
+    "operator": "白铁",
+    "operatorId": "char_4072_ironmn",
+    "skillId": "skchr_ironmn_2",
+    "skillLabel": "S2",
+    "source": "top20"
+  },
+  {
+    "id": "e1-top20-018",
+    "operator": "仇白",
+    "operatorId": "char_4082_qiubai",
+    "skillId": "skchr_qiubai_3",
+    "skillLabel": "S3",
+    "source": "top20"
+  },
+  {
+    "id": "e1-top20-019",
+    "operator": "逻各斯",
+    "operatorId": "char_4133_logos",
+    "skillId": "skchr_logos_3",
+    "skillLabel": "S3",
+    "source": "top20"
+  },
+  {
+    "id": "e1-top20-020",
+    "operator": "焰影苇草",
+    "operatorId": "char_1020_reed2",
+    "skillId": "skchr_reed2_3",
+    "skillLabel": "S3",
+    "source": "top20"
+  },
+  {
+    "id": "e1-common-001",
+    "operator": "能天使",
+    "operatorId": "char_103_angel",
+    "skillId": "skchr_angel_2",
+    "skillLabel": "S2",
+    "source": "common"
+  },
+  {
+    "id": "e1-common-002",
+    "operator": "艾雅法拉",
+    "operatorId": "char_180_amgoat",
+    "skillId": "skchr_amgoat_3",
+    "skillLabel": "S3",
+    "source": "common"
+  },
+  {
+    "id": "e1-common-003",
+    "operator": "陈（近卫）",
+    "operatorId": "char_010_chen",
+    "skillId": "skchr_chen_3",
+    "skillLabel": "S3",
+    "source": "common"
+  },
+  {
+    "id": "e1-common-004",
+    "operator": "史尔特尔",
+    "operatorId": "char_350_surtr",
+    "skillId": "skchr_surtr_2",
+    "skillLabel": "S2",
+    "source": "common"
+  },
+  {
+    "id": "e1-common-005",
+    "operator": "棘刺",
+    "operatorId": "char_293_thorns",
+    "skillId": "skchr_thorns_2",
+    "skillLabel": "S2",
+    "source": "common"
+  },
+  {
+    "id": "e1-common-006",
+    "operator": "推进之王",
+    "operatorId": "char_112_siege",
+    "skillId": "skchr_siege_3",
+    "skillLabel": "S3",
+    "source": "common"
+  },
+  {
+    "id": "e1-common-007",
+    "operator": "德克萨斯",
+    "operatorId": "char_102_texas",
+    "skillId": "skchr_texas_2",
+    "skillLabel": "S2",
+    "source": "common"
+  },
+  {
+    "id": "e1-common-008",
+    "operator": "拉普兰德",
+    "operatorId": "char_140_whitew",
+    "skillId": "skchr_whitew_2",
+    "skillLabel": "S2",
+    "source": "common"
+  },
+  {
+    "id": "e1-common-009",
+    "operator": "W",
+    "operatorId": "char_113_cqbw",
+    "skillId": "skchr_cqbw_3",
+    "skillLabel": "S3",
+    "source": "common"
+  },
+  {
+    "id": "e1-common-010",
+    "operator": "维什戴尔",
+    "operatorId": "char_1035_wisdel",
+    "skillId": "skchr_wisdel_3",
+    "skillLabel": "S3",
+    "source": "common"
+  }
+]

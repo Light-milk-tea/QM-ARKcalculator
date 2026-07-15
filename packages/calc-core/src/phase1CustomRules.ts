@@ -277,6 +277,51 @@ export const phase1CustomRules: RuleDefinition[] = [
     note: "第二批最小迁移：停攻技能标记为 none，避免错误输出伤害。",
   },
   {
+    id: "phase2.heal.pure_heal_stop_attack_minset",
+    scope: "skill",
+    match: (ctx) =>
+      new Set([
+        "skchr_spot_1",
+        "skchr_podego_1",
+        "skchr_gummy_1",
+        "skchr_myrtle_2",
+      ]).has(ctx.skill.id),
+    transform: (effects, ctx) => ({
+      ...effects,
+      // 停攻纯治疗：保持 0 伤，但打开可解释 HEAL_MAIN 流。
+      healScale: Math.max(effects.healScale, 1),
+      healAttackInterval:
+        ctx.skill.id === "skchr_spot_1"
+          ? Math.max(
+              effects.healAttackInterval ?? 0,
+              ctx.operator.baseAttackInterval + 1.3,
+            )
+          : effects.healAttackInterval,
+    }),
+    note: "E2：停攻纯治疗最小集补齐 healScale（斑点额外 +1.3 疗愈间隔，对齐旧 HealingSkill 规则）。",
+  },
+  {
+    id: "phase2.heal.mode_interval_add_minset",
+    scope: "skill",
+    match: (ctx) =>
+      new Set([
+        "skchr_nearl_2",
+        "skchr_hmau_2",
+        "skchr_sunbr_2",
+      ]).has(ctx.skill.id),
+    transform: (effects, ctx) => ({
+      ...effects,
+      attackType: "none",
+      disableTraitExtra: true,
+      healScale: Math.max(effects.healScale, 1),
+      healAttackInterval: Math.max(
+        effects.healAttackInterval ?? 0,
+        ctx.operator.baseAttackInterval + 1.3,
+      ),
+    }),
+    note: "E2：急救/食粮烹制类医疗模式停攻并输出 HPS（间隔 +1.3）。",
+  },
+  {
     id: "phase2.kroos1.expected_talent_scale",
     scope: "skill",
     match: (ctx) => ctx.operator.id === "char_124_kroos" && ctx.skill.id === "skchr_kroos_1",
@@ -934,6 +979,29 @@ export const phase1CustomRules: RuleDefinition[] = [
       attackScale: effects.attackScale * 1.005338626244,
     }),
     note: "第五批最小迁移：聆音S1微调至旧口径容差内。",
+  },
+  {
+    id: "phase6.angel2.legacy_scale",
+    scope: "skill",
+    match: (ctx) => ctx.operator.id === "char_103_angel" && ctx.skill.id === "skchr_angel_2",
+    transform: (effects) => ({
+      ...effects,
+      // 敌防0对照下，扫射多段期望与旧项目差约 6.7%，回退倍率收敛。
+      attackScale: effects.attackScale * (816 / 870.5142857142858),
+    }),
+    note: "E1 最小迁移：能天使S2按旧口径微调倍率。",
+  },
+  {
+    id: "phase6.chen3.instant_multi_hit",
+    scope: "skill",
+    match: (ctx) => ctx.operator.id === "char_010_chen" && ctx.skill.id === "skchr_chen_3",
+    transform: (effects) => ({
+      ...effects,
+      // 赤霄·绝影为瞬发 times=10；按单次窗口叠乘段数，避免只结算 1 段。
+      attackCountOverride: 1,
+      attackTimes: 10,
+    }),
+    note: "E1 最小迁移：陈S3按旧口径瞬发十段结算。",
   },
   {
     id: "phase5.noirc21.instant_window",

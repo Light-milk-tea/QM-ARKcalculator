@@ -28,8 +28,7 @@
     "chineseName": "策士",
     "attackType": "物理",
     "position": "地面"
-  },    
-
+  },
   "fearless": {
     "chineseName": "無畏者",
     "attackType": "物理",
@@ -49,7 +48,7 @@
     "chineseName": "鬥士",
     "attackType": "物理",
     "position": "地面"
-  }, 
+  },
   "centurion": {
     "chineseName": "強攻手",
     "attackType": "物理",
@@ -84,12 +83,12 @@
     "chineseName": "劍豪",
     "attackType": "物理",
     "position": "地面"
-  }, 
+  },
   "primguard": {
     "chineseName": "本源近衛",
     "attackType": "物理",
     "position": "地面"
-  },  
+  },
   "instructor": {
     "chineseName": "教官",
     "attackType": "物理",
@@ -100,7 +99,6 @@
     "attackType": "物理",
     "position": "地面"
   },
-  
   "fastshot": {
     "chineseName": "速射手",
     "attackType": "物理",
@@ -151,7 +149,6 @@
     "attackType": "物理",
     "position": "高台"
   },
-  
   "corecaster": {
     "chineseName": "中堅術師",
     "attackType": "法術",
@@ -181,7 +178,7 @@
     "chineseName": "轟擊術師",
     "attackType": "法術",
     "position": "高台"
-  }, 
+  },
   "phalanx": {
     "chineseName": "陣法術師",
     "attackType": "法術",
@@ -191,13 +188,12 @@
     "chineseName": "塑靈術師",
     "attackType": "法術",
     "position": "高台"
-  },  
+  },
   "primcaster": {
     "chineseName": "本源術師",
     "attackType": "法術",
     "position": "高台"
   },
-
   "slower": {
     "chineseName": "凝滯師",
     "attackType": "法術",
@@ -212,7 +208,7 @@
     "chineseName": "護佑者",
     "attackType": "法術",
     "position": "高台"
-  }, 
+  },
   "summoner": {
     "chineseName": "召喚師",
     "attackType": "法術",
@@ -233,7 +229,6 @@
     "attackType": "物理",
     "position": "地面"
   },
-  
   "pusher": {
     "chineseName": "推擊手",
     "attackType": "物理",
@@ -284,7 +279,6 @@
     "attackType": "物理",
     "position": "地面"
   },
-
   "protector": {
     "chineseName": "鐵衛",
     "attackType": "物理",
@@ -299,7 +293,7 @@
     "chineseName": "決戰者",
     "attackType": "物理",
     "position": "地面"
-  }, 
+  },
   "unyield": {
     "chineseName": "不屈者",
     "attackType": "物理",
@@ -325,7 +319,6 @@
     "attackType": "物理",
     "position": "地面"
   },
-
   "physician": {
     "chineseName": "醫師",
     "attackType": "治療",
@@ -345,7 +338,7 @@
     "chineseName": "群癒師",
     "attackType": "治療",
     "position": "高台"
-  }, 
+  },
   "chainhealer": {
     "chineseName": "鍊癒師",
     "attackType": "治療",
@@ -360,5 +353,10 @@
     "chineseName": "咒癒師",
     "attackType": "法術",
     "position": "高台"
-  }  
+  },
+  "supportiveranger": {
+    "chineseName": "獵手",
+    "attackType": "物理",
+    "position": "高台"
+  }
 }

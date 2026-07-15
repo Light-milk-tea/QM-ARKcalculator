@@ -2,7 +2,7 @@
 
 - Source: internal calc-core rule inventory
 - Current phase: MVP-DPS first batch
-- Last generated: 2026-07-06T05:03:45.395Z
+- Last generated: 2026-07-14T06:23:51.531Z
 - Rule version: v0.4.0
 - Top20 progress: ready=20, pending=0
 

@@ -272,6 +272,14 @@ describe("calculateSkillDps", () => {
         (rule) => rule.ruleId === "phase2.skill.stop_attacking_minset" && rule.applied,
       ),
     ).toBe(true);
+    expect(result.healing.enabled).toBe(true);
+    expect(result.healing.hps).toBeGreaterThan(0);
+    expect(result.healing.streams.some((stream) => stream.id === "HEAL_MAIN")).toBe(true);
+    expect(
+      result.ruleTrace.some(
+        (rule) => rule.ruleId === "phase2.heal.pure_heal_stop_attack_minset" && rule.applied,
+      ),
+    ).toBe(true);
   });
 
   it("克洛丝 S1 在条件开启时应叠加天赋期望倍率", () => {

@@ -13,11 +13,14 @@
 3. Build：`npm run build`
 4. Custom Audit：`npm run audit:custom`
 
-当前阶段附加阈值（由 `audit:custom` 校验）：
+当前阶段附加阈值（由 `audit:custom` 校验，口径为**可选干员技能**）：
 
-- `blackboardCoverage >= 0.75`
-- `likelyCustomRatio <= 0.25`
+- `blackboardCoverage >= 0.95`（可选干员技能中含 blackboard 的比例）
+- `likelyCustomRatio <= 0.22`
+- `knownKeyCoverage >= 0.70`（blackboard 键命中已知/显式忽略库的比例）
 - `readyTop20 >= 12`（可通过 `MIN_READY_TOP20` 环境变量临时覆盖）
+
+说明：全量表 `allSkillsBlackboardCoverage` 仅作信息项输出，不再作为门禁主阈值（会被 TOKEN/TRAP 等无归属技能稀释）。
 
 统一入口：`npm run quality:gate`
 

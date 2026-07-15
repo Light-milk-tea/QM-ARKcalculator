@@ -319,13 +319,13 @@ flowchart LR
 
 ## 11. 最终验收清单（你可以直接勾选）
 
-- [ ] `apps/web` 无业务公式逻辑，计算全部来自 `@qm/calc-core`
-- [ ] `calculateSkillDps()` 是唯一计算入口
-- [ ] 结果固定包含 `summary/schedule/streams/formula/ruleTrace/warnings`
-- [ ] 未映射/歧义语义必有 warning，不静默
-- [ ] Top20 规则覆盖率达到阶段目标
-- [ ] `npm run quality:gate` 可稳定通过
-- [ ] `versions` 中有可追溯数据版本、规则版本、发布快照
+- [x] `apps/web` 无业务公式逻辑，计算全部来自 `@qm/calc-core`
+- [x] `calculateSkillDps()` 是唯一计算入口
+- [x] 结果固定包含 `summary/schedule/streams/formula/ruleTrace/warnings`
+- [x] 未映射/歧义语义必有 warning，不静默
+- [x] Top20 规则覆盖率达到阶段目标
+- [x] `npm run quality:gate` 可稳定通过
+- [x] `versions` 中有可追溯数据版本、规则版本、发布快照
 
 ---
 

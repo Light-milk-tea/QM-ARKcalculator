@@ -4,14 +4,18 @@ import { fileURLToPath } from "node:url";
 
 const root = resolve(fileURLToPath(new URL("..", import.meta.url)));
 const skillsPath = resolve(root, "apps/web/public/json/skill_table.json");
+const charactersPath = resolve(root, "apps/web/public/json/character_table.json");
 const top20CasesPath = resolve(root, "packages/calc-core/__tests__/fixtures/top20-priority-cases.json");
 
-const MIN_BLACKBOARD_COVERAGE = 0.75;
-const MAX_LIKELY_CUSTOM_RATIO = 0.25;
+// E4：以可选干员技能为审计口径（排除 TOKEN/TRAP 与无归属技能稀释）。
+const MIN_BLACKBOARD_COVERAGE = 0.95;
+const MAX_LIKELY_CUSTOM_RATIO = 0.22;
+const MIN_KNOWN_KEY_COVERAGE = 0.7;
 const MIN_READY_TOP20 = Number.parseInt(process.env.MIN_READY_TOP20 ?? "12", 10);
 
 const raw = await readFile(skillsPath, "utf8");
 const skillTable = JSON.parse(raw);
+const characterTable = JSON.parse(await readFile(charactersPath, "utf8"));
 const top20CasesRaw = await readFile(top20CasesPath, "utf8");
 const top20Cases = JSON.parse(top20CasesRaw);
 
@@ -70,35 +74,69 @@ const knownBlackboardKeys = new Set([
   "attack@heal_interval",
   "attack@heal_times",
   "attack@heal_duration",
+  // E4：高频非主链/效用键显式入库，降低误报与 keyCoverage 压力。
+  "cost",
+  "hp_ratio",
+  "max_hp",
+  "value",
+  "score",
+  "next_score",
+  "enemy_key",
+  "force",
+  "block_cnt",
+  "talent_scale",
+  "branch_id",
+  "sluggish",
+  "ct",
+  "move_speed",
+  "sp",
+  "prob",
+  "default_recipe_idx",
+  "ability_range_forward_extend",
+  "projectile_range",
+  "projectile_delay_time",
+  "projectile_life_time",
+  "attack@projectile_life_time",
+  "taunt_level",
+  "max_cnt",
+  "range_id",
+  "max_summon_cnt",
+  "skill_max_trigger_time",
+  "dialogue_config_signal_key",
+  "max_stack_cnt",
+  "cold",
+  "attack@hp_ratio",
+  "hp_recovery_per_sec",
+  "attack@atk_to_hp_recovery_ratio",
+  "hp_recovery_per_sec_by_max_hp_ratio",
+  "damage",
+  "range_num",
+  "can_select_num",
+  "respawn_time",
+  "atk_scale_2",
+  "live_duration",
+  "damage_resistance",
+  "mode",
+  "ammo",
+  "attack@ammo",
+  "fake_interval",
+  "unmovable",
+  "attack@unmovable",
 ]);
 
 const knownBlackboardPrefixes = ["talent@", "recipe.", "sandbox_res_collector."];
 const ignoredUnmappedBlackboardKeysBySkillId = {
-  // 艾雅法拉 S2 的以下键在当前单目标 DPS 口径中不作为主结算输入：
-  // - atk_scale_2: 与 atk_scale 重复倍率键
-  // - fk/ct: 触发批次参数，暂不进入主链伤害模型
   skchr_amgoat_2: new Set(["atk_scale_2", "fk", "ct"]),
-  // 假日威龙陈 S3 的 projectile_life_time 主要影响弹道生命周期，不进入当前 DPS 主结算。
   skchr_chen2_3: new Set(["attack@projectile_life_time"]),
-  // 玛恩纳 S3 的以下键主要影响特性增益与击杀回转，不进入当前技能窗口 DPS 主结算。
   skchr_mlynar_3: new Set(["trait_up", "per_kill_reduce"]),
-  // 水月 S2 的 unmovable 为控制语义，不影响当前单目标 DPS 主链。
   skchr_mizuki_2: new Set(["attack@unmovable"]),
-  // 史尔特尔 S3 的以下键只影响攻击范围/生存，不参与当前 DPS 计算语义。
   skchr_surtr_3: new Set(["ability_range_forward_extend", "max_hp", "hp_ratio"]),
-  // 伊芙利特 S2 的 burn.atk_scale / ct 主要用于灼烧分段与触发节奏，不直接作为当前单目标主链伤害输入。
   skchr_ifrit_2: new Set(["burn.atk_scale", "ct"]),
-  // 归鲨 S3 的以下键为生存阈值/额外段语义，当前版本通过自定义规则近似，不直接进入主链面板计算。
   skchr_ghost2_3: new Set(["max_hp", "attack@atk_scale_ex", "attack@hp_ratio"]),
-  // 白铁 S2 的 fake_interval 用于伪攻间节拍标注，不直接作为主链攻间输入。
   skchr_ironmn_2: new Set(["fake_interval"]),
-  // 仇白 S3 的以下键用于层数与天赋耦合，不直接作为当前单目标主链 DPS 输入。
   skchr_qiubai_3: new Set(["max_stack_cnt", "talent_scale"]),
-  // 逻各斯 S3 的 projectile_move_scale 影响弹道运动表现，不进入当前主链结算。
   skchr_logos_3: new Set(["projectile_move_scale"]),
-  // 焰影苇草 S3 的切换态 atk 键暂由 custom 规则近似承接，不直接纳入主链面板。
   skchr_reed2_3: new Set(["reed2_skil_3[switch_mode].atk"]),
-  // 阿米娅（术）S3 的 max_hp 为生存语义，不参与当前技能窗口 DPS 主链结算。
   skchr_amiya_3: new Set(["max_hp"]),
 };
 
@@ -111,11 +149,40 @@ function isIgnoredUnmappedBlackboardKey(skillId, key) {
   return ignoredUnmappedBlackboardKeysBySkillId[skillId]?.has(key) ?? false;
 }
 
+function collectOperatorSkillIds(characters) {
+  const skillIds = new Set();
+  for (const [charId, character] of Object.entries(characters)) {
+    if (!charId.startsWith("char_")) continue;
+    if (character?.profession === "TOKEN" || character?.profession === "TRAP") continue;
+    for (const entry of character?.skills ?? []) {
+      if (typeof entry?.skillId === "string" && entry.skillId) {
+        skillIds.add(entry.skillId);
+      }
+    }
+  }
+  return skillIds;
+}
+
+const operatorSkillIds = collectOperatorSkillIds(characterTable);
+
 let total = 0;
 let withBlackboard = 0;
 let withLikelyCustom = 0;
+let keyOccurrences = 0;
+let knownKeyOccurrences = 0;
+let allSkillsWithLevels = 0;
+let allSkillsWithBlackboard = 0;
 
 for (const skill of Object.values(skillTable)) {
+  const levels = skill?.levels;
+  if (!Array.isArray(levels) || levels.length === 0) continue;
+  allSkillsWithLevels += 1;
+  const bb = levels[levels.length - 1]?.blackboard ?? [];
+  if (bb.length > 0) allSkillsWithBlackboard += 1;
+}
+
+for (const skillId of operatorSkillIds) {
+  const skill = skillTable[skillId];
   const levels = skill?.levels;
   if (!Array.isArray(levels) || levels.length === 0) continue;
   total += 1;
@@ -128,10 +195,21 @@ for (const skill of Object.values(skillTable)) {
   ) {
     withLikelyCustom += 1;
   }
+  for (const entry of bb) {
+    const key = String(entry?.key ?? "");
+    if (!key) continue;
+    keyOccurrences += 1;
+    if (isKnownBlackboardKey(key) || isIgnoredUnmappedBlackboardKey(skillId, key)) {
+      knownKeyOccurrences += 1;
+    }
+  }
 }
 
 const blackboardCoverage = total > 0 ? withBlackboard / total : 0;
 const likelyCustomRatio = withBlackboard > 0 ? withLikelyCustom / withBlackboard : 0;
+const knownKeyCoverage = keyOccurrences > 0 ? knownKeyOccurrences / keyOccurrences : 0;
+const allSkillsBlackboardCoverage =
+  allSkillsWithLevels > 0 ? allSkillsWithBlackboard / allSkillsWithLevels : 0;
 const readyTop20 = top20Cases.filter((item) => item.status === "ready").length;
 const pendingTop20 = top20Cases.filter((item) => item.status !== "ready").length;
 
@@ -189,11 +267,14 @@ const warningStats = collectWarningStats(top20Cases);
 console.log(
   JSON.stringify(
     {
+      scope: "playable-operators",
       totalSkills: total,
       skillsWithBlackboard: withBlackboard,
       likelyNeedCustomRules: withLikelyCustom,
       blackboardCoverage,
       likelyCustomRatio,
+      knownKeyCoverage,
+      allSkillsBlackboardCoverage,
       readyTop20,
       pendingTop20,
       warningCountByCode: warningStats.warningCountByCode,
@@ -202,6 +283,7 @@ console.log(
       thresholds: {
         minBlackboardCoverage: MIN_BLACKBOARD_COVERAGE,
         maxLikelyCustomRatio: MAX_LIKELY_CUSTOM_RATIO,
+        minKnownKeyCoverage: MIN_KNOWN_KEY_COVERAGE,
         minReadyTop20: MIN_READY_TOP20,
       },
     },
@@ -219,6 +301,11 @@ if (blackboardCoverage < MIN_BLACKBOARD_COVERAGE) {
 if (likelyCustomRatio > MAX_LIKELY_CUSTOM_RATIO) {
   violations.push(
     `likelyCustomRatio=${likelyCustomRatio.toFixed(4)} > ${MAX_LIKELY_CUSTOM_RATIO.toFixed(2)}`,
+  );
+}
+if (knownKeyCoverage < MIN_KNOWN_KEY_COVERAGE) {
+  violations.push(
+    `knownKeyCoverage=${knownKeyCoverage.toFixed(4)} < ${MIN_KNOWN_KEY_COVERAGE.toFixed(2)}`,
   );
 }
 if (readyTop20 < MIN_READY_TOP20) {

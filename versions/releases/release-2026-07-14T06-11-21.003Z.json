@@ -1,0 +1,64 @@
+{
+  "releaseId": "release-2026-07-14T06:11:21.003Z",
+  "createdAt": "2026-07-14T06:11:21.003Z",
+  "dataVersion": {
+    "dataVersionId": "20260714-1",
+    "source": "ArknightCalculator/public/json <- Kengxxiao/ArknightsGameData@634e7e7d12c9 (2026-07-10)",
+    "syncedAt": "2026-07-14T06:10:43.342Z",
+    "notes": "Forward sync: +佩德洛/谬因; mapped supportiveranger; skill_table 1767->1772."
+  },
+  "ruleVersion": {
+    "ruleVersionId": "v0.4.0",
+    "phase": "mvp-dps",
+    "includes": [
+      "phase1.damage_type.switch_magical",
+      "phase1.defense.shred_ratio",
+      "phase1.other_stream.extra_true",
+      "phase1.duration.burst_short_window",
+      "phase1.lava.s1.schedule_parity",
+      "phase1.gdglow3.multi_hit",
+      "phase1.chen2s3.holiday_trigger_window",
+      "phase1.mizuki2.attack_interval_shift",
+      "phase1.thorns3.stable_stage",
+      "phase1.chen2.instant_multi_hit",
+      "phase1.horn3.conditional_overload",
+      "phase1.texas2.appear_extra_stream",
+      "phase1.ifrit2.burn_def_shred_proxy",
+      "phase1.cerber2.hotblade_aspd_proxy",
+      "phase1.mlynar3.verdict_true_stream",
+      "phase1.ghost23.burst_threshold_proxy",
+      "phase1.ironmn2.iter_amp_proxy",
+      "phase1.qiubai3.switch_magical_burst",
+      "phase1.logos3.arts_burst_variant",
+      "phase1.reed23.burn_echo_proxy"
+    ],
+    "notes": "Phase1 migration expanded to Top20 ready=20 with second-batch proxy rules."
+  },
+  "dataHashes": [
+    {
+      "file": "battle_equip_table.json",
+      "sha256": "43885f727d21a72129e49da6f0275c4d4cce44320354c39aaa18729f05dbe680"
+    },
+    {
+      "file": "character_table.json",
+      "sha256": "6ef2c0f725512d37ae6abbb248708474cfac56a712f811cc937cae75c4aa688b"
+    },
+    {
+      "file": "profession.json",
+      "sha256": "d7261c5f59e1bb34c497b0b612ac9c4b6085c365d05aa4efba310ddafd68c4cd"
+    },
+    {
+      "file": "skill_table.json",
+      "sha256": "d8a5a6422d8cb57180123b337a3ae4649386064ac3a31e7c525c9a9ff3ae0320"
+    },
+    {
+      "file": "subProfessionId.json",
+      "sha256": "0239b67114170d88339b669a89aa14b52513bb5d48e16902fee996cdc8e54ae8"
+    },
+    {
+      "file": "uniequip_table.json",
+      "sha256": "a9798a3477da5472d0a39ea9a7a43569179790633106ca60b4100dac2203ee2f"
+    }
+  ],
+  "dataSnapshotCaptured": false
+}
